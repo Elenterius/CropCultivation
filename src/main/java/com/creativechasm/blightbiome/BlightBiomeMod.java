@@ -1,11 +1,25 @@
 package com.creativechasm.blightbiome;
 
+import com.creativechasm.blightbiome.client.renderer.entity.BlobInsectRenderer;
+import com.creativechasm.blightbiome.client.renderer.entity.BroodmotherRenderer;
+import com.creativechasm.blightbiome.common.entity.BlobInsectEntity;
+import com.creativechasm.blightbiome.common.entity.BroodmotherEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.entity.EntityClassification;
+import net.minecraft.entity.EntityType;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntityType;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.InterModComms;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -18,36 +32,30 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.stream.Collectors;
 
-@Mod("bligthbiome")
+@Mod("blightbiome")
 public class BlightBiomeMod
 {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	public BlightBiomeMod()
 	{
-		// Register the setup method for modloading
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
-		// Register the enqueueIMC method for modloading
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
-		// Register the processIMC method for modloading
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
-		// Register the doClientStuff method for modloading
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
 
 		// Register ourselves for server and other game events we are interested in
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 
-	private void setup(final FMLCommonSetupEvent event)
-	{
-		// some preinit code
-		LOGGER.info("HELLO FROM PREINIT");
-		LOGGER.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());
-	}
+	private void setup(final FMLCommonSetupEvent event) { /* pre-init stuff */ }
 
 	private void doClientStuff(final FMLClientSetupEvent event)
 	{
 		LOGGER.info("Got game settings {}", event.getMinecraftSupplier().get().gameSettings);
+
+		RenderingRegistry.registerEntityRenderingHandler(BlobInsectEntity.class, BlobInsectRenderer::new);
+		RenderingRegistry.registerEntityRenderingHandler(BroodmotherEntity.class, BroodmotherRenderer::new);
 	}
 
 	private void enqueueIMC(final InterModEnqueueEvent event)
@@ -77,10 +85,47 @@ public class BlightBiomeMod
 	@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 	public static class RegistryEvents
 	{
-		@SubscribeEvent
-		public static void onBlocksRegistry(final RegistryEvent.Register<Block> blockRegistryEvent)
+		public static final ItemGroup ITEM_GROUP = new ItemGroup(-1, "blightbiome")
 		{
-			LOGGER.info("HELLO from Register Block");
+			@OnlyIn(Dist.CLIENT)
+			public ItemStack createIcon()
+			{
+				return new ItemStack(Blocks.GOLD_BLOCK);
+			}
+		};
+
+		@SubscribeEvent
+		public static void onBlocksRegistry(final RegistryEvent.Register<Block> registryEvent)
+		{
+//			Block block = new BlockWormhole().setRegistryName("wormhole");
+//			registryEvent.getRegistry().register(block);
+		}
+
+		@SubscribeEvent
+		public static void onTileEntityTypeRegistry(final RegistryEvent.Register<TileEntityType<?>> registryEvent)
+		{
+//			registryEvent.getRegistry().register(TileEntityType.Builder.create(WormholeTileEntity::new, ModBlocks.WORMHOLE).build(null).setRegistryName("wormhole"));
+		}
+
+		@SubscribeEvent
+		public static void onItemsRegistry(final RegistryEvent.Register<Item> registryEvent)
+		{
+//			Item.Properties properties = new Item.Properties().group(GATECRASHING_ITEM_GROUP);
+//
+//			registryEvent.getRegistry().register(new BlockItem(ModBlocks.WORMHOLE, properties).setRegistryName("wormhole"));
+		}
+
+		@SubscribeEvent
+		public static void onEntityTypeRegistry(final RegistryEvent.Register<EntityType<?>> registryEvent)
+		{
+			registryEvent.getRegistry().register(EntityType.Builder.create(BlobInsectEntity::new, EntityClassification.MONSTER).size(0.4F, 0.35F).build("blob_insect").setRegistryName("blob_insect"));
+			registryEvent.getRegistry().register(EntityType.Builder.create(BroodmotherEntity::new, EntityClassification.MONSTER).size(1.6F, 0.7F).build("brood_mother").setRegistryName("brood_mother"));
+		}
+
+		@SubscribeEvent
+		public static void onModelRegistry(final ModelRegistryEvent registryEvent)
+		{
+//			ClientRegistry.bindTileEntitySpecialRenderer(WormholeTileEntity.class, new WormholeTileEntityRenderer());
 		}
 	}
 }

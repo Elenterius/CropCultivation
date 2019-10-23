@@ -1,4 +1,5 @@
 package com.creativechasm.blightbiome.client.renderer.entity.model;
+//Made by Elenterius
 
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.entity.model.RendererModel;

@@ -4,9 +4,9 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.world.World;
 
-public class BlobInsectEntity extends MonsterEntity
+public class BroodmotherEntity extends MonsterEntity
 {
-	public BlobInsectEntity(EntityType<? extends BlobInsectEntity> entityEntityType, World world)
+	public BroodmotherEntity(EntityType<? extends BroodmotherEntity> entityEntityType, World world)
 	{
 		super(entityEntityType, world);
 	}
