@@ -2,11 +2,13 @@ package com.creativechasm.blightbiome;
 
 import com.creativechasm.blightbiome.client.renderer.entity.BlobInsectRenderer;
 import com.creativechasm.blightbiome.client.renderer.entity.BroodmotherRenderer;
+import com.creativechasm.blightbiome.client.renderer.entity.PestererRenderer;
 import com.creativechasm.blightbiome.common.block.BlightsoilBlock;
 import com.creativechasm.blightbiome.common.block.BlightweedBlock;
 import com.creativechasm.blightbiome.common.block.ModBlocks;
 import com.creativechasm.blightbiome.common.entity.BlobInsectEntity;
 import com.creativechasm.blightbiome.common.entity.BroodmotherEntity;
+import com.creativechasm.blightbiome.common.entity.PestererEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.SlabBlock;
 import net.minecraft.block.SoundType;
@@ -63,6 +65,7 @@ public class BlightBiomeMod
 
 		RenderingRegistry.registerEntityRenderingHandler(BlobInsectEntity.class, BlobInsectRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(BroodmotherEntity.class, BroodmotherRenderer::new);
+		RenderingRegistry.registerEntityRenderingHandler(PestererEntity.class, PestererRenderer::new);
 	}
 
 	private void enqueueIMC(final InterModEnqueueEvent event)
@@ -134,6 +137,7 @@ public class BlightBiomeMod
 		{
 			registryEvent.getRegistry().register(EntityType.Builder.create(BlobInsectEntity::new, EntityClassification.MONSTER).size(0.4F, 0.35F).build("blob_insect").setRegistryName("blob_insect"));
 			registryEvent.getRegistry().register(EntityType.Builder.create(BroodmotherEntity::new, EntityClassification.MONSTER).size(1.6F, 0.7F).build("brood_mother").setRegistryName("brood_mother"));
+			registryEvent.getRegistry().register(EntityType.Builder.create(PestererEntity::new, EntityClassification.MONSTER).size(1.0F, 1.5F).build("pesterer").setRegistryName("pesterer"));
 		}
 
 		@SubscribeEvent
