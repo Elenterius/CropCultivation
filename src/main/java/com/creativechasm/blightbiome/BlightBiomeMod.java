@@ -107,7 +107,8 @@ public class BlightBiomeMod
 			registryEvent.getRegistry().registerAll(
 					new BlightsoilBlock().setRegistryName("blightsoil"),
 					new BlightweedBlock().setRegistryName("blightweeds"),
-					new SlabBlock(Block.Properties.create(Material.EARTH, MaterialColor.DIRT).hardnessAndResistance(0.5F).sound(SoundType.GROUND)).setRegistryName("blightsoil_slab")
+					new SlabBlock(Block.Properties.create(Material.EARTH, MaterialColor.DIRT).hardnessAndResistance(0.5F).sound(SoundType.GROUND)).setRegistryName("blightsoil_slab"),
+					new Block(Block.Properties.create(Material.EARTH, MaterialColor.DIRT).hardnessAndResistance(0.5F).sound(SoundType.GROUND)).setRegistryName("blightmoss")
 			);
 		}
 
@@ -125,6 +126,7 @@ public class BlightBiomeMod
 			registryEvent.getRegistry().register(new BlockItem(ModBlocks.BLIGHT_SOIL, properties).setRegistryName("blightsoil"));
 			registryEvent.getRegistry().register(new BlockItem(ModBlocks.BLIGHT_WEED, properties).setRegistryName("blightweeds"));
 			registryEvent.getRegistry().register(new BlockItem(ModBlocks.BLIGHT_SOIL_SLAB, properties).setRegistryName("blightsoil_slab"));
+			registryEvent.getRegistry().register(new BlockItem(ModBlocks.BLIGHT_MOSS, properties).setRegistryName("blightmoss"));
 		}
 
 		@SubscribeEvent
