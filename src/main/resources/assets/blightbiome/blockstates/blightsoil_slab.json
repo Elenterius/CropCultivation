@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "blightbiome:block/blightsoil_slab"
+    },
+    "type=top": {
+      "model": "blightbiome:block/blightsoil_slab_top"
+    },
+    "type=double": {
+      "model": "blightbiome:block/blightsoil"
+    }
+  }
+}

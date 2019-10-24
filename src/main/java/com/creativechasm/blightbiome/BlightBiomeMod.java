@@ -2,12 +2,19 @@ package com.creativechasm.blightbiome;
 
 import com.creativechasm.blightbiome.client.renderer.entity.BlobInsectRenderer;
 import com.creativechasm.blightbiome.client.renderer.entity.BroodmotherRenderer;
+import com.creativechasm.blightbiome.common.block.BlightsoilBlock;
+import com.creativechasm.blightbiome.common.block.BlightweedBlock;
+import com.creativechasm.blightbiome.common.block.ModBlocks;
 import com.creativechasm.blightbiome.common.entity.BlobInsectEntity;
 import com.creativechasm.blightbiome.common.entity.BroodmotherEntity;
 import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
+import net.minecraft.block.SlabBlock;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.material.Material;
+import net.minecraft.block.material.MaterialColor;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -90,15 +97,18 @@ public class BlightBiomeMod
 			@OnlyIn(Dist.CLIENT)
 			public ItemStack createIcon()
 			{
-				return new ItemStack(Blocks.GOLD_BLOCK);
+				return new ItemStack(ModBlocks.BLIGHT_SOIL);
 			}
 		};
 
 		@SubscribeEvent
 		public static void onBlocksRegistry(final RegistryEvent.Register<Block> registryEvent)
 		{
-//			Block block = new BlockWormhole().setRegistryName("wormhole");
-//			registryEvent.getRegistry().register(block);
+			registryEvent.getRegistry().registerAll(
+					new BlightsoilBlock().setRegistryName("blightsoil"),
+					new BlightweedBlock().setRegistryName("blightweeds"),
+					new SlabBlock(Block.Properties.create(Material.EARTH, MaterialColor.DIRT).hardnessAndResistance(0.5F).sound(SoundType.GROUND)).setRegistryName("blightsoil_slab")
+			);
 		}
 
 		@SubscribeEvent
@@ -110,9 +120,11 @@ public class BlightBiomeMod
 		@SubscribeEvent
 		public static void onItemsRegistry(final RegistryEvent.Register<Item> registryEvent)
 		{
-//			Item.Properties properties = new Item.Properties().group(GATECRASHING_ITEM_GROUP);
-//
-//			registryEvent.getRegistry().register(new BlockItem(ModBlocks.WORMHOLE, properties).setRegistryName("wormhole"));
+			Item.Properties properties = new Item.Properties().group(ITEM_GROUP);
+
+			registryEvent.getRegistry().register(new BlockItem(ModBlocks.BLIGHT_SOIL, properties).setRegistryName("blightsoil"));
+			registryEvent.getRegistry().register(new BlockItem(ModBlocks.BLIGHT_WEED, properties).setRegistryName("blightweeds"));
+			registryEvent.getRegistry().register(new BlockItem(ModBlocks.BLIGHT_SOIL_SLAB, properties).setRegistryName("blightsoil_slab"));
 		}
 
 		@SubscribeEvent
