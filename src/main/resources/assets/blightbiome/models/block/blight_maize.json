@@ -1,0 +1,6 @@
+{
+  "parent": "block/crop",
+  "textures": {
+    "crop": "blightbiome:block/blight_roots"
+  }
+}

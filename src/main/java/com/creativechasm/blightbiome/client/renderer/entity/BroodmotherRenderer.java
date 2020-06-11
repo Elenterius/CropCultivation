@@ -1,31 +1,38 @@
 package com.creativechasm.blightbiome.client.renderer.entity;
 
+import com.creativechasm.blightbiome.BlightBiomeMod;
 import com.creativechasm.blightbiome.client.renderer.entity.model.BroodmotherModel;
 import com.creativechasm.blightbiome.common.entity.BroodmotherEntity;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.client.renderer.entity.layers.AbstractEyesLayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nonnull;
+
 @OnlyIn(Dist.CLIENT)
-public class BroodmotherRenderer<T extends BroodmotherEntity> extends MobRenderer<T, BroodmotherModel<T>>
-{
-	private static final ResourceLocation TEXTURE = new ResourceLocation("blightbiome", "textures/entity/broodmother.png");
+public class BroodmotherRenderer extends MobRenderer<BroodmotherEntity, BroodmotherModel> {
+    private static final ResourceLocation TEXTURE = new ResourceLocation(BlightBiomeMod.MOD_ID, "textures/entity/broodmother.png");
+    private static final ResourceLocation EMISSION_TEXTURE = new ResourceLocation(BlightBiomeMod.MOD_ID, "textures/entity/broodmother_emission.png");
+    private static final RenderType EYE_RENDER_TYPE = RenderType.getEyes(EMISSION_TEXTURE);
 
-	public BroodmotherRenderer(EntityRendererManager rendererManager)
-	{
-		super(rendererManager, new BroodmotherModel<>(), 0.8F);
-//		this.addLayer(new SpiderEyesLayer(this));
-	}
+    public BroodmotherRenderer(EntityRendererManager rendererManager) {
+        super(rendererManager, new BroodmotherModel(), 0.8F);
+        addLayer(new AbstractEyesLayer<BroodmotherEntity, BroodmotherModel>(this) {
+            @Override
+            @Nonnull
+            public RenderType getRenderType() {
+                return EYE_RENDER_TYPE;
+            }
+        });
+    }
 
-	protected float getDeathMaxRotation(T entityLivingBaseIn)
-	{
-		return 180.0F;
-	}
-
-	protected ResourceLocation getEntityTexture(@SuppressWarnings("NullableProblems") T entityLivingBaseIn)
-	{
-		return TEXTURE;
-	}
+    @Override
+    @Nonnull
+    public ResourceLocation getEntityTexture(@Nonnull BroodmotherEntity entityLivingBaseIn) {
+        return TEXTURE;
+    }
 }

@@ -1,6 +1,6 @@
 {
   "parent": "block/cross",
   "textures": {
-    "cross": "blightbiome:block/blight_weeds"
+    "cross": "blightbiome:block/blight_sprout"
   }
 }

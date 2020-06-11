@@ -1,131 +1,178 @@
 package com.creativechasm.blightbiome.client.renderer.entity.model;
 //Made by Elenterius
 
+import com.creativechasm.blightbiome.common.entity.BroodmotherEntity;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.renderer.entity.model.EntityModel;
-import net.minecraft.client.renderer.entity.model.RendererModel;
-import net.minecraft.client.renderer.model.ModelBox;
-import net.minecraft.entity.Entity;
+import net.minecraft.client.renderer.model.ModelRenderer;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nonnull;
+
 @OnlyIn(Dist.CLIENT)
-public class BroodmotherModel<T extends Entity> extends EntityModel<T>
-{
-	private final RendererModel abdomen;
-	private final RendererModel body;
-	private final RendererModel leftLeg0;
-	private final RendererModel head;
-	private final RendererModel bottomJaw;
-	private final RendererModel topJaw;
-	private final RendererModel leftLeg1;
-	private final RendererModel leftLeg2;
-	private final RendererModel leftLeg3;
-	private final RendererModel rightLeg0;
-	private final RendererModel rightLeg1;
-	private final RendererModel rightLeg2;
-	private final RendererModel rightLeg3;
+public class BroodmotherModel extends EntityModel<BroodmotherEntity> {
+    private final ModelRenderer abdomen;
+    private final ModelRenderer body;
+    private final ModelRenderer leftLeg0;
+    private final ModelRenderer head;
+    private final ModelRenderer bottomJaw;
+    private final ModelRenderer topJaw;
+    private final ModelRenderer leftLeg1;
+    private final ModelRenderer leftLeg2;
+    private final ModelRenderer leftLeg3;
+    private final ModelRenderer rightLeg0;
+    private final ModelRenderer rightLeg1;
+    private final ModelRenderer rightLeg2;
+    private final ModelRenderer rightLeg3;
 
-	public BroodmotherModel()
-	{
-		textureWidth = 64;
-		textureHeight = 64;
+    public BroodmotherModel() {
+        textureWidth = 64;
+        textureHeight = 64;
 
-		abdomen = new RendererModel(this);
-		abdomen.setRotationPoint(0.0F, 19.0F, 3.0F);
-		setRotationAngle(abdomen, 0.3491F, 0.0F, 0.0F);
-		abdomen.cubeList.add(new ModelBox(abdomen, 0, 14, -5.0F, -4.0F, 0.0F, 10, 9, 12, 0.0F, true));
-		abdomen.cubeList.add(new ModelBox(abdomen, 8, 35, -3.5F, -3.0F, 12.0F, 7, 7, 2, 0.0F, true));
+        abdomen = new ModelRenderer(this);
+        abdomen.setRotationPoint(0.0F, 19.0F, 3.0F);
+        setRotationAngle(abdomen, 0.3491F, 0.0F, 0.0F);
+        abdomen.setTextureOffset(0, 14).addBox(-5.0F, -4.0F, 0.0F, 10.0F, 9.0F, 12.0F, 0.0F, true);
+        abdomen.setTextureOffset(8, 35).addBox(-3.5F, -3.0F, 12.0F, 7.0F, 7.0F, 2.0F, 0.0F, true);
 
-		body = new RendererModel(this);
-		body.setRotationPoint(0.0F, 20.0F, 0.0F);
-		setRotationAngle(body, 0.1396F, 0.0F, 0.0F);
-		body.cubeList.add(new ModelBox(body, 0, 0, -3.0F, -3.0F, -3.0F, 6, 6, 8, 0.0F, true));
+        body = new ModelRenderer(this);
+        body.setRotationPoint(0.0F, 20.0F, 0.0F);
+        setRotationAngle(body, 0.1396F, 0.0F, 0.0F);
+        body.setTextureOffset(0, 0).addBox(-3.0F, -3.0F, -3.0F, 6.0F, 6.0F, 8.0F, 0.0F, true);
 
-		leftLeg0 = new RendererModel(this);
-		leftLeg0.setRotationPoint(4.0F, 20.0F, -1.0F);
-		setRotationAngle(leftLeg0, 0.0F, 0.7854F, 0.4363F);
-		leftLeg0.cubeList.add(new ModelBox(leftLeg0, 21, 0, -1.0F, -1.0F, -1.0F, 16, 2, 2, 0.0F, true));
+        leftLeg0 = new ModelRenderer(this);
+        leftLeg0.setRotationPoint(4.0F, 20.0F, -1.0F);
+        setRotationAngle(leftLeg0, 0.0F, 0.7854F, 0.4363F);
+        leftLeg0.setTextureOffset(21, 0).addBox(-1.0F, -1.0F, -1.0F, 16.0F, 2.0F, 2.0F, 0.0F, true);
 
-		head = new RendererModel(this);
-		head.setRotationPoint(0.0F, 20.0F, -3.0F);
-		setRotationAngle(head, 0.0698F, 0.0F, 0.0F);
-		head.cubeList.add(new ModelBox(head, 32, 4, -2.5F, -4.0F, -5.0F, 5, 6, 6, 0.0F, true));
-		head.cubeList.add(new ModelBox(head, 1, 37, -3.0F, -2.75F, -4.2F, 1, 1, 1, 0.0F, true));
-		head.cubeList.add(new ModelBox(head, 1, 37, 2.0F, -2.75F, -4.2F, 1, 1, 1, 0.0F, true));
-		head.cubeList.add(new ModelBox(head, 1, 37, -3.0F, -1.7F, -2.6F, 1, 1, 1, 0.0F, true));
-		head.cubeList.add(new ModelBox(head, 1, 37, 2.0F, -1.7F, -2.6F, 1, 1, 1, 0.0F, false));
-		head.cubeList.add(new ModelBox(head, 1, 37, -3.0F, -3.35F, -2.65F, 1, 1, 1, 0.0F, true));
-		head.cubeList.add(new ModelBox(head, 1, 37, 2.0F, -3.35F, -2.65F, 1, 1, 1, 0.0F, false));
+        head = new ModelRenderer(this);
+        head.setRotationPoint(0.0F, 20.0F, -3.0F);
+        setRotationAngle(head, 0.0698F, 0.0F, 0.0F);
+        head.setTextureOffset(32, 4).addBox(-2.5F, -4.0F, -5.0F, 5.0F, 6.0F, 6.0F, 0.0F, true);
+        head.setTextureOffset(1, 37).addBox(-3.0F, -2.75F, -4.2F, 1.0F, 1.0F, 1.0F, 0.0F, true);
+        head.setTextureOffset(1, 37).addBox(2.0F, -2.75F, -4.2F, 1.0F, 1.0F, 1.0F, 0.0F, true);
+        head.setTextureOffset(1, 37).addBox(-3.0F, -1.7F, -2.6F, 1.0F, 1.0F, 1.0F, 0.0F, true);
+        head.setTextureOffset(1, 37).addBox(2.0F, -1.7F, -2.6F, 1.0F, 1.0F, 1.0F, 0.0F, false);
+        head.setTextureOffset(1, 37).addBox(-3.0F, -3.35F, -2.65F, 1.0F, 1.0F, 1.0F, 0.0F, true);
+        head.setTextureOffset(1, 37).addBox(2.0F, -3.35F, -2.65F, 1.0F, 1.0F, 1.0F, 0.0F, false);
 
-		bottomJaw = new RendererModel(this);
-		bottomJaw.setRotationPoint(0.0F, 0.5F, -5.0F);
-		head.addChild(bottomJaw);
-		bottomJaw.cubeList.add(new ModelBox(bottomJaw, 42, 43, -1.5F, -0.7989F, -6.964F, 3, 2, 8, 0.0F, false));
+        bottomJaw = new ModelRenderer(this);
+        bottomJaw.setRotationPoint(0.0F, 0.5F, -5.0F);
+        head.addChild(bottomJaw);
+        bottomJaw.setTextureOffset(42, 43).addBox(-1.5F, -0.7989F, -6.964F, 3.0F, 2.0F, 8.0F, 0.0F, false);
 
-		topJaw = new RendererModel(this);
-		topJaw.setRotationPoint(0.0F, -2.5F, -5.0F);
-		head.addChild(topJaw);
-		topJaw.cubeList.add(new ModelBox(topJaw, 32, 20, -2.0F, -0.55F, -4.0F, 4, 2, 4, 0.0F, true));
-		topJaw.cubeList.add(new ModelBox(topJaw, 48, 21, -1.5F, -0.55F, -7.0F, 3, 2, 3, 0.0F, true));
-		topJaw.cubeList.add(new ModelBox(topJaw, 46, 35, -1.0F, -1.05F, -7.0F, 2, 1, 7, 0.0F, true));
-		topJaw.cubeList.add(new ModelBox(topJaw, 46, 35, -1.0F, -1.55F, -8.0F, 2, 4, 1, 0.0F, true));
+        topJaw = new ModelRenderer(this);
+        topJaw.setRotationPoint(0.0F, -2.5F, -5.0F);
+        head.addChild(topJaw);
+        topJaw.setTextureOffset(32, 20).addBox(-2.0F, -0.55F, -4.0F, 4.0F, 2.0F, 4.0F, 0.0F, true);
+        topJaw.setTextureOffset(48, 21).addBox(-1.5F, -0.55F, -7.0F, 3.0F, 2.0F, 3.0F, 0.0F, true);
+        topJaw.setTextureOffset(46, 35).addBox(-1.0F, -1.05F, -7.0F, 2.0F, 1.0F, 7.0F, 0.0F, true);
+        topJaw.setTextureOffset(46, 35).addBox(-1.0F, -1.55F, -8.0F, 2.0F, 4.0F, 1.0F, 0.0F, true);
 
-		leftLeg1 = new RendererModel(this);
-		leftLeg1.setRotationPoint(4.0F, 20.0F, 0.0F);
-		setRotationAngle(leftLeg1, 0.0F, 0.2618F, 0.4363F);
-		leftLeg1.cubeList.add(new ModelBox(leftLeg1, 21, 0, -1.0F, -1.0F, -1.0F, 16, 2, 2, 0.0F, true));
+        leftLeg1 = new ModelRenderer(this);
+        leftLeg1.setRotationPoint(4.0F, 20.0F, 0.0F);
+        setRotationAngle(leftLeg1, 0.0F, 0.2618F, 0.4363F);
+        leftLeg1.setTextureOffset(21, 0).addBox(-1.0F, -1.0F, -1.0F, 16.0F, 2.0F, 2.0F, 0.0F, true);
 
-		leftLeg2 = new RendererModel(this);
-		leftLeg2.setRotationPoint(4.0F, 20.0F, 1.0F);
-		setRotationAngle(leftLeg2, 0.0F, -0.0873F, 0.2618F);
-		leftLeg2.cubeList.add(new ModelBox(leftLeg2, 21, 0, -1.0F, -1.0F, -1.0F, 16, 2, 2, 0.0F, true));
+        leftLeg2 = new ModelRenderer(this);
+        leftLeg2.setRotationPoint(4.0F, 20.0F, 1.0F);
+        setRotationAngle(leftLeg2, 0.0F, -0.0873F, 0.2618F);
+        leftLeg2.setTextureOffset(21, 0).addBox(-1.0F, -1.0F, -1.0F, 16.0F, 2.0F, 2.0F, 0.0F, true);
 
-		leftLeg3 = new RendererModel(this);
-		leftLeg3.setRotationPoint(4.0F, 20.0F, 2.0F);
-		setRotationAngle(leftLeg3, 0.0F, -0.4363F, 0.2618F);
-		leftLeg3.cubeList.add(new ModelBox(leftLeg3, 21, 0, -1.0F, -1.0F, -1.0F, 16, 2, 2, 0.0F, true));
+        leftLeg3 = new ModelRenderer(this);
+        leftLeg3.setRotationPoint(4.0F, 20.0F, 2.0F);
+        setRotationAngle(leftLeg3, 0.0F, -0.4363F, 0.2618F);
+        leftLeg3.setTextureOffset(21, 0).addBox(-1.0F, -1.0F, -1.0F, 16.0F, 2.0F, 2.0F, 0.0F, true);
 
-		rightLeg0 = new RendererModel(this);
-		rightLeg0.setRotationPoint(-4.0F, 20.0F, -1.0F);
-		setRotationAngle(rightLeg0, 0.0F, -0.8727F, -0.3491F);
-		rightLeg0.cubeList.add(new ModelBox(rightLeg0, 21, 0, -15.0F, -1.0F, -1.0F, 16, 2, 2, 0.0F, false));
+        rightLeg0 = new ModelRenderer(this);
+        rightLeg0.setRotationPoint(-4.0F, 20.0F, -1.0F);
+        setRotationAngle(rightLeg0, 0.0F, -0.8727F, -0.3491F);
+        rightLeg0.setTextureOffset(21, 0).addBox(-15.0F, -1.0F, -1.0F, 16.0F, 2.0F, 2.0F, 0.0F, false);
 
-		rightLeg1 = new RendererModel(this);
-		rightLeg1.setRotationPoint(-4.0F, 20.0F, 0.0F);
-		setRotationAngle(rightLeg1, 0.0F, -0.3491F, -0.3491F);
-		rightLeg1.cubeList.add(new ModelBox(rightLeg1, 21, 0, -15.0F, -1.0F, -1.0F, 16, 2, 2, 0.0F, false));
+        rightLeg1 = new ModelRenderer(this);
+        rightLeg1.setRotationPoint(-4.0F, 20.0F, 0.0F);
+        setRotationAngle(rightLeg1, 0.0F, -0.3491F, -0.3491F);
+        rightLeg1.setTextureOffset(21, 0).addBox(-15.0F, -1.0F, -1.0F, 16.0F, 2.0F, 2.0F, 0.0F, false);
 
-		rightLeg2 = new RendererModel(this);
-		rightLeg2.setRotationPoint(-4.0F, 20.0F, 1.0F);
-		setRotationAngle(rightLeg2, 0.0F, 0.0F, -0.3491F);
-		rightLeg2.cubeList.add(new ModelBox(rightLeg2, 21, 0, -15.0F, -1.0F, -1.0F, 16, 2, 2, 0.0F, false));
+        rightLeg2 = new ModelRenderer(this);
+        rightLeg2.setRotationPoint(-4.0F, 20.0F, 1.0F);
+        setRotationAngle(rightLeg2, 0.0F, 0.0F, -0.3491F);
+        rightLeg2.setTextureOffset(21, 0).addBox(-15.0F, -1.0F, -1.0F, 16.0F, 2.0F, 2.0F, 0.0F, false);
 
-		rightLeg3 = new RendererModel(this);
-		rightLeg3.setRotationPoint(-4.0F, 20.0F, 2.0F);
-		setRotationAngle(rightLeg3, 0.0F, 0.5236F, -0.4363F);
-		rightLeg3.cubeList.add(new ModelBox(rightLeg3, 21, 0, -15.0F, -1.0F, -1.0F, 16, 2, 2, 0.0F, false));
-	}
+        rightLeg3 = new ModelRenderer(this);
+        rightLeg3.setRotationPoint(-4.0F, 20.0F, 2.0F);
+        setRotationAngle(rightLeg3, 0.0F, 0.5236F, -0.4363F);
+        rightLeg3.setTextureOffset(21, 0).addBox(-15.0F, -1.0F, -1.0F, 16.0F, 2.0F, 2.0F, 0.0F, false);
+    }
 
-	@Override
-	public void render(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale)
-	{
-		abdomen.render(scale);
-		body.render(scale);
-		leftLeg0.render(scale);
-		head.render(scale);
-		leftLeg1.render(scale);
-		leftLeg2.render(scale);
-		leftLeg3.render(scale);
-		rightLeg0.render(scale);
-		rightLeg1.render(scale);
-		rightLeg2.render(scale);
-		rightLeg3.render(scale);
-	}
+    @Override
+    public void setRotationAngles(@Nonnull BroodmotherEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+        head.rotateAngleY = netHeadYaw * ((float) Math.PI / 180F);
+        head.rotateAngleX = headPitch * ((float) Math.PI / 180F);
+        float f = ((float) Math.PI / 9F);
+        leftLeg3.rotateAngleZ = leftLeg0.rotateAngleZ = f;
+        rightLeg3.rotateAngleZ = rightLeg0.rotateAngleZ = -f;
+        leftLeg2.rotateAngleZ = leftLeg1.rotateAngleZ = f * 0.75F;
+        rightLeg2.rotateAngleZ = rightLeg1.rotateAngleZ = -f * 0.75F;
 
-	public void setRotationAngle(RendererModel RendererModel, float x, float y, float z)
-	{
-		RendererModel.rotateAngleX = x;
-		RendererModel.rotateAngleY = y;
-		RendererModel.rotateAngleZ = z;
-	}
+        float f1 = ((float) Math.PI / 16F);
+        leftLeg3.rotateAngleY = -f * 1.75F;
+        rightLeg3.rotateAngleY = f * 1.75F;
+        leftLeg2.rotateAngleY = -f1;
+        rightLeg2.rotateAngleY = f1;
+        leftLeg1.rotateAngleY = f1;
+        rightLeg1.rotateAngleY = -f1;
+        leftLeg0.rotateAngleY = f * 1.75F;
+        rightLeg0.rotateAngleY = -f * 1.75F;
+
+        float f3 = -(MathHelper.cos(limbSwing * 0.6662F * 2.0F + 0.0F) * 0.4F) * limbSwingAmount;
+        float f4 = -(MathHelper.cos(limbSwing * 0.6662F * 2.0F + (float) Math.PI) * 0.4F) * limbSwingAmount;
+        float f5 = -(MathHelper.cos(limbSwing * 0.6662F * 2.0F + ((float) Math.PI / 2F)) * 0.4F) * limbSwingAmount;
+        float f6 = -(MathHelper.cos(limbSwing * 0.6662F * 2.0F + ((float) Math.PI * 1.5F)) * 0.4F) * limbSwingAmount;
+        float f7 = Math.abs(MathHelper.sin(limbSwing * 0.6662F + 0.0F) * 0.4F) * limbSwingAmount;
+        float f8 = Math.abs(MathHelper.sin(limbSwing * 0.6662F + (float) Math.PI) * 0.4F) * limbSwingAmount;
+        float f9 = Math.abs(MathHelper.sin(limbSwing * 0.6662F + ((float) Math.PI / 2F)) * 0.4F) * limbSwingAmount;
+        float f10 = Math.abs(MathHelper.sin(limbSwing * 0.6662F + ((float) Math.PI * 1.5F)) * 0.4F) * limbSwingAmount;
+
+        leftLeg3.rotateAngleY += f3;
+        rightLeg3.rotateAngleY += -f3;
+        leftLeg2.rotateAngleY += f4;
+        rightLeg2.rotateAngleY += -f4;
+        leftLeg1.rotateAngleY += f5;
+        rightLeg1.rotateAngleY += -f5;
+        leftLeg0.rotateAngleY += f6;
+        rightLeg0.rotateAngleY += -f6;
+        leftLeg3.rotateAngleZ += f7;
+        rightLeg3.rotateAngleZ += -f7;
+        leftLeg2.rotateAngleZ += f8;
+        rightLeg2.rotateAngleZ += -f8;
+        leftLeg1.rotateAngleZ += f9;
+        rightLeg1.rotateAngleZ += -f9;
+        leftLeg0.rotateAngleZ += f10;
+        rightLeg0.rotateAngleZ += -f10;
+    }
+
+    @Override
+    public void render(@Nonnull MatrixStack matrixStack, @Nonnull IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        abdomen.render(matrixStack, buffer, packedLight, packedOverlay);
+        body.render(matrixStack, buffer, packedLight, packedOverlay);
+        leftLeg0.render(matrixStack, buffer, packedLight, packedOverlay);
+        head.render(matrixStack, buffer, packedLight, packedOverlay);
+        leftLeg1.render(matrixStack, buffer, packedLight, packedOverlay);
+        leftLeg2.render(matrixStack, buffer, packedLight, packedOverlay);
+        leftLeg3.render(matrixStack, buffer, packedLight, packedOverlay);
+        rightLeg0.render(matrixStack, buffer, packedLight, packedOverlay);
+        rightLeg1.render(matrixStack, buffer, packedLight, packedOverlay);
+        rightLeg2.render(matrixStack, buffer, packedLight, packedOverlay);
+        rightLeg3.render(matrixStack, buffer, packedLight, packedOverlay);
+    }
+
+    public void setRotationAngle(ModelRenderer modelRenderer, float x, float y, float z) {
+        modelRenderer.rotateAngleX = x;
+        modelRenderer.rotateAngleY = y;
+        modelRenderer.rotateAngleZ = z;
+    }
 }

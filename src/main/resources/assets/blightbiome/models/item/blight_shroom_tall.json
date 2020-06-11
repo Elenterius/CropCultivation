@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "blightbiome:block/blight_weeds"
+    "layer0": "blightbiome:block/blight_shroom_tall"
   }
 }
