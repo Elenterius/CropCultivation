@@ -1,7 +1,7 @@
 package com.creativechasm.blightbiome.client.renderer.entity.model;
 //Made by Elenterius
 
-import com.creativechasm.blightbiome.common.entity.BroodmotherEntity;
+import com.creativechasm.blightbiome.common.entity.BroodMotherEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.renderer.entity.model.EntityModel;
@@ -13,7 +13,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nonnull;
 
 @OnlyIn(Dist.CLIENT)
-public class BroodmotherModel extends EntityModel<BroodmotherEntity> {
+public class BroodMotherModel extends EntityModel<BroodMotherEntity> {
     private final ModelRenderer abdomen;
     private final ModelRenderer body;
     private final ModelRenderer leftLeg0;
@@ -28,7 +28,7 @@ public class BroodmotherModel extends EntityModel<BroodmotherEntity> {
     private final ModelRenderer rightLeg2;
     private final ModelRenderer rightLeg3;
 
-    public BroodmotherModel() {
+    public BroodMotherModel() {
         textureWidth = 64;
         textureHeight = 64;
 
@@ -109,15 +109,15 @@ public class BroodmotherModel extends EntityModel<BroodmotherEntity> {
     }
 
     @Override
-    public void setRotationAngles(@Nonnull BroodmotherEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void setRotationAngles(@Nonnull BroodMotherEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         head.rotateAngleY = netHeadYaw * ((float) Math.PI / 180F);
         head.rotateAngleX = headPitch * ((float) Math.PI / 180F);
+
         float f = ((float) Math.PI / 9F);
         leftLeg3.rotateAngleZ = leftLeg0.rotateAngleZ = f;
         rightLeg3.rotateAngleZ = rightLeg0.rotateAngleZ = -f;
         leftLeg2.rotateAngleZ = leftLeg1.rotateAngleZ = f * 0.75F;
         rightLeg2.rotateAngleZ = rightLeg1.rotateAngleZ = -f * 0.75F;
-
         float f1 = ((float) Math.PI / 16F);
         leftLeg3.rotateAngleY = -f * 1.75F;
         rightLeg3.rotateAngleY = f * 1.75F;
@@ -127,7 +127,6 @@ public class BroodmotherModel extends EntityModel<BroodmotherEntity> {
         rightLeg1.rotateAngleY = -f1;
         leftLeg0.rotateAngleY = f * 1.75F;
         rightLeg0.rotateAngleY = -f * 1.75F;
-
         float f3 = -(MathHelper.cos(limbSwing * 0.6662F * 2.0F + 0.0F) * 0.4F) * limbSwingAmount;
         float f4 = -(MathHelper.cos(limbSwing * 0.6662F * 2.0F + (float) Math.PI) * 0.4F) * limbSwingAmount;
         float f5 = -(MathHelper.cos(limbSwing * 0.6662F * 2.0F + ((float) Math.PI / 2F)) * 0.4F) * limbSwingAmount;
@@ -136,7 +135,6 @@ public class BroodmotherModel extends EntityModel<BroodmotherEntity> {
         float f8 = Math.abs(MathHelper.sin(limbSwing * 0.6662F + (float) Math.PI) * 0.4F) * limbSwingAmount;
         float f9 = Math.abs(MathHelper.sin(limbSwing * 0.6662F + ((float) Math.PI / 2F)) * 0.4F) * limbSwingAmount;
         float f10 = Math.abs(MathHelper.sin(limbSwing * 0.6662F + ((float) Math.PI * 1.5F)) * 0.4F) * limbSwingAmount;
-
         leftLeg3.rotateAngleY += f3;
         rightLeg3.rotateAngleY += -f3;
         leftLeg2.rotateAngleY += f4;
@@ -153,6 +151,14 @@ public class BroodmotherModel extends EntityModel<BroodmotherEntity> {
         rightLeg1.rotateAngleZ += -f9;
         leftLeg0.rotateAngleZ += f10;
         rightLeg0.rotateAngleZ += -f10;
+
+//        float health = Math.max(entityIn.getMaxHealth() - entityIn.getHealth(), 1f) * 0.5F;
+//        float bob = MathHelper.sin(ageInTicks)  * 0.0133F * health;
+//        abdomen.rotateAngleY = bob;
+//        abdomen.rotateAngleX = 0.3490659F + bob;
+//
+//        topJaw.rotateAngleX = -0.0194155F + bob * 0.5F;
+//        bottomJaw.rotateAngleX = 0.0194155F - bob * 0.25F;
     }
 
     @Override

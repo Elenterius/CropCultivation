@@ -1,9 +1,9 @@
 package com.creativechasm.blightbiome.common.registry;
 
 import com.creativechasm.blightbiome.BlightBiomeMod;
-import com.creativechasm.blightbiome.common.entity.BlightBroodEntity;
 import com.creativechasm.blightbiome.common.entity.BlobInsectEntity;
-import com.creativechasm.blightbiome.common.entity.BroodmotherEntity;
+import com.creativechasm.blightbiome.common.entity.BroodMotherEntity;
+import com.creativechasm.blightbiome.common.entity.BroodlingEntity;
 import com.creativechasm.blightbiome.common.entity.PestererEntity;
 import net.minecraft.entity.*;
 import net.minecraft.entity.monster.MonsterEntity;
@@ -20,8 +20,8 @@ import java.util.Random;
 @Mod.EventBusSubscriber(modid = BlightBiomeMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class EntityRegistry {
     public final static EntityType<BlobInsectEntity> BLOB_INSECT = registerEntity(EntityType.Builder.create(BlobInsectEntity::new, EntityClassification.MONSTER).size(0.4F, 0.35F), "blob_insect");
-    public final static EntityType<BroodmotherEntity> BROOD_MOTHER = registerEntity(EntityType.Builder.create(BroodmotherEntity::new, EntityClassification.MONSTER).size(1.6F, 0.7F), "brood_mother");
-    public final static EntityType<BlightBroodEntity> BLIGHT_BROOD = registerEntity(EntityType.Builder.create(BlightBroodEntity::new, EntityClassification.MONSTER).size(1.6F, 0.7F), "blight_brood");
+    public final static EntityType<BroodMotherEntity> BROOD_MOTHER = registerEntity(EntityType.Builder.create(BroodMotherEntity::new, EntityClassification.MONSTER).size(1.6F, 0.7F), "brood_mother");
+    public final static EntityType<BroodlingEntity> BLIGHT_BROOD = registerEntity(EntityType.Builder.create(BroodlingEntity::new, EntityClassification.MONSTER).size(1.6F, 0.7F), "blight_brood");
     public final static EntityType<PestererEntity> PESTERER = registerEntity(EntityType.Builder.create(PestererEntity::new, EntityClassification.MONSTER).size(1.0F, 1.5F), "pesterer");
 
     private static <T extends Entity> EntityType<T> registerEntity(EntityType.Builder<T> builder, String entityName) {

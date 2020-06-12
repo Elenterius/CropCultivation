@@ -1,18 +1,17 @@
 package com.creativechasm.blightbiome.common.entity;
 
-import net.minecraft.entity.*;
-import net.minecraft.entity.monster.SpiderEntity;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.entity.EntitySize;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.Pose;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.util.DamageSource;
-import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.Explosion;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
-public class BlobInsectEntity extends SpiderEntity {
+public class BlobInsectEntity extends SwarmGroupEntity {
+
     public BlobInsectEntity(EntityType<? extends BlobInsectEntity> entityType, World world) {
         super(entityType, world);
     }
@@ -26,23 +25,23 @@ public class BlobInsectEntity extends SpiderEntity {
     }
 
     @Override
-    public void tick() {
-        super.tick();
+    public boolean inRangeOfLeader() {
+        double dist = getDistanceSq(getLeader());
+        return dist >= 9D && dist <= 256D;
+    }
+
+    @Override
+    public boolean attackEntityFrom(DamageSource source, float amount) {
+        return super.attackEntityFrom(source, amount);
     }
 
     @Override
     public void onDeath(@Nonnull DamageSource cause) {
         super.onDeath(cause);
-        if (!world.isRemote) {
+        if (!world.isRemote && !cause.isUnblockable()) {
             Explosion.Mode mode = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(world, this) ? Explosion.Mode.DESTROY : Explosion.Mode.NONE;
             world.createExplosion(this, this.getPosX(), this.getPosY(), this.getPosZ(), 0.75f, mode);
         }
-    }
-
-    @Override
-    @Nullable
-    public ILivingEntityData onInitialSpawn(@Nonnull IWorld worldIn, @Nonnull DifficultyInstance difficultyIn, @Nonnull SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
-        return spawnDataIn;
     }
 
     @Override

@@ -1,12 +1,12 @@
 modLoader="javafml" #mandatory
-loaderVersion="[31,)" #mandatory (28 is current forge version)
-issueTrackerURL="http://my.issue.tracker/" #optional
+loaderVersion="[31,)" #mandatory (31 is current forge version)
+#issueTrackerURL="http://my.issue.tracker/" #optional
 [[mods]] #mandatory
 modId="blightbiome" #mandatory
 version="${file.jarVersion}" #mandatory
 displayName="Blight Biomes" #mandatory
-updateJSONURL="http://myurl.me/" #optional
-displayURL="http://example.com/" #optional
+#updateJSONURL="http://myurl.me/" #optional
+#displayURL="http://example.com/" #optional
 logoFile="examplemod.png" #optional
 credits="Thanks for this example mod goes to Java" #optional
 authors="Elenterius" #optional

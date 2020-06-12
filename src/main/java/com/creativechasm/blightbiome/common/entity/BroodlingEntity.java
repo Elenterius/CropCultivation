@@ -12,8 +12,8 @@ import net.minecraft.world.World;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class BlightBroodEntity extends SpiderEntity {
-    public BlightBroodEntity(EntityType<? extends SpiderEntity> type, World world) {
+public class BroodlingEntity extends SpiderEntity {
+    public BroodlingEntity(EntityType<? extends SpiderEntity> type, World world) {
         super(type, world);
     }
 
