@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "blooming=true": {
+      "model": "blightbiome:block/blooming_flower_test"
+    },
+    "blooming=false": {
+      "model": "blightbiome:block/flower_test"
+    }
+  }
+}

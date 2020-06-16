@@ -1,6 +1,9 @@
 package com.creativechasm.blightbiome.common.registry;
 
 import com.creativechasm.blightbiome.BlightBiomeMod;
+import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.item.*;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -21,19 +24,36 @@ public class ItemRegistry {
     @SubscribeEvent
     public static void onItemsRegistry(final RegistryEvent.Register<Item> registryEvent) {
         Item.Properties properties = new Item.Properties().group(ITEM_GROUP);
-        registryEvent.getRegistry().register(new BlockItem(BlockRegistry.BLIGHT_SOIL, properties).setRegistryName("blightsoil"));
-        registryEvent.getRegistry().register(new BlockItem(BlockRegistry.BLIGHT_WEED, properties).setRegistryName("blightweeds"));
-        registryEvent.getRegistry().register(new BlockItem(BlockRegistry.BLIGHT_SOIL_SLAB, properties).setRegistryName("blightsoil_slab"));
-        registryEvent.getRegistry().register(new BlockItem(BlockRegistry.BLIGHT_MOSS, properties).setRegistryName("blightmoss"));
-        registryEvent.getRegistry().register(new BlockItem(BlockRegistry.BLIGHT_MUSHROOM_TALL, new Item.Properties().group(ITEM_GROUP)).setRegistryName("blight_shroom_tall"));
-        registryEvent.getRegistry().register(new BlockItem(BlockRegistry.BLIGHT_MAIZE, new Item.Properties().group(ITEM_GROUP)).setRegistryName("blight_maize"));
-        registryEvent.getRegistry().register(new BlockItem(BlockRegistry.BLIGHT_SPROUT, new Item.Properties().group(ITEM_GROUP)).setRegistryName("blight_sprout"));
-        registryEvent.getRegistry().register(new BlockItem(BlockRegistry.BLIGHT_SPROUT_SMALL, new Item.Properties().group(ITEM_GROUP)).setRegistryName("blight_sprout_small"));
+        registryEvent.getRegistry().registerAll(
+                createItemForBlock(BlockRegistry.BLIGHT_SOIL, properties),
+                createItemForBlock(BlockRegistry.BLIGHT_WEED, properties),
+                createItemForBlock(BlockRegistry.BLIGHT_SOIL_SLAB, properties),
+                createItemForBlock(BlockRegistry.BLIGHT_MOSS, properties),
+                createItemForBlock(BlockRegistry.BLIGHT_MUSHROOM_TALL, properties),
+                createItemForBlock(BlockRegistry.BLIGHT_MAIZE, properties),
+                createItemForBlock(BlockRegistry.BLIGHT_SPROUT, properties),
+                createItemForBlock(BlockRegistry.BLIGHT_SPROUT_SMALL, properties),
+                createItemForBlock(BlockRegistry.LILY_TREE_SAPLING, properties),
+
+                createItemForBlock(BlockRegistry.BLOOMING_FLOWER_TEST, properties)
+        );
 
 //        properties = new Item.Properties().group(ItemGroup.MISC);
-        registryEvent.getRegistry().register(new SpawnEggItem(EntityRegistry.BLOB_INSECT, 0x4B2277, 0xAF27E0, properties).setRegistryName("spawn_egg_blob_insect"));
-        registryEvent.getRegistry().register(new SpawnEggItem(EntityRegistry.BROOD_MOTHER, 0x932C3B, 0x47415E, properties).setRegistryName("spawn_egg_broodmother"));
-        registryEvent.getRegistry().register(new SpawnEggItem(EntityRegistry.BLIGHT_BROOD, 0x932C3B, 0x47415E, properties).setRegistryName("spawn_egg_blight_brood"));
-        registryEvent.getRegistry().register(new SpawnEggItem(EntityRegistry.PESTERER, 0x384740, 0x5E8C6C, properties).setRegistryName("spawn_egg_pesterer"));
+        registryEvent.getRegistry().registerAll(
+                createSpawnEggItem(EntityRegistry.BLOB_INSECT, 0x4B2277, 0xAF27E0, properties),
+                createSpawnEggItem(EntityRegistry.BROOD_MOTHER, 0x4B2277, 0xCF7DEC, properties),
+                createSpawnEggItem(EntityRegistry.BLIGHT_BROOD, 0x4B2277, 0xE7BEF5, properties),
+                createSpawnEggItem(EntityRegistry.PESTERER, 0x6e4e92, 0xBF52E6, properties)
+        );
+    }
+
+    private static Item createItemForBlock(Block block, Item.Properties properties) {
+        //noinspection ConstantConditions
+        return new BlockItem(block, properties).setRegistryName(block.getRegistryName());
+    }
+
+    private static <T extends Entity> Item createSpawnEggItem(EntityType<T> entityType, int primaryColor, int secondaryColor, Item.Properties properties) {
+        //noinspection ConstantConditions
+        return new SpawnEggItem(entityType, primaryColor, secondaryColor, properties).setRegistryName("spawn_egg_" + entityType.getRegistryName().getPath());
     }
 }

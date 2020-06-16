@@ -35,5 +35,8 @@ public class ModelRegistry {
         RenderTypeLookup.setRenderLayer(BlockRegistry.BLIGHT_MAIZE, cutout);
         RenderTypeLookup.setRenderLayer(BlockRegistry.BLIGHT_SPROUT, cutout);
         RenderTypeLookup.setRenderLayer(BlockRegistry.BLIGHT_SPROUT_SMALL, cutout);
+        RenderTypeLookup.setRenderLayer(BlockRegistry.LILY_TREE_SAPLING, cutout);
+
+        RenderTypeLookup.setRenderLayer(BlockRegistry.BLOOMING_FLOWER_TEST, cutout);
     }
 }

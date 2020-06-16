@@ -1,11 +1,10 @@
 package com.creativechasm.blightbiome.common.registry;
 
 import com.creativechasm.blightbiome.BlightBiomeMod;
-import com.creativechasm.blightbiome.common.block.BlightCropBlock;
-import com.creativechasm.blightbiome.common.block.BlightShroom;
-import com.creativechasm.blightbiome.common.block.BlightWeedBlock;
-import com.creativechasm.blightbiome.common.block.BlightsoilBlock;
+import com.creativechasm.blightbiome.common.block.*;
+import com.creativechasm.blightbiome.common.block.tree.LilyTree;
 import net.minecraft.block.Block;
+import net.minecraft.block.SaplingBlock;
 import net.minecraft.block.SlabBlock;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -44,6 +43,12 @@ public class BlockRegistry {
     @ObjectHolder("blight_maize")
     public static BlightCropBlock BLIGHT_MAIZE;
 
+    @ObjectHolder("lilytree_sapling")
+    public static SaplingBlock LILY_TREE_SAPLING;
+
+    @ObjectHolder("blooming_flower_test")
+    public static BloomingPlantBlock BLOOMING_FLOWER_TEST;
+
     @SubscribeEvent
     public static void onBlocksRegistry(final RegistryEvent.Register<Block> registryEvent) {
         registryEvent.getRegistry().registerAll(
@@ -54,7 +59,9 @@ public class BlockRegistry {
                 new BlightShroom().setRegistryName("blight_shroom_tall"),
                 new BlightCropBlock().setRegistryName("blight_maize"),
                 new BlightWeedBlock().setRegistryName("blight_sprout"),
-                new BlightWeedBlock().setRegistryName("blight_sprout_small")
+                new BlightWeedBlock().setRegistryName("blight_sprout_small"),
+                new SaplingBlockX(new LilyTree()).setRegistryName("lilytree_sapling"),
+                new BloomingPlantBlock(Block.Properties.create(Material.PLANTS).doesNotBlockMovement().tickRandomly().hardnessAndResistance(0.0F).sound(SoundType.PLANT)).setRegistryName("blooming_flower_test")
         );
     }
 
