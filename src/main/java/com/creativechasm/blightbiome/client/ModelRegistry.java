@@ -1,10 +1,7 @@
 package com.creativechasm.blightbiome.client;
 
 import com.creativechasm.blightbiome.BlightBiomeMod;
-import com.creativechasm.blightbiome.client.renderer.entity.BlightBroodRenderer;
-import com.creativechasm.blightbiome.client.renderer.entity.BlobInsectRenderer;
-import com.creativechasm.blightbiome.client.renderer.entity.BroodmotherRenderer;
-import com.creativechasm.blightbiome.client.renderer.entity.PestererRenderer;
+import com.creativechasm.blightbiome.client.renderer.entity.*;
 import com.creativechasm.blightbiome.common.registry.BlockRegistry;
 import com.creativechasm.blightbiome.common.registry.EntityRegistry;
 import net.minecraft.client.renderer.RenderType;
@@ -26,6 +23,7 @@ public class ModelRegistry {
         RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.BROOD_MOTHER, BroodmotherRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.PESTERER, PestererRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.BLIGHT_BROOD, BlightBroodRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.BELL_SLIME, BellSlimeRenderer::new);
 
 //			ClientRegistry.bindTileEntitySpecialRenderer(WormholeTileEntity.class, new WormholeTileEntityRenderer());
 

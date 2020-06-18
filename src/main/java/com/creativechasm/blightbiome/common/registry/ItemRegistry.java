@@ -43,7 +43,8 @@ public class ItemRegistry {
                 createSpawnEggItem(EntityRegistry.BLOB_INSECT, 0x4B2277, 0xAF27E0, properties),
                 createSpawnEggItem(EntityRegistry.BROOD_MOTHER, 0x4B2277, 0xCF7DEC, properties),
                 createSpawnEggItem(EntityRegistry.BLIGHT_BROOD, 0x4B2277, 0xE7BEF5, properties),
-                createSpawnEggItem(EntityRegistry.PESTERER, 0x6e4e92, 0xBF52E6, properties)
+                createSpawnEggItem(EntityRegistry.PESTERER, 0x6e4e92, 0xBF52E6, properties),
+                createSpawnEggItem(EntityRegistry.BELL_SLIME, 0x5c7515, 0x00cc00, properties)
         );
     }
 
