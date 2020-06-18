@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.entity.model.SlimeModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.monster.SlimeEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -20,7 +20,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nonnull;
 
 @OnlyIn(Dist.CLIENT)
-public class BellSlimeSproutLayer<T extends LivingEntity> extends LayerRenderer<T, SlimeModel<T>> {
+public class BellSlimeSproutLayer<T extends SlimeEntity> extends LayerRenderer<T, SlimeModel<T>> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(BlightBiomeMod.MOD_ID, "textures/entity/bellslime_sprout.png");
     private final EntityModel<T> sproutModel = new BellSlimeSproutModel<>();
     public static final Quaternion eulerYaw90 = new Quaternion(0, 90, 0, true);
@@ -36,7 +36,6 @@ public class BellSlimeSproutLayer<T extends LivingEntity> extends LayerRenderer<
             matrixStackIn.scale(0.9f, 0.8f, 0.8f);
             matrixStackIn.translate(0D, -0.25D, 0D);
             matrixStackIn.rotate(eulerYaw90);
-
             sproutModel.setLivingAnimations(entity, limbSwing, limbSwingAmount, partialTicks);
             sproutModel.setRotationAngles(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
             IVertexBuilder ivertexbuilder = bufferIn.getBuffer(RenderType.getEntityCutoutNoCull(TEXTURE));

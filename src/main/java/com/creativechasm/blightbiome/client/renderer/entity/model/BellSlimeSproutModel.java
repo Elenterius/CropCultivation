@@ -4,14 +4,15 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
-import net.minecraft.entity.Entity;
+import net.minecraft.entity.monster.SlimeEntity;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 
 @OnlyIn(Dist.CLIENT)
-public class BellSlimeSproutModel<T extends Entity> extends EntityModel<T> {
+public class BellSlimeSproutModel<T extends SlimeEntity> extends EntityModel<T> {
 
     private final ModelRenderer plant;
     private final ModelRenderer bud;
@@ -33,7 +34,15 @@ public class BellSlimeSproutModel<T extends Entity> extends EntityModel<T> {
     }
 
     @Override
-    public void setRotationAngles(@Nonnull Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void setRotationAngles(@Nonnull T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+    }
+
+    @Override
+    public void setLivingAnimations(@Nonnull T entity, float limbSwing, float limbSwingAmount, float partialTick) {
+        float f = MathHelper.lerp(partialTick, entity.prevSquishFactor, entity.squishFactor) / (entity.getSlimeSize() * 0.5F + 1.0F) * 3f;
+        f = MathHelper.sin(f);
+        bud.rotateAngleX = f;
+        bud.rotateAngleZ = f;
     }
 
     @Override
