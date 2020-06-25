@@ -3,6 +3,7 @@ package com.creativechasm.blightbiome.common.registry;
 import com.creativechasm.blightbiome.BlightBiomeMod;
 import com.creativechasm.blightbiome.common.block.*;
 import com.creativechasm.blightbiome.common.block.tree.LilyTree;
+import com.creativechasm.blightbiome.common.util.SoilTexture;
 import net.minecraft.block.Block;
 import net.minecraft.block.SaplingBlock;
 import net.minecraft.block.SlabBlock;
@@ -18,6 +19,9 @@ import net.minecraftforge.registries.ObjectHolder;
 @ObjectHolder(BlightBiomeMod.MOD_ID)
 @Mod.EventBusSubscriber(modid = BlightBiomeMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class BlockRegistry {
+
+    @ObjectHolder("loam_soil")
+    public static SoilBlock LOAM_SOIL;
 
     @ObjectHolder("blightsoil")
     public static BlightsoilBlock BLIGHT_SOIL;
@@ -61,7 +65,10 @@ public class BlockRegistry {
                 new BlightWeedBlock().setRegistryName("blight_sprout"),
                 new BlightWeedBlock().setRegistryName("blight_sprout_small"),
                 new SaplingBlockX(new LilyTree()).setRegistryName("lilytree_sapling"),
-                new BloomingPlantBlock(Block.Properties.create(Material.PLANTS).doesNotBlockMovement().tickRandomly().hardnessAndResistance(0.0F).sound(SoundType.PLANT)).setRegistryName("blooming_flower_test")
+                new BloomingPlantBlock(Block.Properties.create(Material.PLANTS).doesNotBlockMovement().tickRandomly().hardnessAndResistance(0.0F).sound(SoundType.PLANT)).setRegistryName("blooming_flower_test"),
+                new SoilBlock(Block.Properties.create(Material.EARTH).hardnessAndResistance(0.6F).sound(SoundType.GROUND), SoilTexture.LOAM).setRegistryName("loam_soil")
+//                new SoilBlock(Block.Properties.create(Material.SAND).hardnessAndResistance(0.5F).sound(SoundType.SAND), SoilTexture.SAND),
+//                new SoilBlock(Block.Properties.create(Material.CLAY).hardnessAndResistance(0.6F).sound(SoundType.GROUND), SoilTexture.CLAY)
         );
     }
 

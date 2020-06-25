@@ -1,0 +1,24 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "block/farmland"
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "moisture": "6"
+          },
+          {
+            "moisture": "7"
+          }
+        ]
+      },
+      "apply": {
+        "model": "block/farmland_moist"
+      }
+    }
+  ]
+}
