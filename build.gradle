@@ -9,6 +9,7 @@ buildscript {
     }
 }
 apply plugin: 'net.minecraftforge.gradle'
+//apply plugin: 'org.spongepowered.mixin'
 
 apply plugin: 'idea'
 apply plugin: 'maven-publish'
@@ -23,10 +24,10 @@ minecraft {
     // snapshot_YYYYMMDD   Snapshot are built nightly.
     // stable_#            Stables are built at the discretion of the MCP team.
     // Simply re-run your setup task after changing the mappings to update your workspace.
-    mappings channel: 'snapshot', version: '20200612-1.15.1'
+    mappings channel: 'snapshot', version: '20200624-1.15.1'
     // makeObfSourceJar = false
-    
-    // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+
+//     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     runs {
         client {

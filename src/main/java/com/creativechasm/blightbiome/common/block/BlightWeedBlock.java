@@ -1,6 +1,6 @@
 package com.creativechasm.blightbiome.common.block;
 
-import com.creativechasm.blightbiome.common.registry.BlockRegistry;
+import com.creativechasm.blightbiome.registry.BlockRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.state.properties.SlabType;

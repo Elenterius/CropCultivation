@@ -1,7 +1,7 @@
 package com.creativechasm.blightbiome.common.block.tree;
 
-import com.creativechasm.blightbiome.common.registry.BlockRegistry;
 import com.creativechasm.blightbiome.common.world.gen.feature.LilyTreeFeature;
+import com.creativechasm.blightbiome.registry.BlockRegistry;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.block.trees.Tree;
 import net.minecraft.world.gen.blockstateprovider.BlockStateProvider;

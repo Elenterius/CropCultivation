@@ -1,6 +1,6 @@
 package com.creativechasm.blightbiome.common.entity;
 
-import com.creativechasm.blightbiome.common.registry.EntityRegistry;
+import com.creativechasm.blightbiome.registry.EntityRegistry;
 import net.minecraft.entity.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;

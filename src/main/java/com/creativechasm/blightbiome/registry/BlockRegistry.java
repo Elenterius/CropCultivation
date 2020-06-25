@@ -1,4 +1,4 @@
-package com.creativechasm.blightbiome.common.registry;
+package com.creativechasm.blightbiome.registry;
 
 import com.creativechasm.blightbiome.BlightBiomeMod;
 import com.creativechasm.blightbiome.common.block.*;
@@ -10,7 +10,6 @@ import net.minecraft.block.SlabBlock;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
-import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -70,10 +69,5 @@ public class BlockRegistry {
 //                new SoilBlock(Block.Properties.create(Material.SAND).hardnessAndResistance(0.5F).sound(SoundType.SAND), SoilTexture.SAND),
 //                new SoilBlock(Block.Properties.create(Material.CLAY).hardnessAndResistance(0.6F).sound(SoundType.GROUND), SoilTexture.CLAY)
         );
-    }
-
-    @SubscribeEvent
-    public static void onTileEntityTypeRegistry(final RegistryEvent.Register<TileEntityType<?>> registryEvent) {
-//			registryEvent.getRegistry().register(TileEntityType.Builder.create(WormholeTileEntity::new, ModBlocks.WORMHOLE).build(null).setRegistryName("wormhole"));
     }
 }

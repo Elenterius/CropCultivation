@@ -1,9 +1,7 @@
-package com.creativechasm.blightbiome.client;
+package com.creativechasm.blightbiome.registry;
 
 import com.creativechasm.blightbiome.BlightBiomeMod;
 import com.creativechasm.blightbiome.client.renderer.entity.*;
-import com.creativechasm.blightbiome.common.registry.BlockRegistry;
-import com.creativechasm.blightbiome.common.registry.EntityRegistry;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraftforge.api.distmarker.Dist;

@@ -1,4 +1,4 @@
-package com.creativechasm.blightbiome.common.registry;
+package com.creativechasm.blightbiome.registry;
 
 import com.creativechasm.blightbiome.BlightBiomeMod;
 import net.minecraft.block.Block;

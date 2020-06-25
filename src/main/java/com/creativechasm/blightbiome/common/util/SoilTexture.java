@@ -7,7 +7,7 @@ public enum SoilTexture {
     SANDY_CLAY(0.3f, 1.2f),
     SANDY_LOAM(0.32f, 1.3f),
     SANDY_SILT(0.36f, 1.311f),
-    LOAM(0.4f, 0.8f),
+    LOAM(0.4f, 0.825f),
     SILT_CLAY(0.4f, 0.718f),
     SILT(0.41f, 1.3125f),
     LOAM_CLAY(0.420f, 0.025f),
