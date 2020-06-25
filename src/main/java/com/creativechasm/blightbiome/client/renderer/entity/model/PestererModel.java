@@ -73,6 +73,8 @@ public class PestererModel extends EntityModel<PestererEntity> {
 
     @Override
     public void setRotationAngles(@Nonnull PestererEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+        head.rotateAngleY = netHeadYaw * ((float) Math.PI / 180F);
+        head.rotateAngleX = headPitch * ((float) Math.PI / 180F);
     }
 
     @Override
