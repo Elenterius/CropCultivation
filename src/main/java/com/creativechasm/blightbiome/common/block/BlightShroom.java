@@ -16,7 +16,7 @@ public class BlightShroom extends BushBlock {
     protected static final VoxelShape SHAPE = Block.makeCuboidShape(5.0D, 0.0D, 5.0D, 11.0D, 10.0D, 11.0D);
 
     public BlightShroom() {
-        super(Properties.create(Material.PLANTS).doesNotBlockMovement().hardnessAndResistance(0.0F).sound(SoundType.PLANT).lightValue(1));
+        super(Properties.create(Material.PLANTS).doesNotBlockMovement().hardnessAndResistance(0.0F).sound(SoundType.PLANT).lightValue(3));
     }
 
     @Override
@@ -35,5 +35,10 @@ public class BlightShroom extends BushBlock {
             return type == SlabType.TOP || type == SlabType.DOUBLE;
         }
         return false;
+    }
+
+    @Override
+    public boolean isEmissiveRendering(@Nonnull BlockState state) {
+        return true;
     }
 }
