@@ -131,7 +131,7 @@ public class SoilBlock extends FarmlandBlock {
             else if (bottom == Blocks.SPONGE) seepageLoss += 1.35f;  // dry sponge drains water proactive
             else if (Tags.Blocks.GRAVEL.contains(bottom)) seepageLoss += 0.68f;
             else if (Tags.Blocks.SAND.contains(bottom)) seepageLoss += 0.35f;
-            System.out.println("seepage: " + seepageLoss);
+//            System.out.println("seepage: " + seepageLoss);
         }
 
         //calculate total moisture loss
@@ -149,7 +149,6 @@ public class SoilBlock extends FarmlandBlock {
                         nitrogen--;
                         phosphorous--;
                         potassium--;
-                        System.out.println("growing stuff");
                     }
                 }
             }

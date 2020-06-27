@@ -19,6 +19,29 @@
       "apply": {
         "model": "block/farmland_moist"
       }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "moisture": "8"
+          },
+          {
+            "moisture": "9"
+          }
+        ]
+      },
+      "apply": {
+        "model": "blightbiome:block/soil_wet"
+      }
+    },
+    {
+      "when": {
+        "moisture": "10"
+      },
+      "apply": {
+        "model": "blightbiome:block/soil_waterlogged"
+      }
     }
   ]
 }
