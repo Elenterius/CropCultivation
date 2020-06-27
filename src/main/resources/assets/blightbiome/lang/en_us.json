@@ -1,7 +1,9 @@
 {
   "itemGroup.blightbiome": "Blight Plague",
+
   "block.blightbiome.blightsoil": "Afflicted Soil",
   "block.blightbiome.blightsoil_slab": "Afflicted Soil Slab",
+
   "block.blightbiome.lilytree_sapling": "Prickly Lilymould Sapling",
   "block.blightbiome.lilytree_wood": "Prickly Lilymould Wood",
   "block.blightbiome.lilytree_pad": "Prickly Lilymould-Pad",
@@ -12,10 +14,15 @@
   "block.blightbiome.moon_lamp": "Moon-Moth Lamp",
   "item.blightbiome.makhana": "Polluted Makhana",
   "item.blightbiome.luminescent_spores": "Luminescent Spores",
+
   "item.blightbiome.journal": "Plant Journal",
   "item.blightbiome.gold_sickle": "Gold Sickle",
   "item.blightbiome.iron_trowel": "Gardening Trowel",
+  "item.blightbiome.organic_matter": "Organic Matter",
+  "item.blightbiome.fertilizer": "NPK Fertilizer",
+
   "item.blightbiome.seed_bag": "Pachamamas Cropbag",
+
   "item.blightbiome.true_sight_goggles": "Crystalline Compound Lenses",
   "item.blightbiome.dye_changer": "Phenomorphous Dye",
   "item.blightbiome.climbing_boots": "Boots of the Millipedes",
@@ -24,5 +31,6 @@
   "item.blightbiome.spawn_egg_blob_insect": "Blobling Spawn Egg",
   "item.blightbiome.spawn_egg_brood_mother": "Broodmother Spawn Egg",
   "item.blightbiome.spawn_egg_blight_brood": "Broodling Spawn Egg",
-  "item.blightbiome.spawn_egg_pesterer": "Pesterer Spawn Egg"
+  "item.blightbiome.spawn_egg_pesterer": "Pesterer Spawn Egg",
+  "item.blightbiome.spawn_egg_bell_slime": "Bellslime Spawn Egg"
 }
