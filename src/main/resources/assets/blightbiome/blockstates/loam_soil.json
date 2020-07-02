@@ -1,47 +1,17 @@
 {
   "multipart": [
     {
-      "apply": {
-        "model": "block/farmland"
-      }
-    },
-    {
+      "apply": {"model": "block/farmland"}
+    }, {
       "when": {
-        "OR": [
-          {
-            "moisture": "6"
-          },
-          {
-            "moisture": "7"
-          }
-        ]
-      },
-      "apply": {
-        "model": "block/farmland_moist"
-      }
-    },
-    {
+        "OR": [{"moisture": "6"}, {"moisture": "7"}]
+      }, "apply": {"model": "block/farmland_moist"}
+    }, {
       "when": {
-        "OR": [
-          {
-            "moisture": "8"
-          },
-          {
-            "moisture": "9"
-          }
-        ]
-      },
-      "apply": {
-        "model": "blightbiome:block/soil_wet"
-      }
-    },
-    {
-      "when": {
-        "moisture": "10"
-      },
-      "apply": {
-        "model": "blightbiome:block/soil_waterlogged"
-      }
+        "OR": [{"moisture": "8"}, {"moisture": "9"}]
+      }, "apply": {"model": "blightbiome:block/soil_wet"}
+    }, {
+      "when": {"moisture": "10"}, "apply": {"model": "blightbiome:block/soil_waterlogged"}
     }
   ]
 }

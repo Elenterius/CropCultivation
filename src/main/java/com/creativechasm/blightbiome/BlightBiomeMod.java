@@ -3,6 +3,7 @@ package com.creativechasm.blightbiome;
 import com.creativechasm.blightbiome.client.ClientProxy;
 import com.creativechasm.blightbiome.common.IProxy;
 import com.creativechasm.blightbiome.common.ServerProxy;
+import com.creativechasm.blightbiome.common.util.NatureUtil;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -38,7 +39,9 @@ public class BlightBiomeMod {
         MinecraftForge.EVENT_BUS.register(this);
     }
 
-    private void setup(final FMLCommonSetupEvent event) { /* pre-init stuff */ }
+    private void setup(final FMLCommonSetupEvent event) {
+        NatureUtil.initTemperatureNormalizer();
+    }
 
     private void doClientStuff(final FMLClientSetupEvent event) {
         LOGGER.info("Got game settings {}", event.getMinecraftSupplier().get().gameSettings);

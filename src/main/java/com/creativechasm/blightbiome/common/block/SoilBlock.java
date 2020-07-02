@@ -7,12 +7,17 @@ import com.creativechasm.blightbiome.common.util.SoilTexture;
 import com.creativechasm.blightbiome.registry.TileEntityRegistry;
 import net.minecraft.block.*;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
@@ -103,7 +108,7 @@ public class SoilBlock extends FarmlandBlock {
         if (!NatureUtil.doesSoilHaveWater(worldIn, pos, soilTexture.getMaxWaterDistance()) && !isRaining) {
             directMoistureLoss = 0.5f;
         }
-        // increase moisture
+        // increase moisture (infiltration)
         else if (moisture < getMaxMoistureLevel()) {
             moisture++;
             if (isRaining && worldIn.getRainStrength(1f) > 0.8) {
@@ -118,44 +123,59 @@ public class SoilBlock extends FarmlandBlock {
             if (worldIn.isDaytime() && worldIn.canBlockSeeSky(pos)) evaporationLoss += 0.25f;
         }
 
-        //seepage loss
+        //drainage loss
         //TODO: rework this!
-        float seepageLoss = 0f;
+        float drainageLoss = 0f;
         if (moisture >= maxMoistureCapacity - 1) {
             float waterRetentionModifier = organicMatter * SoilTexture.ORGANIC_MATTER_MODIFIER;
-            seepageLoss = soilTexture.getSeepageLoss() - waterRetentionModifier + 0.025f;
+            drainageLoss = soilTexture.getDrainageLoss() - waterRetentionModifier + 0.025f;
             BlockState bottomState = worldIn.getBlockState(pos.down());
             Block bottom = bottomState.getBlock();
-            if (bottom == Blocks.CLAY) seepageLoss -= 1f - SoilTexture.CLAY.getSeepageLoss();
-            else if (Tags.Blocks.STONE.contains(bottom)) seepageLoss -= 0.5f;
-            else if (bottom == Blocks.SPONGE) seepageLoss += 1.35f;  // dry sponge drains water proactive
-            else if (Tags.Blocks.GRAVEL.contains(bottom)) seepageLoss += 0.68f;
-            else if (Tags.Blocks.SAND.contains(bottom)) seepageLoss += 0.35f;
-//            System.out.println("seepage: " + seepageLoss);
+            if (bottom == Blocks.CLAY) drainageLoss -= 1f - SoilTexture.CLAY.getDrainageLoss();
+            else if (Tags.Blocks.STONE.contains(bottom)) drainageLoss -= 0.5f;
+            else if (bottom == Blocks.SPONGE) drainageLoss += 1.35f;  // dry sponge drains water "proactively"
+            else if (Tags.Blocks.GRAVEL.contains(bottom)) drainageLoss += 0.68f;
+            else if (Tags.Blocks.SAND.contains(bottom)) drainageLoss += 0.35f;
+//            System.out.println("drainage: " + drainageLoss);
         }
 
         //calculate total moisture loss
-        moisture -= MathHelper.clamp(Math.round(directMoistureLoss + evaporationLoss + seepageLoss), 0, 3);
+        moisture -= MathHelper.clamp(Math.round(directMoistureLoss + evaporationLoss + drainageLoss), 0, 3);
 
         //boost plant growth by consuming water with nutrients
-        if (moisture > MoistureType.AVERAGE_0.getMoistureLevel() && nitrogen > 0 && phosphorous > 0 && potassium > 0 && worldIn.rand.nextFloat() < 0.7f) {
+        if (moisture > MoistureType.AVERAGE_0.getMoistureLevel() && nitrogen > 0 && phosphorous > 0 && potassium > 0 && worldIn.rand.nextFloat() < 0.5f) {
             BlockState upState = worldIn.getBlockState(pos.up());
             if (upState.getBlock() instanceof IGrowable) {
                 IGrowable growable = (IGrowable) upState.getBlock();
                 if (growable.canGrow(worldIn, pos, upState, false)) {
                     if (growable.canUseBonemeal(worldIn, worldIn.rand, pos, upState)) {
-                        growable.grow(worldIn, worldIn.rand, pos, upState);
+
+                        int[] ages = NatureUtil.getCurrentAgeAndMaxAge(upState);
+                        int currAge = ages[0], maxAge = ages[1];
+                        if (currAge < maxAge * 0.333f) { //root growth phase
+                            potassium--;
+                        }
+                        else if (currAge < maxAge * 0.666f) { //foliage growth phase
+                            nitrogen--;
+                        }
+                        else if (currAge < maxAge) { //flower/fruit growth phase
+                            phosphorous--;
+                        }
+                        else { //fallback, what Growable has no age property? penalize the player for using "illegal" plant
+                            nitrogen -= 2;
+                            phosphorous -= 2;
+                            potassium -= 2;
+                        }
                         moisture--;
-                        nitrogen--;
-                        phosphorous--;
-                        potassium--;
+
+                        growable.grow(worldIn, worldIn.rand, pos, upState);
                     }
                 }
             }
         }
 
         //decompose organic matter into nutrients
-        if (worldIn.rand.nextFloat() < 0.05f) { // 1/20
+        if (worldIn.rand.nextFloat() < 0.025f) { // 1/40
             if (organicMatter > 0) {
                 organicMatter--;
                 nitrogen++;
@@ -164,11 +184,14 @@ public class SoilBlock extends FarmlandBlock {
             }
         }
 
-        float fertilizerBurnProbability = 0;
-        if (phosphorous > 8) fertilizerBurnProbability += 1f / 3f;
-        if (potassium > 8) fertilizerBurnProbability += 1f / 3f;
-        if (hasCrops && moisture < MoistureType.MOIST.getMoistureLevel() && worldIn.rand.nextFloat() <= fertilizerBurnProbability) {
-            //TODO: apply fertilizer burn to plant
+        if (hasCrops && moisture < MoistureType.MOIST.getMoistureLevel()) {
+            float fertilizerBurnProbability = 0;
+            if (nitrogen > 8) fertilizerBurnProbability += 1f / 3f;
+            if (phosphorous > 8) fertilizerBurnProbability += 1f / 3f;
+            if (potassium > 8) fertilizerBurnProbability += 1f / 3f;
+            if (worldIn.rand.nextFloat() <= fertilizerBurnProbability) {
+                //TODO: apply fertilizer burn to plant
+            }
         }
 
         if (moisture > maxMoistureCapacity) {
@@ -222,6 +245,26 @@ public class SoilBlock extends FarmlandBlock {
                 worldIn.setBlockState(pos, state.with(MOISTURE, moisture), Constants.BlockFlags.BLOCK_UPDATE);
             }
         }
+    }
+
+    @Override
+    @Nonnull
+    public ActionResultType onBlockActivated(BlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos, PlayerEntity player, @Nonnull Hand handIn, @Nonnull BlockRayTraceResult hit) {
+        int organic = state.get(ORGANIC_MATTER);
+        ItemStack stack = player.getHeldItem(handIn);
+        if (organic < 4 && ComposterBlock.CHANCES.containsKey(stack.getItem())) {
+            if (!worldIn.isRemote) {
+                float f = ComposterBlock.CHANCES.getFloat(stack.getItem());
+                if (f > 0.0F && worldIn.getRandom().nextFloat() < f) {
+                    worldIn.setBlockState(pos, state.with(ORGANIC_MATTER, organic + 1), Constants.BlockFlags.BLOCK_UPDATE);
+                }
+                if (!player.abilities.isCreativeMode) {
+                    stack.shrink(1);
+                }
+            }
+            return ActionResultType.SUCCESS;
+        }
+        return ActionResultType.PASS;
     }
 
     public static void updateState(ServerWorld worldIn, BlockPos pos, BlockState state, SoilTileEntity tileState, int moisture, int nitrogen, int phosphorous, int potassium, int organicMatter) {

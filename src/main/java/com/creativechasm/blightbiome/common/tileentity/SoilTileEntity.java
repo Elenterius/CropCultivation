@@ -1,5 +1,6 @@
 package com.creativechasm.blightbiome.common.tileentity;
 
+import com.creativechasm.blightbiome.common.util.SoilPHType;
 import com.creativechasm.blightbiome.registry.TileEntityRegistry;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
@@ -10,19 +11,37 @@ import javax.annotation.Nonnull;
 
 public class SoilTileEntity extends TileEntity {
     private final byte[] nutrients = new byte[3];
+    private byte pH = 70;
+    private SoilPHType cachedSoilPH = null;
 
     public SoilTileEntity() {
         super(TileEntityRegistry.LOAM_SOIL);
     }
 
     protected void setNutrientAmount(int idx, int amount, int maxAmount) {
-        byte value = (byte) amount;
+        byte value = (byte) MathHelper.clamp(amount, 0, maxAmount);
         if (value == nutrients[idx]) return;
-        value = (byte) MathHelper.clamp(amount, 0, maxAmount);
-        if (value != nutrients[idx]) {
-            nutrients[idx] = value;
-            markDirty();
-        }
+        nutrients[idx] = value;
+        markDirty();
+    }
+
+    protected void setPH(float pHf) {
+        int pHi = Math.round(pHf * 10f);
+        pHi = MathHelper.clamp(pHi, 0, 100);
+        byte value = (byte) pHi;
+        if (value == pH) return;
+        pH = value;
+        cachedSoilPH = SoilPHType.fromPHValue(pH);
+        markDirty();
+    }
+
+    public float getPH() {
+        return pH / 10f;
+    }
+
+    public SoilPHType getSoilPHType() {
+        if (cachedSoilPH == null) cachedSoilPH = SoilPHType.fromPHValue(pH);
+        return cachedSoilPH;
     }
 
     public byte getNitrogen() {
@@ -56,6 +75,9 @@ public class SoilTileEntity extends TileEntity {
             byte[] bytes = compound.getByteArray("nutrients");
             System.arraycopy(bytes, 0, nutrients, 0, bytes.length);
         }
+        if (compound.contains("pH", Constants.NBT.TAG_BYTE)) {
+            pH = compound.getByte("pH");
+        }
     }
 
     @Override
@@ -63,6 +85,7 @@ public class SoilTileEntity extends TileEntity {
     public CompoundNBT write(@Nonnull CompoundNBT compound) {
         super.write(compound);
         compound.putByteArray("nutrients", nutrients);
+        compound.putByte("pH", pH);
         return compound;
     }
 

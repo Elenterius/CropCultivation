@@ -34,8 +34,8 @@ public class BlobInsectRenderer extends MobRenderer<BlobInsectEntity, BlobInsect
 
             @Override
             public void render(@Nonnull MatrixStack matrixStackIn, @Nonnull IRenderTypeBuffer bufferIn, int packedLightIn, @Nonnull BlobInsectEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-                IVertexBuilder ivertexbuilder = bufferIn.getBuffer(this.getRenderType());
-                this.getEntityModel().render(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+                IVertexBuilder ivertexbuilder = bufferIn.getBuffer(getRenderType());
+                getEntityModel().render(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
             }
         });
     }

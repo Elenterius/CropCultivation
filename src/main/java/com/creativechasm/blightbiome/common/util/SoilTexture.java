@@ -1,42 +1,45 @@
 package com.creativechasm.blightbiome.common.util;
 
-import net.minecraft.util.math.MathHelper;
-
 public enum SoilTexture {
-    SAND(0.17f, 2.45f),
-    SANDY_CLAY(0.3f, 1.2f),
-    SANDY_LOAM(0.32f, 1.3f),
-    SANDY_SILT(0.36f, 1.311f),
-    LOAM(0.4f, 0.825f),
-    SILT_CLAY(0.4f, 0.718f),
-    SILT(0.41f, 1.3125f),
-    LOAM_CLAY(0.420f, 0.025f),
-    CLAY(0.48f, 0.125f);
+    // https://support.rainmachine.com/hc/en-us/articles/228001248-Soil-Types
 
+    CLAY(0.357f, DrainageType.VERY_POORLY_DRAINED, 6),
+    SILTY_CLAY(0.3485f, DrainageType.POORLY_DRAINED, 6),
+    SANDY_CLAY(0.306f, DrainageType.IMPERFECTLY_DRAINED, 5),
+    CLAY_LOAM(0.306f, DrainageType.MODERATELY_WELL_DRAINED, 5),
+    SANDY_CLAY_LOAM(0.306f, DrainageType.MODERATELY_WELL_DRAINED, 5),
+    LOAM(0.26f, DrainageType.WELL_DRAINED, 5),
+    SILTY_LOAM(0.272f, DrainageType.IMPERFECTLY_DRAINED, 5),
+    SILT(0.255f, DrainageType.IMPERFECTLY_DRAINED, 4),
+    SILTY_CLAY_LOAM(0.2365f, DrainageType.MODERATELY_WELL_DRAINED, 4),
+    SANDY_LOAM(0.17f, DrainageType.IMPERFECTLY_DRAINED, 4),
+    LOAMY_SAND(0.14f, DrainageType.IMPERFECTLY_DRAINED, 4),
+    SAND(0.1f, DrainageType.RAPIDLY_DRAINED, 3);
+
+    public static float MAX_DRAINAGE_AMOUNT = 2f;
     public static float ORGANIC_MATTER_MODIFIER = 0.125f;
-    public static int maxMoistureContent = 10;
+    public static byte maxMoistureContent = 10;
     public static float depletionLinePct = 0.25f;
 
-    float waterCapacity;
-    float seepageLoss;
+    private final float fieldCapacity;
+    private final DrainageType drainageType;
+    private final byte maxWaterDistance;
 
-    SoilTexture(float waterHoldingCapacity, float seepageLoss) {
-        this.waterCapacity = waterHoldingCapacity;
-        this.seepageLoss = seepageLoss;
+    SoilTexture(float fieldCapacityPct, DrainageType drainageType, int maxWaterDistance) {
+        this.fieldCapacity = fieldCapacityPct;
+        this.drainageType = drainageType;
+        this.maxWaterDistance = (byte) maxWaterDistance;
     }
 
     public float getWaterHoldingCapacity() {
-        return waterCapacity;
+        return fieldCapacity;
     }
 
     public int getMaxWaterDistance() {
-        // water search radius of vanilla farmland block is 4
-        // loam is considered "equal" to vanilla farmland
-        // LOAM.waterCapacity * (10 + 1f) = 4.4f --> 4
-        return MathHelper.floor(waterCapacity * (maxMoistureContent + 1f));
+        return maxWaterDistance;
     }
 
-    public float getSeepageLoss() {
-        return seepageLoss;
+    public float getDrainageLoss() {
+        return drainageType.getMultiplier() + MAX_DRAINAGE_AMOUNT;
     }
 }
