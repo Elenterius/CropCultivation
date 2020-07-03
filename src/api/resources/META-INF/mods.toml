@@ -1,0 +1,11 @@
+modLoader="javafml"
+loaderVersion="[31,)"
+
+[[mods]]
+modId="envirlib"
+version="1.0.0"
+displayName="EnvirLib"
+authors="Elenterius"
+description='''
+Mod Lib for Environment related things like Agriculture
+'''

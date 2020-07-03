@@ -1,19 +1,12 @@
-package com.creativechasm.blightbiome.common.util;
+package com.creativechasm.environment.util;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.CropsBlock;
-import net.minecraft.state.IProperty;
-import net.minecraft.state.IntegerProperty;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorldReader;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
-import net.minecraftforge.common.FarmlandWaterManager;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class NatureUtil {
+public class ClimateUtil {
 
     private static float normMIN = -0.5f;
     private static float normMAX = 2f;
@@ -98,41 +91,6 @@ public class NatureUtil {
         }
 
         return Condensate.NONE;
-    }
-
-    public static boolean doesSoilHaveWater(IWorldReader worldIn, BlockPos pos, int distance) {
-        for (BlockPos blockpos : BlockPos.getAllInBoxMutable(pos.add(-distance, 0, -distance), pos.add(distance, 1, distance))) {
-            if (worldIn.getFluidState(blockpos).isTagged(FluidTags.WATER)) return true;
-        }
-        return FarmlandWaterManager.hasBlockWaterTicket(worldIn, pos);
-    }
-
-    public static float calculateWaterInfiltrationScoreForSoil(IWorldReader worldIn, BlockPos pos, int distance) {
-        float score = 0f;
-
-        for (BlockPos blockpos : BlockPos.getAllInBoxMutable(pos.add(-distance, 0, -distance), pos.add(distance, 1, distance))) {
-            if (worldIn.getFluidState(blockpos).isTagged(FluidTags.WATER)) {
-                score += (distance - blockpos.manhattanDistance(pos) + 0.5f) / distance;
-            }
-        }
-        if (FarmlandWaterManager.hasBlockWaterTicket(worldIn, pos)) score += 1f;
-
-        float n = (distance + distance) * (distance + distance) - 1;
-        return score / n;
-    }
-
-    public static int[] getCurrentAgeAndMaxAge(BlockState state) {
-        if (state.getBlock() instanceof CropsBlock) {
-            CropsBlock block = (CropsBlock) state.getBlock();
-            return new int[]{state.get(block.getAgeProperty()), block.getMaxAge()};
-        }
-        for (IProperty<?> prop : state.getProperties()) {
-            if (prop.getName().equals("age") && prop instanceof IntegerProperty) {
-                IntegerProperty age = (IntegerProperty) prop;
-                return new int[]{state.get(age), age.getAllowedValues().stream().max(Integer::compareTo).orElse(0)};
-            }
-        }
-        return new int[]{0,0};
     }
 
 }

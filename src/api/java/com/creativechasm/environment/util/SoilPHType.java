@@ -1,11 +1,7 @@
-package com.creativechasm.blightbiome.common.util;
+package com.creativechasm.environment.util;
 
 import com.google.common.collect.Range;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.server.ServerWorld;
 
 import java.util.Random;
 
@@ -23,6 +19,8 @@ public enum SoilPHType {
     STRONGLY_ALKALINE(Range.closed(8.5f, 9.0f)),
     VERY_STRONGLY_ALKALINE(Range.greaterThan(9.0f));
 
+    public static final float MAXIMUM = 14f;
+    public static final int MINIMUM = 0;
     private final Range<Float> pHRange;
     SoilPHType(Range<Float> pHRange) {
         this.pHRange = pHRange;
@@ -33,20 +31,24 @@ public enum SoilPHType {
     }
 
     public boolean containsPH(float pH) {
-        pH = (Math.round(pH * 10f) / 10f);
+        pH = roundPH(pH);
         return pHRange.contains(pH);
     }
 
-    public float getRandomPH(Random rand) {
+    public float getPH(float pct) {
         if (pHRange.hasLowerBound() && pHRange.hasUpperBound()) {
-            return MathHelper.nextFloat(rand, pHRange.lowerEndpoint(), pHRange.upperEndpoint());
+            return MathHelper.lerp(pct, pHRange.lowerEndpoint(), pHRange.upperEndpoint());
         }
-        else if (!pHRange.hasLowerBound()) return MathHelper.nextFloat(rand, 0, pHRange.upperEndpoint());
-        else return MathHelper.nextFloat(rand, pHRange.lowerEndpoint(), 14f);
+        else if (!pHRange.hasLowerBound()) return MathHelper.lerp(pct, MINIMUM, pHRange.upperEndpoint());
+        else return MathHelper.lerp(pct, pHRange.lowerEndpoint(), MAXIMUM);
     }
 
-    protected float getRandomPHAffectedByTemperature(Random rand, float localTemperature) {
-        boolean pickHigherValues = NatureUtil.rescaleTemperature(localTemperature) < 0.5f;
+    public float randomPH(Random rand) {
+        return getPH(rand.nextFloat());
+    }
+
+    protected float randomPHAffectedByTemperature(Random rand, float localTemperature) {
+        boolean pickHigherValues = ClimateUtil.rescaleTemperature(localTemperature) < 0.5f;
         if (pHRange.hasLowerBound() && pHRange.hasUpperBound()) {
             float midpoint = MathHelper.lerp(0.5f, pHRange.lowerEndpoint(), pHRange.upperEndpoint());
             if (pickHigherValues) return MathHelper.nextFloat(rand, midpoint, pHRange.upperEndpoint());
@@ -54,28 +56,23 @@ public enum SoilPHType {
         }
         else if (!pHRange.hasLowerBound()) {
             if (pickHigherValues) return MathHelper.nextFloat(rand, pHRange.upperEndpoint() * 0.5f, pHRange.upperEndpoint());
-            else return MathHelper.nextFloat(rand, 0, pHRange.upperEndpoint() * 0.5f);
+            else return MathHelper.nextFloat(rand, MINIMUM, pHRange.upperEndpoint() * 0.5f);
         }
         else {
-            if (pickHigherValues) return MathHelper.nextFloat(rand, 11.5f, 14f);
+            if (pickHigherValues) return MathHelper.nextFloat(rand, 11.5f, MAXIMUM);
             else return MathHelper.nextFloat(rand, pHRange.lowerEndpoint(), 11.5f);
         }
     }
 
-    public static SoilPHType fromPHValue(float pH) {
-        pH = (Math.round(pH * 10f) / 10f);
+    public static float roundPH(float pH) {
+        return Math.round(pH * 10f) / 10f;
+    }
+
+    public static SoilPHType fromPH(float pH) {
+        pH = roundPH(pH);
         for (SoilPHType phType : values()) {
             if (phType.pHRange.contains(pH)) return phType;
         }
         return NEUTRAL;
-    }
-
-    public static float getPHForBlockInWorld(ServerWorld world, BlockPos pos, BlockState state) {
-        float temperature = world.getBiome(pos).getTemperature(pos);
-        if (state.getBlock() == Blocks.PODZOL) return STRONGLY_ACIDIC.getRandomPHAffectedByTemperature(world.rand, temperature);
-        if (state.getBlock() == Blocks.CLAY) return SLIGHTLY_ALKALINE.getRandomPHAffectedByTemperature(world.rand, temperature);
-        if (state.getBlock() == Blocks.SAND) return NEUTRAL.getRandomPHAffectedByTemperature(world.rand, temperature);
-        if (state.getBlock() == Blocks.DIRT) return SLIGHTLY_ACIDIC.getRandomPHAffectedByTemperature(world.rand, temperature);
-        return NEUTRAL.getRandomPHAffectedByTemperature(world.rand, temperature);
     }
 }

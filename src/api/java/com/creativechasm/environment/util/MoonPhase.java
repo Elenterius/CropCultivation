@@ -1,4 +1,4 @@
-package com.creativechasm.blightbiome.common.util;
+package com.creativechasm.environment.util;
 
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.Dimension;

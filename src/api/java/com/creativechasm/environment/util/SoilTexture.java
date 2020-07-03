@@ -1,4 +1,4 @@
-package com.creativechasm.blightbiome.common.util;
+package com.creativechasm.environment.util;
 
 public enum SoilTexture {
     // https://support.rainmachine.com/hc/en-us/articles/228001248-Soil-Types

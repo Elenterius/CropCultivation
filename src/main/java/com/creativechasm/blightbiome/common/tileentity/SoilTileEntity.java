@@ -1,7 +1,7 @@
 package com.creativechasm.blightbiome.common.tileentity;
 
-import com.creativechasm.blightbiome.common.util.SoilPHType;
 import com.creativechasm.blightbiome.registry.TileEntityRegistry;
+import com.creativechasm.environment.util.SoilPHType;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.MathHelper;
@@ -31,7 +31,7 @@ public class SoilTileEntity extends TileEntity {
         byte value = (byte) pHi;
         if (value == pH) return;
         pH = value;
-        cachedSoilPH = SoilPHType.fromPHValue(pH);
+        cachedSoilPH = SoilPHType.fromPH(pH);
         markDirty();
     }
 
@@ -40,7 +40,7 @@ public class SoilTileEntity extends TileEntity {
     }
 
     public SoilPHType getSoilPHType() {
-        if (cachedSoilPH == null) cachedSoilPH = SoilPHType.fromPHValue(pH);
+        if (cachedSoilPH == null) cachedSoilPH = SoilPHType.fromPH(pH);
         return cachedSoilPH;
     }
 

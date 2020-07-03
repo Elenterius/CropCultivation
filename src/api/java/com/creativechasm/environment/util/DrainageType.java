@@ -1,4 +1,4 @@
-package com.creativechasm.blightbiome.common.util;
+package com.creativechasm.environment.util;
 
 public enum DrainageType {
     NOT_DRAINED(0f),

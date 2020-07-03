@@ -1,37 +1,23 @@
 modLoader="javafml" #mandatory
 loaderVersion="[31,)" #mandatory (31 is current forge version)
 #issueTrackerURL="http://my.issue.tracker/" #optional
-[[mods]] #mandatory
-modId="blightbiome" #mandatory
-version="${file.jarVersion}" #mandatory
-displayName="Blight Biomes" #mandatory
+
+[[mods]]
+modId="blightbiome"
+version="${file.jarVersion}"
+displayName="Blight Biomes"
 #updateJSONURL="http://myurl.me/" #optional
 #displayURL="http://example.com/" #optional
 logoFile="examplemod.png" #optional
 credits="Thanks for this example mod goes to Java" #optional
-authors="Elenterius" #optional
-# The description text for the mod (multi line!) (#mandatory)
+authors="Elenterius"
 description='''
 This is a long form description of the mod. You can write whatever you want here
-
-Have some lorem ipsum.
 '''
-# A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
-#[[dependencies.examplemod]] #optional
-    # the modid of the dependency
-   # modId="forge" #mandatory
-    # Does this dependency have to exist - if not, ordering below must be specified
-  #  mandatory=true #mandatory
-    # The version range of the dependency
- #   versionRange="[31,)" #mandatory
-    # An ordering relationship for the dependency - BEFORE or AFTER required if the relationship is not mandatory
-#    ordering="NONE"
-    # Side this dependency is applied on - BOTH, CLIENT or SERVER
-#    side="BOTH"
-# Here's another dependency
-#[[dependencies.examplemod]]
-#    modId="minecraft"
-#    mandatory=true
-#    versionRange="[1.15.2]"
-#    ordering="NONE"
-#    side="BOTH"
+
+[[dependencies.blightbiome]]
+    modId="envirlib"
+    mandatory=true
+    versionRange="[1.0.0]"
+    ordering="NONE"
+    side="BOTH"

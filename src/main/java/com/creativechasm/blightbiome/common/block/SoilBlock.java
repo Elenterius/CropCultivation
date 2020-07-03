@@ -1,10 +1,11 @@
 package com.creativechasm.blightbiome.common.block;
 
 import com.creativechasm.blightbiome.common.tileentity.SoilTileEntity;
-import com.creativechasm.blightbiome.common.util.MoistureType;
-import com.creativechasm.blightbiome.common.util.NatureUtil;
-import com.creativechasm.blightbiome.common.util.SoilTexture;
 import com.creativechasm.blightbiome.registry.TileEntityRegistry;
+import com.creativechasm.environment.util.AgricultureUtil;
+import com.creativechasm.environment.util.ClimateUtil;
+import com.creativechasm.environment.util.MoistureType;
+import com.creativechasm.environment.util.SoilTexture;
 import net.minecraft.block.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -105,7 +106,7 @@ public class SoilBlock extends FarmlandBlock {
 
         // decrease moisture
         float directMoistureLoss = 0f;
-        if (!NatureUtil.doesSoilHaveWater(worldIn, pos, soilTexture.getMaxWaterDistance()) && !isRaining) {
+        if (!AgricultureUtil.doesSoilHaveWater(worldIn, pos, soilTexture.getMaxWaterDistance()) && !isRaining) {
             directMoistureLoss = 0.5f;
         }
         // increase moisture (infiltration)
@@ -118,7 +119,7 @@ public class SoilBlock extends FarmlandBlock {
 
         //evaporation loss in arid biomes
         float evaporationLoss = 0f;
-        if (NatureUtil.doesWaterEvaporate(biome.getDefaultTemperature(), biome.getDownfall())) {
+        if (ClimateUtil.doesWaterEvaporate(biome.getDefaultTemperature(), biome.getDownfall())) {
             evaporationLoss += 1f;
             if (worldIn.isDaytime() && worldIn.canBlockSeeSky(pos)) evaporationLoss += 0.25f;
         }
@@ -150,7 +151,7 @@ public class SoilBlock extends FarmlandBlock {
                 if (growable.canGrow(worldIn, pos, upState, false)) {
                     if (growable.canUseBonemeal(worldIn, worldIn.rand, pos, upState)) {
 
-                        int[] ages = NatureUtil.getCurrentAgeAndMaxAge(upState);
+                        int[] ages = AgricultureUtil.getCurrentAgeAndMaxAge(upState);
                         int currAge = ages[0], maxAge = ages[1];
                         if (currAge < maxAge * 0.333f) { //root growth phase
                             potassium--;

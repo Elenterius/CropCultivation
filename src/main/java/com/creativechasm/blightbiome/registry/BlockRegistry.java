@@ -3,7 +3,7 @@ package com.creativechasm.blightbiome.registry;
 import com.creativechasm.blightbiome.BlightBiomeMod;
 import com.creativechasm.blightbiome.common.block.*;
 import com.creativechasm.blightbiome.common.block.tree.LilyTree;
-import com.creativechasm.blightbiome.common.util.SoilTexture;
+import com.creativechasm.environment.util.SoilTexture;
 import net.minecraft.block.Block;
 import net.minecraft.block.SaplingBlock;
 import net.minecraft.block.SlabBlock;
