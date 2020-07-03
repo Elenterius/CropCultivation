@@ -1,9 +1,9 @@
 {
-  "parent": "blightbiome:block/soil_template",
+  "parent": "envirlib:block/soil_template",
   "textures": {
     "particle": "block/dirt",
     "dirt": "block/dirt",
     "top": "block/farmland_moist",
-    "water": "blightbiome:block/wet_spots"
+    "water": "envirlib:block/wet_spots"
   }
 }

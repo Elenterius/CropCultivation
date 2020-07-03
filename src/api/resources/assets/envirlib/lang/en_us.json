@@ -1,0 +1,8 @@
+{
+  "itemGroup.envirlib": "EnvirLib",
+  "block.envirlib.silt": "Silt",
+  "block.envirlib.loam_soil": "Loamy Soil",
+  "block.envirlib.silt_soil": "Silty Soil",
+  "block.envirlib.sand_soil": "Sandy Soil",
+  "block.envirlib.clay_soil": "Clayey Soil"
+}

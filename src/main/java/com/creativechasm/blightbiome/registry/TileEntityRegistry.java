@@ -1,7 +1,6 @@
 package com.creativechasm.blightbiome.registry;
 
 import com.creativechasm.blightbiome.BlightBiomeMod;
-import com.creativechasm.blightbiome.common.tileentity.SoilTileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -12,11 +11,11 @@ import net.minecraftforge.registries.ObjectHolder;
 @Mod.EventBusSubscriber(modid = BlightBiomeMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class TileEntityRegistry {
 
-    @ObjectHolder("loam_soil")
-    public static TileEntityType<?> LOAM_SOIL;
+//    @ObjectHolder("farm_soil")
+//    public static TileEntityType<?> FARM_SOIL;
 
     @SubscribeEvent
     public static void onTileEntityTypeRegistry(final RegistryEvent.Register<TileEntityType<?>> registryEvent) {
-        registryEvent.getRegistry().register(TileEntityType.Builder.create(SoilTileEntity::new, BlockRegistry.LOAM_SOIL).build(null).setRegistryName("loam_soil"));
+//        registryEvent.getRegistry().register(TileEntityType.Builder.create(() -> new SoilStateTileEntity(FARM_SOIL), BlockRegistry.LOAM_SOIL).build(null).setRegistryName("farm_soil"));
     }
 }

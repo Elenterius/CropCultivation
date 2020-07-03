@@ -1,4 +1,4 @@
-package com.creativechasm.blightbiome.common.block;
+package com.creativechasm.environment.api.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -16,12 +16,12 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Random;
 
-public class BloomingPlantBlock extends BushBlock {
+public class BloomingBushBlock extends BushBlock {
 
     public static final BooleanProperty BLOOMING = BooleanProperty.create("blooming");
 
-    public BloomingPlantBlock(Properties properties) {
-        super(properties);
+    public BloomingBushBlock(Properties properties) {
+        super(properties.tickRandomly());
         setDefaultState(stateContainer.getBaseState().with(BLOOMING, true));
     }
 

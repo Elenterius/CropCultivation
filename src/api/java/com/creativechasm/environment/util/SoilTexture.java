@@ -1,20 +1,22 @@
 package com.creativechasm.environment.util;
 
+import net.minecraft.util.math.MathHelper;
+
 public enum SoilTexture {
     // https://support.rainmachine.com/hc/en-us/articles/228001248-Soil-Types
 
-    CLAY(0.357f, DrainageType.VERY_POORLY_DRAINED, 6),
-    SILTY_CLAY(0.3485f, DrainageType.POORLY_DRAINED, 6),
-    SANDY_CLAY(0.306f, DrainageType.IMPERFECTLY_DRAINED, 5),
-    CLAY_LOAM(0.306f, DrainageType.MODERATELY_WELL_DRAINED, 5),
-    SANDY_CLAY_LOAM(0.306f, DrainageType.MODERATELY_WELL_DRAINED, 5),
-    LOAM(0.26f, DrainageType.WELL_DRAINED, 5),
-    SILTY_LOAM(0.272f, DrainageType.IMPERFECTLY_DRAINED, 5),
-    SILT(0.255f, DrainageType.IMPERFECTLY_DRAINED, 4),
-    SILTY_CLAY_LOAM(0.2365f, DrainageType.MODERATELY_WELL_DRAINED, 4),
-    SANDY_LOAM(0.17f, DrainageType.IMPERFECTLY_DRAINED, 4),
-    LOAMY_SAND(0.14f, DrainageType.IMPERFECTLY_DRAINED, 4),
-    SAND(0.1f, DrainageType.RAPIDLY_DRAINED, 3);
+    CLAY(0.357f, DrainageType.VERY_POORLY_DRAINED, 6, 0xb1d6ff),
+    SILTY_CLAY(0.3485f, DrainageType.POORLY_DRAINED, 6, MathHelper.hsvToRGB(224f, 0.21f, 0.8f)),
+    SANDY_CLAY(0.306f, DrainageType.IMPERFECTLY_DRAINED, 5, MathHelper.hsvToRGB(195f, 0.21f, 0.99f)),
+    CLAY_LOAM(0.306f, DrainageType.MODERATELY_WELL_DRAINED, 5, MathHelper.hsvToRGB(195f, 0.31f, 1f)),
+    SANDY_CLAY_LOAM(0.306f, DrainageType.MODERATELY_WELL_DRAINED, 5, MathHelper.hsvToRGB(28f, 0.76f, 0.85f)), //0xd87f33
+    LOAM(0.26f, DrainageType.WELL_DRAINED, 5, 0xad8363),
+    SILTY_LOAM(0.272f, DrainageType.IMPERFECTLY_DRAINED, 5, MathHelper.hsvToRGB(16f, 0.23f, 0.50f)), //0x806a62
+    SILT(0.255f, DrainageType.IMPERFECTLY_DRAINED, 4, MathHelper.hsvToRGB(0f, 0f, 0.50f)), //0x808080
+    SILTY_CLAY_LOAM(0.2365f, DrainageType.MODERATELY_WELL_DRAINED, 4, MathHelper.hsvToRGB(16f, 0.23f, 0.50f)), //0x806a62
+    SANDY_LOAM(0.17f, DrainageType.IMPERFECTLY_DRAINED, 4, MathHelper.hsvToRGB(26f, 0.11f, 0.89f)), //0xe3d5ca
+    LOAMY_SAND(0.14f, DrainageType.IMPERFECTLY_DRAINED, 4, MathHelper.hsvToRGB(17f, 0.11f, 0.89f)), //0xe3d1ca
+    SAND(0.1f, DrainageType.RAPIDLY_DRAINED, 3, MathHelper.hsvToRGB(57f, 0.21f, 0.99f)); //0xfcf9c7
 
     public static float MAX_DRAINAGE_AMOUNT = 2f;
     public static float ORGANIC_MATTER_MODIFIER = 0.125f;
@@ -24,11 +26,13 @@ public enum SoilTexture {
     private final float fieldCapacity;
     private final DrainageType drainageType;
     private final byte maxWaterDistance;
+    public final int color;
 
-    SoilTexture(float fieldCapacityPct, DrainageType drainageType, int maxWaterDistance) {
+    SoilTexture(float fieldCapacityPct, DrainageType drainageType, int maxWaterDistance, int color) {
         this.fieldCapacity = fieldCapacityPct;
         this.drainageType = drainageType;
         this.maxWaterDistance = (byte) maxWaterDistance;
+        this.color = color;
     }
 
     public float getWaterHoldingCapacity() {

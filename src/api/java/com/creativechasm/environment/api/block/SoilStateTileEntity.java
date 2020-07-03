@@ -1,21 +1,21 @@
-package com.creativechasm.blightbiome.common.tileentity;
+package com.creativechasm.environment.api.block;
 
-import com.creativechasm.blightbiome.registry.TileEntityRegistry;
 import com.creativechasm.environment.util.SoilPHType;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nonnull;
 
-public class SoilTileEntity extends TileEntity {
+public class SoilStateTileEntity extends TileEntity {
     private final byte[] nutrients = new byte[3];
     private byte pH = 70;
     private SoilPHType cachedSoilPH = null;
 
-    public SoilTileEntity() {
-        super(TileEntityRegistry.LOAM_SOIL);
+    public SoilStateTileEntity(TileEntityType<?> type) {
+        super(type);
     }
 
     protected void setNutrientAmount(int idx, int amount, int maxAmount) {
@@ -25,7 +25,7 @@ public class SoilTileEntity extends TileEntity {
         markDirty();
     }
 
-    protected void setPH(float pHf) {
+    public void setPH(float pHf) {
         int pHi = Math.round(pHf * 10f);
         pHi = MathHelper.clamp(pHi, 0, 100);
         byte value = (byte) pHi;

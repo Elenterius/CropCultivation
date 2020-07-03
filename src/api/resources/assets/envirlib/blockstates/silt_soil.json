@@ -1,0 +1,17 @@
+{
+  "multipart": [
+    {
+      "apply": {"model": "envirlib:block/soil_dry"}
+    }, {
+      "when": {
+        "OR": [{"moisture": "6"}, {"moisture": "7"}]
+      }, "apply": {"model": "envirlib:block/soil_moist"}
+    }, {
+      "when": {
+        "OR": [{"moisture": "8"}, {"moisture": "9"}]
+      }, "apply": {"model": "envirlib:block/soil_wet"}
+    }, {
+      "when": {"moisture": "10"}, "apply": {"model": "envirlib:block/soil_waterlogged"}
+    }
+  ]
+}

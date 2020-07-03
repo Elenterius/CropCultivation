@@ -1,5 +1,6 @@
 package com.creativechasm.blightbiome.common.block;
 
+import com.creativechasm.environment.api.block.BloomingBushBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.server.ServerWorld;
@@ -7,7 +8,7 @@ import net.minecraft.world.server.ServerWorld;
 import javax.annotation.Nonnull;
 import java.util.Random;
 
-public class MoonFlowerBlock extends BloomingPlantBlock {
+public class MoonFlowerBlock extends BloomingBushBlock {
 
     public MoonFlowerBlock(Properties properties) {
         super(properties);

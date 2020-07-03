@@ -3,7 +3,7 @@ package com.creativechasm.blightbiome.registry;
 import com.creativechasm.blightbiome.BlightBiomeMod;
 import com.creativechasm.blightbiome.common.block.*;
 import com.creativechasm.blightbiome.common.block.tree.LilyTree;
-import com.creativechasm.environment.util.SoilTexture;
+import com.creativechasm.environment.api.block.BloomingBushBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.SaplingBlock;
 import net.minecraft.block.SlabBlock;
@@ -18,9 +18,6 @@ import net.minecraftforge.registries.ObjectHolder;
 @ObjectHolder(BlightBiomeMod.MOD_ID)
 @Mod.EventBusSubscriber(modid = BlightBiomeMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class BlockRegistry {
-
-    @ObjectHolder("loam_soil")
-    public static SoilBlock LOAM_SOIL;
 
     @ObjectHolder("blightsoil")
     public static BlightsoilBlock BLIGHT_SOIL;
@@ -50,7 +47,7 @@ public class BlockRegistry {
     public static SaplingBlock LILY_TREE_SAPLING;
 
     @ObjectHolder("blooming_flower_test")
-    public static BloomingPlantBlock BLOOMING_FLOWER_TEST;
+    public static BloomingBushBlock BLOOMING_FLOWER_TEST;
 
     @SubscribeEvent
     public static void onBlocksRegistry(final RegistryEvent.Register<Block> registryEvent) {
@@ -64,8 +61,7 @@ public class BlockRegistry {
                 new BlightWeedBlock().setRegistryName("blight_sprout"),
                 new BlightWeedBlock().setRegistryName("blight_sprout_small"),
                 new SaplingBlockX(new LilyTree()).setRegistryName("lilytree_sapling"),
-                new BloomingPlantBlock(Block.Properties.create(Material.PLANTS).doesNotBlockMovement().tickRandomly().hardnessAndResistance(0.0F).sound(SoundType.PLANT)).setRegistryName("blooming_flower_test"),
-                new SoilBlock(Block.Properties.create(Material.EARTH).hardnessAndResistance(0.6F).sound(SoundType.GROUND), SoilTexture.LOAM).setRegistryName("loam_soil")
+                new BloomingBushBlock(Block.Properties.create(Material.PLANTS).doesNotBlockMovement().hardnessAndResistance(0.0F).sound(SoundType.PLANT)).setRegistryName("blooming_flower_test")
 //                new SoilBlock(Block.Properties.create(Material.SAND).hardnessAndResistance(0.5F).sound(SoundType.SAND), SoilTexture.SAND),
 //                new SoilBlock(Block.Properties.create(Material.CLAY).hardnessAndResistance(0.6F).sound(SoundType.GROUND), SoilTexture.CLAY)
         );

@@ -1,5 +1,5 @@
 {
-  "parent": "blightbiome:block/soil_template",
+  "parent": "envirlib:block/soil_template",
   "ambientocclusion": false,
   "textures": {
     "particle": "block/dirt",

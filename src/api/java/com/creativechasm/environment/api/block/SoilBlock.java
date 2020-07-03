@@ -1,7 +1,5 @@
-package com.creativechasm.blightbiome.common.block;
+package com.creativechasm.environment.api.block;
 
-import com.creativechasm.blightbiome.common.tileentity.SoilTileEntity;
-import com.creativechasm.blightbiome.registry.TileEntityRegistry;
 import com.creativechasm.environment.util.AgricultureUtil;
 import com.creativechasm.environment.util.ClimateUtil;
 import com.creativechasm.environment.util.MoistureType;
@@ -33,7 +31,7 @@ import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
 import java.util.Random;
 
-public class SoilBlock extends FarmlandBlock {
+public abstract class SoilBlock extends FarmlandBlock {
 
     public static final IntegerProperty MOISTURE = IntegerProperty.create("moisture", 0, 10);
     public static final IntegerProperty ORGANIC_MATTER = IntegerProperty.create("organic_matter", 0, 4);
@@ -67,9 +65,7 @@ public class SoilBlock extends FarmlandBlock {
     }
 
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return TileEntityRegistry.LOAM_SOIL.create();
-    }
+    public abstract TileEntity createTileEntity(BlockState state, IBlockReader world);
 
     public int getMaxMoistureLevel() {
         return 10;
@@ -90,8 +86,8 @@ public class SoilBlock extends FarmlandBlock {
         }
 
         TileEntity tileEntity = worldIn.getTileEntity(pos);
-        if (!(tileEntity instanceof SoilTileEntity)) return;
-        SoilTileEntity tileState = (SoilTileEntity) tileEntity;
+        if (!(tileEntity instanceof SoilStateTileEntity)) return;
+        SoilStateTileEntity tileState = (SoilStateTileEntity) tileEntity;
 
         int moisture = state.get(MOISTURE);
         int nitrogen = tileState.getNitrogen();
@@ -224,8 +220,8 @@ public class SoilBlock extends FarmlandBlock {
         if (worldIn instanceof ServerWorld && worldIn.rand.nextInt(20) == 0) {
             if (worldIn.getBiome(pos).getTemperature(pos) >= 0.15F) {
                 TileEntity tileEntity = worldIn.getTileEntity(pos);
-                if (!(tileEntity instanceof SoilTileEntity)) return;
-                SoilTileEntity tileState = (SoilTileEntity) tileEntity;
+                if (!(tileEntity instanceof SoilStateTileEntity)) return;
+                SoilStateTileEntity tileState = (SoilStateTileEntity) tileEntity;
                 BlockState state = worldIn.getBlockState(pos);
                 int moisture = state.get(MOISTURE);
                 moisture++; //increase moisture
@@ -268,7 +264,7 @@ public class SoilBlock extends FarmlandBlock {
         return ActionResultType.PASS;
     }
 
-    public static void updateState(ServerWorld worldIn, BlockPos pos, BlockState state, SoilTileEntity tileState, int moisture, int nitrogen, int phosphorous, int potassium, int organicMatter) {
+    public static void updateState(ServerWorld worldIn, BlockPos pos, BlockState state, SoilStateTileEntity tileState, int moisture, int nitrogen, int phosphorous, int potassium, int organicMatter) {
         moisture = MathHelper.clamp(moisture, 0, 10);
         organicMatter = MathHelper.clamp(organicMatter, 0, 4);
         tileState.setNitrogen(nitrogen);

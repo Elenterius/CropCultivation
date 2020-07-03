@@ -35,8 +35,6 @@ public class ItemRegistry {
                 createItemForBlock(BlockRegistry.BLIGHT_SPROUT_SMALL, properties),
                 createItemForBlock(BlockRegistry.LILY_TREE_SAPLING, properties),
 
-                createItemForBlock(BlockRegistry.LOAM_SOIL, properties),
-
                 createItemForBlock(BlockRegistry.BLOOMING_FLOWER_TEST, properties)
         );
 

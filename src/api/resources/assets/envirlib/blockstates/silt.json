@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "envirlib:block/silt"
+    }
+  }
+}
