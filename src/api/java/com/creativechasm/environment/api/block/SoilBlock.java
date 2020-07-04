@@ -1,11 +1,10 @@
 package com.creativechasm.environment.api.block;
 
-import com.creativechasm.environment.util.AgricultureUtil;
-import com.creativechasm.environment.util.ClimateUtil;
-import com.creativechasm.environment.util.MoistureType;
-import com.creativechasm.environment.util.SoilTexture;
+import com.creativechasm.environment.EnvironmentLib;
+import com.creativechasm.environment.util.*;
 import net.minecraft.block.*;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
@@ -28,6 +27,7 @@ import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.util.Random;
 
@@ -41,17 +41,17 @@ public abstract class SoilBlock extends FarmlandBlock {
     public SoilBlock(Properties properties, SoilTexture soilTexture) {
         super(properties.tickRandomly()); //farmland adds property MOISTURE_0_7 to stateContainer, we don't want that!
 
-        // build new stateContainer without MOISTURE_0_7
+        // build new stateContainer with our own moisture property
         StateContainer.Builder<Block, BlockState> builder = new StateContainer.Builder<>(this);
         builder.add(MOISTURE, ORGANIC_MATTER); // normally we would call fillStateContainer(builder)
-        StateContainer<Block, BlockState> container = builder.create(BlockState::new); //replace stateContainer
+        StateContainer<Block, BlockState> container = builder.create(BlockState::new);
 
         try {
             Field field = ObfuscationReflectionHelper.findField(Block.class, "field_176227_L");// stateContainer
             field.setAccessible(true);
-            field.set(this, container);
+            field.set(this, container); //replace stateContainer
         } catch (Exception e) {
-            e.printStackTrace();
+            EnvironmentLib.LOGGER.error("Unable to replace stateContainer of SoilBlock", e);
             throw new RuntimeException("Unable to modify field_176227_L");
         }
 
@@ -90,6 +90,7 @@ public abstract class SoilBlock extends FarmlandBlock {
         SoilStateTileEntity tileState = (SoilStateTileEntity) tileEntity;
 
         int moisture = state.get(MOISTURE);
+        float pH = tileState.getPH();
         int nitrogen = tileState.getNitrogen();
         int phosphorous = tileState.getPhosphorus();
         int potassium = tileState.getPotassium();
@@ -140,7 +141,15 @@ public abstract class SoilBlock extends FarmlandBlock {
         moisture -= MathHelper.clamp(Math.round(directMoistureLoss + evaporationLoss + drainageLoss), 0, 3);
 
         //boost plant growth by consuming water with nutrients
-        if (moisture > MoistureType.AVERAGE_0.getMoistureLevel() && nitrogen > 0 && phosphorous > 0 && potassium > 0 && worldIn.rand.nextFloat() < 0.5f) {
+        float NPct = PlantNutrient.NITROGEN.getAvailabilityInSoilForPlant(pH);
+        float PPct = PlantNutrient.PHOSPHORUS.getAvailabilityInSoilForPlant(pH);
+        float KPct = PlantNutrient.POTASSIUM.getAvailabilityInSoilForPlant(pH);
+        float N = nitrogen * NPct;
+        float P = phosphorous * PPct;
+        float K = potassium * KPct;
+
+        EnvironmentLib.LOGGER.debug("boost growth chance: " + (0.75f * ((NPct+PPct+KPct)/3f)));
+        if (moisture > MoistureType.AVERAGE_0.getMoistureLevel() && N > 0f && P > 0f && K > 0f && worldIn.rand.nextFloat() < 0.75f * ((NPct+PPct+KPct)/3f)) {
             BlockState upState = worldIn.getBlockState(pos.up());
             if (upState.getBlock() instanceof IGrowable) {
                 IGrowable growable = (IGrowable) upState.getBlock();
@@ -196,7 +205,7 @@ public abstract class SoilBlock extends FarmlandBlock {
 //            moisture = MoistureType.STANDING_WATER.getMoistureLevel(); //TODO: handle waterlogged state
         }
 
-        updateState(worldIn, pos, state, tileState, moisture, nitrogen, phosphorous, potassium, organicMatter);
+        updateState(worldIn, pos, state, tileState, moisture, pH, nitrogen, phosphorous, potassium, organicMatter);
     }
 
     protected boolean hasCrops(IBlockReader worldIn, BlockPos pos) {
@@ -217,7 +226,7 @@ public abstract class SoilBlock extends FarmlandBlock {
 
     @Override
     public void fillWithRain(@Nonnull World worldIn, @Nonnull BlockPos pos) {
-        if (worldIn instanceof ServerWorld && worldIn.rand.nextInt(20) == 0) {
+        if (worldIn instanceof ServerWorld && worldIn.rand.nextFloat() < 0.05f) { // 1/20
             if (worldIn.getBiome(pos).getTemperature(pos) >= 0.15F) {
                 TileEntity tileEntity = worldIn.getTileEntity(pos);
                 if (!(tileEntity instanceof SoilStateTileEntity)) return;
@@ -225,6 +234,12 @@ public abstract class SoilBlock extends FarmlandBlock {
                 BlockState state = worldIn.getBlockState(pos);
                 int moisture = state.get(MOISTURE);
                 moisture++; //increase moisture
+
+                //decrease pH (rain is slightly acidic)
+                float pH = tileState.getPH();
+                if(worldIn.rand.nextFloat() < 0.2f) {
+                    pH -= 0.1f;
+                }
 
                 //wash away nutrients
                 int organicMatter = state.get(ORGANIC_MATTER);
@@ -234,7 +249,7 @@ public abstract class SoilBlock extends FarmlandBlock {
                         int nitrogen = tileState.getNitrogen() - 1;
                         int phosphorous = tileState.getPhosphorus() - 1;
                         int potassium = tileState.getPotassium() - 1;
-                        updateState((ServerWorld) worldIn, pos, state, tileState, moisture, nitrogen, phosphorous, potassium, organicMatter);
+                        updateState((ServerWorld) worldIn, pos, state, tileState, moisture, pH, nitrogen, phosphorous, potassium, organicMatter);
                         return;
                     }
                 }
@@ -264,13 +279,22 @@ public abstract class SoilBlock extends FarmlandBlock {
         return ActionResultType.PASS;
     }
 
-    public static void updateState(ServerWorld worldIn, BlockPos pos, BlockState state, SoilStateTileEntity tileState, int moisture, int nitrogen, int phosphorous, int potassium, int organicMatter) {
+    public static void updateState(ServerWorld worldIn, BlockPos pos, BlockState state, SoilStateTileEntity tileState, int moisture, float pH, int nitrogen, int phosphorous, int potassium, int organicMatter) {
         moisture = MathHelper.clamp(moisture, 0, 10);
         organicMatter = MathHelper.clamp(organicMatter, 0, 4);
+        tileState.setPH(pH);
         tileState.setNitrogen(nitrogen);
         tileState.setPhosphorus(phosphorous);
         tileState.setPotassium(potassium);
         worldIn.setBlockState(pos, state.with(MOISTURE, moisture).with(ORGANIC_MATTER, organicMatter), Constants.BlockFlags.BLOCK_UPDATE);
+    }
+
+    @Override
+    public void onBlockPlacedBy(World worldIn, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nullable LivingEntity placer, @Nonnull ItemStack stack) {
+        TileEntity tile = worldIn.getTileEntity(pos);
+        if (tile instanceof SoilStateTileEntity) {
+            ((SoilStateTileEntity) tile).setPH(soilTexture.pHType.randomPHAffectedByTemperature(worldIn.rand, worldIn.getBiome(pos).getTemperature(pos)));
+        }
     }
 
     @Override

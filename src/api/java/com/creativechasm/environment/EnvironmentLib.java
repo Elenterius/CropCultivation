@@ -11,7 +11,7 @@ import org.apache.logging.log4j.Logger;
 @Mod(EnvironmentLib.MOD_ID)
 public class EnvironmentLib {
     public static final String MOD_ID = "envirlib";
-    private static final Logger LOGGER = LogManager.getLogger();
+    public static final Logger LOGGER = LogManager.getLogger();
 
     public EnvironmentLib() {
         MinecraftForge.EVENT_BUS.register(this);

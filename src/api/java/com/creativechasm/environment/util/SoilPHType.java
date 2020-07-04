@@ -47,7 +47,7 @@ public enum SoilPHType {
         return getPH(rand.nextFloat());
     }
 
-    protected float randomPHAffectedByTemperature(Random rand, float localTemperature) {
+    public float randomPHAffectedByTemperature(Random rand, float localTemperature) {
         boolean pickHigherValues = ClimateUtil.rescaleTemperature(localTemperature) < 0.5f;
         if (pHRange.hasLowerBound() && pHRange.hasUpperBound()) {
             float midpoint = MathHelper.lerp(0.5f, pHRange.lowerEndpoint(), pHRange.upperEndpoint());

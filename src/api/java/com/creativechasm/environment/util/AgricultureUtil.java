@@ -50,7 +50,7 @@ public class AgricultureUtil {
         return new int[]{0, 0};
     }
 
-    public static float getPHForBlockInWorld(ServerWorld world, BlockPos pos, BlockState state) {
+    public static float getPHForNonSoilBlockInWorld(ServerWorld world, BlockPos pos, BlockState state) {
         float temperature = world.getBiome(pos).getTemperature(pos);
         if (state.getBlock() == Blocks.PODZOL) return STRONGLY_ACIDIC.randomPHAffectedByTemperature(world.rand, temperature);
         if (state.getBlock() == Blocks.CLAY) return SLIGHTLY_ALKALINE.randomPHAffectedByTemperature(world.rand, temperature);

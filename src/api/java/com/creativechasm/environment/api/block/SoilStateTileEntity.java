@@ -10,7 +10,7 @@ import net.minecraftforge.common.util.Constants;
 import javax.annotation.Nonnull;
 
 public class SoilStateTileEntity extends TileEntity {
-    private final byte[] nutrients = new byte[3];
+    private final byte[] nutrients = new byte[] {4, 3, 3};
     private byte pH = 70;
     private SoilPHType cachedSoilPH = null;
 
