@@ -1,4 +1,4 @@
-package com.creativechasm.environment.util;
+package com.creativechasm.environment.api.soil;
 
 import net.minecraft.util.math.MathHelper;
 
@@ -21,8 +21,9 @@ public enum SoilTexture {
 
     public static float MAX_DRAINAGE_AMOUNT = 2f;
     public static float ORGANIC_MATTER_MODIFIER = 0.125f;
-    public static byte maxMoistureContent = 10;
-    public static float depletionLinePct = 0.25f;
+    public static int maxMoistureContent = 10;
+    public static float depletionPointPct = 0.25f;
+    public static float wiltingPointPct = 0.25f;
 
     private final float fieldCapacity;
     private final DrainageType drainageType;

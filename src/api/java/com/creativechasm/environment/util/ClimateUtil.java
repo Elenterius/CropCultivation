@@ -1,23 +1,31 @@
 package com.creativechasm.environment.util;
 
+import com.creativechasm.environment.EnvironmentLib;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.apache.logging.log4j.Marker;
+import org.apache.logging.log4j.MarkerManager;
 
 public class ClimateUtil {
 
-    private static float normMIN = -0.5f;
-    private static float normMAX = 2f;
-    private static float normDiff = normMAX - normMIN;
+    public static Marker LOG_MARKER = MarkerManager.getMarker("Climate");
 
-    public static void initTemperatureNormalizer() {
+    private static float TEMP_MIN = 2f;
+    private static float TEMP_MAX = -0.5f;
+    private static float TEMP_DIFF;
+
+    public static void determineTemperatureScale() {
+
+        EnvironmentLib.LOGGER.debug(LOG_MARKER, "Determining temperature scale of Biomes...");
         ForgeRegistries.BIOMES.getValues().stream().map(Biome::getDefaultTemperature).forEach(f -> {
-            if (f < normMIN) normMIN = f;
-            else if (f > normMAX) normMAX = f;
+            if (f < TEMP_MIN) TEMP_MIN = f;
+            else if (f > TEMP_MAX) TEMP_MAX = f;
         });
-        normDiff = normMAX - normMIN;
+        TEMP_DIFF = TEMP_MAX - TEMP_MIN;
+        EnvironmentLib.LOGGER.debug(LOG_MARKER, "Global Temperature Range: {" + TEMP_MIN + ", ... , " + TEMP_MAX + "}");
     }
 
     /**
@@ -27,7 +35,7 @@ public class ClimateUtil {
      * @return temperature rescaled between 0.0 and 1.0 (inclusive)
      */
     public static float rescaleTemperature(float t) {
-        return (t - normMIN) / normDiff;
+        return (t - TEMP_MIN) / TEMP_DIFF;
     }
 
     public static boolean isHighHumidity(float relativeHumidity) {

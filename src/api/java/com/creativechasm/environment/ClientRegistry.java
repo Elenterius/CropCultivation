@@ -2,7 +2,8 @@ package com.creativechasm.environment;
 
 import com.creativechasm.environment.api.block.LibBlocks;
 import com.creativechasm.environment.api.block.SoilBlock;
-import com.creativechasm.environment.util.MoistureType;
+import com.creativechasm.environment.api.soil.MoistureType;
+import com.creativechasm.environment.api.soil.SoilTexture;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
@@ -45,6 +46,8 @@ public class ClientRegistry {
                 soilColors,
                 LibBlocks.LOAM_SOIL, LibBlocks.SAND_SOIL, LibBlocks.SILT_SOIL, LibBlocks.CLAY_SOIL
         );
+
+        event.getBlockColors().register((state, lightReader, pos, index) -> SoilTexture.SILT.color, LibBlocks.SILT);
     }
 
     @SubscribeEvent
@@ -53,5 +56,7 @@ public class ClientRegistry {
             BlockState state = ((BlockItem) stack.getItem()).getBlock().getDefaultState();
             return soilColors.getColor(state, null, null, index);
         }, LibBlocks.LOAM_SOIL, LibBlocks.SAND_SOIL, LibBlocks.SILT_SOIL, LibBlocks.CLAY_SOIL);
+
+        event.getItemColors().register((stack, index) -> SoilTexture.SILT.color, LibBlocks.SILT);
     }
 }

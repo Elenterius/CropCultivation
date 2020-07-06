@@ -4,5 +4,10 @@
   "block.envirlib.loam_soil": "Loamy Soil",
   "block.envirlib.silt_soil": "Silty Soil",
   "block.envirlib.sand_soil": "Sandy Soil",
-  "block.envirlib.clay_soil": "Clayey Soil"
+  "block.envirlib.clay_soil": "Clayey Soil",
+
+  "item.envirlib.organic_matter": "Organic Matter",
+  "item.envirlib.compost": "Compost",
+  "item.envirlib.fertilizer": "Fertilizer",
+  "item.envirlib.lime_dust": "Lime Dust"
 }

@@ -10,8 +10,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.FarmlandWaterManager;
+import net.minecraftforge.common.Tags;
 
-import static com.creativechasm.environment.util.SoilPHType.*;
+import static com.creativechasm.environment.api.soil.SoilPHType.*;
 
 public class AgricultureUtil {
 
@@ -53,9 +54,10 @@ public class AgricultureUtil {
     public static float getPHForNonSoilBlockInWorld(ServerWorld world, BlockPos pos, BlockState state) {
         float temperature = world.getBiome(pos).getTemperature(pos);
         if (state.getBlock() == Blocks.PODZOL) return STRONGLY_ACIDIC.randomPHAffectedByTemperature(world.rand, temperature);
+        if (state.getBlock() == Blocks.MYCELIUM) return MODERATELY_ACIDIC.randomPHAffectedByTemperature(world.rand, temperature);
         if (state.getBlock() == Blocks.CLAY) return SLIGHTLY_ALKALINE.randomPHAffectedByTemperature(world.rand, temperature);
-        if (state.getBlock() == Blocks.SAND) return NEUTRAL.randomPHAffectedByTemperature(world.rand, temperature);
-        if (state.getBlock() == Blocks.DIRT) return SLIGHTLY_ACIDIC.randomPHAffectedByTemperature(world.rand, temperature);
+        if (Tags.Blocks.SAND.contains(state.getBlock())) return NEUTRAL.randomPHAffectedByTemperature(world.rand, temperature);
+        if (Tags.Blocks.DIRT.contains(state.getBlock())) return SLIGHTLY_ACIDIC.randomPHAffectedByTemperature(world.rand, temperature);
         return NEUTRAL.randomPHAffectedByTemperature(world.rand, temperature);
     }
 }

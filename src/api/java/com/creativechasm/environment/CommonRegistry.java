@@ -3,7 +3,7 @@ package com.creativechasm.environment;
 import com.creativechasm.environment.api.block.LibBlocks;
 import com.creativechasm.environment.api.block.SoilBlock;
 import com.creativechasm.environment.api.block.SoilStateTileEntity;
-import com.creativechasm.environment.util.SoilTexture;
+import com.creativechasm.environment.api.soil.SoilTexture;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
@@ -32,6 +32,7 @@ public class CommonRegistry {
     @SubscribeEvent
     public static void onBlocksRegistry(final RegistryEvent.Register<Block> registryEvent) {
         registryEvent.getRegistry().registerAll(
+                new Block(Block.Properties.create(Material.EARTH).hardnessAndResistance(0.65F).sound(SoundType.GROUND)).setRegistryName("silt"),
                 createSoilBlock(Block.Properties.create(Material.EARTH).hardnessAndResistance(0.6F).sound(SoundType.GROUND), SoilTexture.LOAM, "loam_soil"),
                 createSoilBlock(Block.Properties.create(Material.EARTH).hardnessAndResistance(0.65F).sound(SoundType.GROUND), SoilTexture.SILT, "silt_soil"),
                 createSoilBlock(Block.Properties.create(Material.SAND).hardnessAndResistance(0.5F).sound(SoundType.GROUND), SoilTexture.SAND, "sand_soil"),
@@ -66,10 +67,14 @@ public class CommonRegistry {
     public static void onItemsRegistry(final RegistryEvent.Register<Item> registryEvent) {
         Item.Properties properties = new Item.Properties().group(ITEM_GROUP);
         registryEvent.getRegistry().registerAll(
+                createItemForBlock(LibBlocks.SILT, properties),
                 createItemForBlock(LibBlocks.LOAM_SOIL, properties),
                 createItemForBlock(LibBlocks.SILT_SOIL, properties),
                 createItemForBlock(LibBlocks.SAND_SOIL, properties),
-                createItemForBlock(LibBlocks.CLAY_SOIL, properties)
+                createItemForBlock(LibBlocks.CLAY_SOIL, properties),
+                new Item(properties).setRegistryName("compost"),
+                new Item(properties).setRegistryName("lime_dust"),
+                new Item(properties).setRegistryName("fertilizer")
         );
     }
 

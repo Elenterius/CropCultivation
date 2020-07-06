@@ -1,13 +1,19 @@
 package com.creativechasm.environment.api.block;
 
 import com.creativechasm.environment.EnvironmentLib;
-import com.creativechasm.environment.util.*;
+import com.creativechasm.environment.api.soil.MoistureType;
+import com.creativechasm.environment.api.soil.PlantNutrient;
+import com.creativechasm.environment.api.soil.SoilTexture;
+import com.creativechasm.environment.api.tags.EnvirlibTags;
+import com.creativechasm.environment.util.AgricultureUtil;
+import com.creativechasm.environment.util.ClimateUtil;
 import net.minecraft.block.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
@@ -18,6 +24,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.server.ServerWorld;
@@ -25,6 +32,7 @@ import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import org.apache.logging.log4j.MarkerManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -67,15 +75,6 @@ public abstract class SoilBlock extends FarmlandBlock {
     @Override
     public abstract TileEntity createTileEntity(BlockState state, IBlockReader world);
 
-    public int getMaxMoistureLevel() {
-        return 10;
-    }
-
-    public int getMaxMoistureCapacity(int organicMatter) {
-        int capacity = MathHelper.floor(getMaxMoistureLevel() * (soilTexture.getWaterHoldingCapacity() + organicMatter * SoilTexture.ORGANIC_MATTER_MODIFIER + soilTexture.getWaterHoldingCapacity()));
-        return MathHelper.clamp(capacity, 0, getMaxMoistureLevel() - 1);
-    }
-
     @Override
     public void tick(@Nonnull BlockState state, @Nonnull ServerWorld worldIn, @Nonnull BlockPos pos, @Nonnull Random rand) {
 
@@ -96,6 +95,7 @@ public abstract class SoilBlock extends FarmlandBlock {
         int potassium = tileState.getPotassium();
         int organicMatter = state.get(ORGANIC_MATTER);
 
+        int moistureGain = 0, moistureLoss = 0;
         int maxMoistureCapacity = getMaxMoistureCapacity(organicMatter);
         boolean hasCrops = hasCrops(worldIn, pos);
         Biome biome = worldIn.getBiome(pos);
@@ -106,12 +106,14 @@ public abstract class SoilBlock extends FarmlandBlock {
         if (!AgricultureUtil.doesSoilHaveWater(worldIn, pos, soilTexture.getMaxWaterDistance()) && !isRaining) {
             directMoistureLoss = 0.5f;
         }
-        // increase moisture (infiltration)
+        // increase moisture (irrigation/infiltration)
         else if (moisture < getMaxMoistureLevel()) {
-            moisture++;
+            moistureGain++;
             if (isRaining && worldIn.getRainStrength(1f) > 0.8) {
-                moisture++;
+                moistureGain++;
             }
+            moisture += moistureGain;
+            worldIn.spawnParticle(ParticleTypes.SPLASH, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, 2, 0.25, 0.06, 0.25, 0.1);
         }
 
         //evaporation loss in arid biomes
@@ -137,8 +139,12 @@ public abstract class SoilBlock extends FarmlandBlock {
 //            System.out.println("drainage: " + drainageLoss);
         }
 
-        //calculate total moisture loss
-        moisture -= MathHelper.clamp(Math.round(directMoistureLoss + evaporationLoss + drainageLoss), 0, 3);
+        //total moisture loss
+        moistureLoss = MathHelper.clamp(Math.round(directMoistureLoss + evaporationLoss + drainageLoss), 0, 3);
+        if (moistureLoss > moistureGain){
+            worldIn.spawnParticle(ParticleTypes.MYCELIUM, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, 4, 0.25, 0.02, 0.25, 0.1);
+        }
+        moisture -= moistureLoss;
 
         //boost plant growth by consuming water with nutrients
         float NPct = PlantNutrient.NITROGEN.getAvailabilityInSoilForPlant(pH);
@@ -148,7 +154,7 @@ public abstract class SoilBlock extends FarmlandBlock {
         float P = phosphorous * PPct;
         float K = potassium * KPct;
 
-        EnvironmentLib.LOGGER.debug("boost growth chance: " + (0.75f * ((NPct+PPct+KPct)/3f)));
+        EnvironmentLib.LOGGER.debug(MarkerManager.getMarker("SoilBlock"), "boost growth chance: " + (0.75f * ((NPct+PPct+KPct)/3f)));
         if (moisture > MoistureType.AVERAGE_0.getMoistureLevel() && N > 0f && P > 0f && K > 0f && worldIn.rand.nextFloat() < 0.75f * ((NPct+PPct+KPct)/3f)) {
             BlockState upState = worldIn.getBlockState(pos.up());
             if (upState.getBlock() instanceof IGrowable) {
@@ -208,6 +214,15 @@ public abstract class SoilBlock extends FarmlandBlock {
         updateState(worldIn, pos, state, tileState, moisture, pH, nitrogen, phosphorous, potassium, organicMatter);
     }
 
+    public int getMaxMoistureLevel() {
+        return 10;
+    }
+
+    public int getMaxMoistureCapacity(int organicMatter) {
+        int capacity = MathHelper.floor(getMaxMoistureLevel() * (soilTexture.getWaterHoldingCapacity() + organicMatter * SoilTexture.ORGANIC_MATTER_MODIFIER + soilTexture.getWaterHoldingCapacity()));
+        return MathHelper.clamp(capacity, 0, getMaxMoistureLevel() - 1);
+    }
+
     protected boolean hasCrops(IBlockReader worldIn, BlockPos pos) {
         BlockState state = worldIn.getBlockState(pos.up());
         return state.getBlock() instanceof IPlantable && canSustainPlant(state, worldIn, pos, Direction.UP, (IPlantable) state.getBlock());
@@ -261,15 +276,31 @@ public abstract class SoilBlock extends FarmlandBlock {
 
     @Override
     @Nonnull
+    public BlockState updatePostPlacement(@Nonnull BlockState stateIn, @Nonnull Direction facing, @Nonnull BlockState facingState, @Nonnull IWorld worldIn, @Nonnull BlockPos currentPos, @Nonnull BlockPos facingPos) {
+
+//        if(facingState.getBlock() instanceof SoilBlock && facingState.get(MOISTURE) >= 6)
+//        {
+//            //TODO: causes block update cascade
+//            EnvironmentLib.LOGGER.debug(MarkerManager.getMarker("SoilBlock"),"scheduling tick");
+//            worldIn.getPendingBlockTicks().scheduleTick(currentPos, stateIn.getBlock(), 1);
+//        }
+
+        // check if block was placed above
+        if (facing == Direction.UP && !stateIn.isValidPosition(worldIn, currentPos)) {
+            worldIn.getPendingBlockTicks().scheduleTick(currentPos, this, 1); //"turn to dirt"
+        }
+
+        return stateIn;
+    }
+
+    @Override
+    @Nonnull
     public ActionResultType onBlockActivated(BlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos, PlayerEntity player, @Nonnull Hand handIn, @Nonnull BlockRayTraceResult hit) {
         int organic = state.get(ORGANIC_MATTER);
         ItemStack stack = player.getHeldItem(handIn);
-        if (organic < 4 && ComposterBlock.CHANCES.containsKey(stack.getItem())) {
+        if (organic < 4 && EnvirlibTags.COMPOST_ITEM.contains(stack.getItem())) {
             if (!worldIn.isRemote) {
-                float f = ComposterBlock.CHANCES.getFloat(stack.getItem());
-                if (f > 0.0F && worldIn.getRandom().nextFloat() < f) {
-                    worldIn.setBlockState(pos, state.with(ORGANIC_MATTER, organic + 1), Constants.BlockFlags.BLOCK_UPDATE);
-                }
+                worldIn.setBlockState(pos, state.with(ORGANIC_MATTER, organic + 1), Constants.BlockFlags.BLOCK_UPDATE);
                 if (!player.abilities.isCreativeMode) {
                     stack.shrink(1);
                 }

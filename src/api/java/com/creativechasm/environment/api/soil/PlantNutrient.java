@@ -1,4 +1,4 @@
-package com.creativechasm.environment.util;
+package com.creativechasm.environment.api.soil;
 
 public enum PlantNutrient {
     NITROGEN('N', pH -> {

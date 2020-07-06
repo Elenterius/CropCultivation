@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "package": "com.creativechasm.environment.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "mixins.envirlib.refmap.json",
+  "mixins": [
+    "MixinComposterBlock",
+    "MixinComposterBlock_FullInventory"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}

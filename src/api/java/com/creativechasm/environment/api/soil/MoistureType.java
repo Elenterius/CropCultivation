@@ -1,4 +1,4 @@
-package com.creativechasm.environment.util;
+package com.creativechasm.environment.api.soil;
 
 public enum MoistureType {
     STANDING_WATER(4f, Float.POSITIVE_INFINITY, 10), /* flooded? - "waterlogged" */

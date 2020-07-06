@@ -1,6 +1,6 @@
 package com.creativechasm.environment.api.block;
 
-import com.creativechasm.environment.util.SoilPHType;
+import com.creativechasm.environment.api.soil.SoilPHType;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
