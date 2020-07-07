@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:feather"
+    }
+  ],
+  "result": {
+    "item": "envirlib:feather_meal",
+    "count": 3
+  }
+}

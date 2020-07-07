@@ -1,6 +1,6 @@
 package com.creativechasm.environment.api.soil;
 
-public enum MoistureType {
+public enum SoilMoisture {
     STANDING_WATER(4f, Float.POSITIVE_INFINITY, 10), /* flooded? - "waterlogged" */
     EXCESSIVELY_WET(3f, 3.9f, 9),
     WET(2f, 2.9f, 8),
@@ -16,15 +16,15 @@ public enum MoistureType {
     float minValue;
     float maxValue;
     int level;
-    private static final MoistureType[] sortedDryToWet = new MoistureType[]{SEVERELY_DRY, EXCESSIVELY_DRY, ABNORMALLY_DRY, DRY, AVERAGE_0, AVERAGE_1, MOIST, ABNORMALLY_MOIST, WET, EXCESSIVELY_WET, STANDING_WATER};
+    private static final SoilMoisture[] sortedDryToWet = new SoilMoisture[]{SEVERELY_DRY, EXCESSIVELY_DRY, ABNORMALLY_DRY, DRY, AVERAGE_0, AVERAGE_1, MOIST, ABNORMALLY_MOIST, WET, EXCESSIVELY_WET, STANDING_WATER};
 
-    MoistureType(float minValue, float maxValue, int moistureLevel) {
+    SoilMoisture(float minValue, float maxValue, int moistureLevel) {
         this.minValue = minValue;
         this.maxValue = maxValue;
         this.level = moistureLevel;
     }
 
-    public static MoistureType fromMoistureLevel(int i) {
+    public static SoilMoisture fromMoistureLevel(int i) {
         return sortedDryToWet[i];
     }
 

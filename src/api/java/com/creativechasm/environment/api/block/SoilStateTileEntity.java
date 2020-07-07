@@ -1,6 +1,8 @@
 package com.creativechasm.environment.api.block;
 
-import com.creativechasm.environment.api.soil.SoilPHType;
+import com.creativechasm.environment.api.soil.SoilPH;
+import com.google.common.primitives.UnsignedBytes;
+import jdk.jfr.Unsigned;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
@@ -10,16 +12,25 @@ import net.minecraftforge.common.util.Constants;
 import javax.annotation.Nonnull;
 
 public class SoilStateTileEntity extends TileEntity {
-    private final byte[] nutrients = new byte[] {4, 3, 3};
-    private byte pH = 70;
-    private SoilPHType cachedSoilPH = null;
+    @Unsigned
+    private final byte[] nutrients = new byte[]{4, 3, 3};
+
+    @Unsigned
+    private byte pH = SoilPH.MAX_VALUE / 2; // init as perfect neutral pH value (fallback)
+
+    private SoilPH cachedSoilPH = null;
 
     public SoilStateTileEntity(TileEntityType<?> type) {
         super(type);
+
+        //validate max values are in unsigned byte range (0-255)
+        UnsignedBytes.checkedCast(getMaxNutrientAmount());
+        UnsignedBytes.checkedCast(getMaxPHValueInInt());
     }
 
     protected void setNutrientAmount(int idx, int amount, int maxAmount) {
-        byte value = (byte) MathHelper.clamp(amount, 0, maxAmount);
+        int ni = MathHelper.clamp(amount, 0, maxAmount);
+        byte value = (byte) ni;
         if (value == nutrients[idx]) return;
         nutrients[idx] = value;
         markDirty();
@@ -27,46 +38,79 @@ public class SoilStateTileEntity extends TileEntity {
 
     public void setPH(float pHf) {
         int pHi = Math.round(pHf * 10f);
-        pHi = MathHelper.clamp(pHi, 0, 100);
+        pHi = MathHelper.clamp(pHi, 0, getMaxPHValueInInt());
         byte value = (byte) pHi;
         if (value == pH) return;
         pH = value;
-        cachedSoilPH = SoilPHType.fromPH(pH);
+        cachedSoilPH = SoilPH.fromPH(pHf);
         markDirty();
     }
 
     public float getPH() {
-        return pH / 10f;
+        return (pH & 0xFF) / 10f;
     }
 
-    public SoilPHType getSoilPHType() {
-        if (cachedSoilPH == null) cachedSoilPH = SoilPHType.fromPH(pH);
+    protected int getMaxPHValueInInt() {
+        return SoilPH.MAX_VALUE * 10;
+    }
+
+    public SoilPH getSoilPHType() {
+        if (cachedSoilPH == null) cachedSoilPH = SoilPH.fromPH(getPH());
         return cachedSoilPH;
     }
 
-    public byte getNitrogen() {
-        return nutrients[0];
+//    public byte getNutrient(PlantNutrient nutrientType) {
+//        switch (nutrientType) {
+//            case NITROGEN:
+//                return getNitrogen();
+//            case PHOSPHORUS:
+//                return getPhosphorus();
+//            case POTASSIUM:
+//                return getPotassium();
+//            default: return -1;
+//        }
+//    }
+
+    public int getNitrogen() {
+        return nutrients[0] & 0xFF;
     }
 
     public void setNitrogen(int amount) {
-        setNutrientAmount(0, amount, 10);
+        setNutrientAmount(0, amount, getMaxNutrientAmount());
     }
 
-    public byte getPhosphorus() {
-        return nutrients[1];
+    public void addNitrogen(int amount) {
+        setNitrogen(getNitrogen() + amount);
+    }
+
+    public int getMaxNutrientAmount() {
+        return 10;
+    }
+
+    public int getPhosphorus() {
+        return nutrients[1] & 0xFF;
     }
 
     public void setPhosphorus(int amount) {
-        setNutrientAmount(1, amount, 10);
+        setNutrientAmount(1, amount, getMaxNutrientAmount());
     }
 
-    public byte getPotassium() {
-        return nutrients[2];
+    public void addPhosphorus(int amount) {
+        setPhosphorus(getPhosphorus() + amount);
+    }
+
+    public int getPotassium() {
+        return nutrients[2] & 0xFF;
     }
 
     public void setPotassium(int amount) {
-        setNutrientAmount(2, amount, 10);
+        setNutrientAmount(2, amount, getMaxNutrientAmount());
     }
+
+    public void addPotassium(int amount) {
+        setPotassium(getPotassium() + amount);
+    }
+
 
     @Override
     public void read(@Nonnull CompoundNBT compound) {

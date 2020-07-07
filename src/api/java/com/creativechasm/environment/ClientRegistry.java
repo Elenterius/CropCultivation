@@ -2,7 +2,8 @@ package com.creativechasm.environment;
 
 import com.creativechasm.environment.api.block.LibBlocks;
 import com.creativechasm.environment.api.block.SoilBlock;
-import com.creativechasm.environment.api.soil.MoistureType;
+import com.creativechasm.environment.api.item.LibItems;
+import com.creativechasm.environment.api.soil.SoilMoisture;
 import com.creativechasm.environment.api.soil.SoilTexture;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.RenderType;
@@ -32,7 +33,7 @@ public class ClientRegistry {
 
     public static IBlockColor soilColors = (state, lightReader, pos, index) -> {
         if (lightReader != null && pos != null) {
-            if (index == 0) return state.get(SoilBlock.MOISTURE) >= MoistureType.WET.getMoistureLevel() ? BiomeColors.getWaterColor(lightReader, pos) : -1;
+            if (index == 0) return state.get(SoilBlock.MOISTURE) >= SoilMoisture.WET.getMoistureLevel() ? BiomeColors.getWaterColor(lightReader, pos) : -1;
         }
         if (index == 1 && state.getBlock() instanceof SoilBlock) {
             return ((SoilBlock) state.getBlock()).soilTexture.color;
@@ -58,5 +59,11 @@ public class ClientRegistry {
         }, LibBlocks.LOAM_SOIL, LibBlocks.SAND_SOIL, LibBlocks.SILT_SOIL, LibBlocks.CLAY_SOIL);
 
         event.getItemColors().register((stack, index) -> SoilTexture.SILT.color, LibBlocks.SILT);
+
+        event.getItemColors().register((stack, index) -> 0x4f9ad8, LibItems.FERTILIZER);
+        event.getItemColors().register((stack, index) -> 0xdfd8bf, LibItems.FEATHER_MEAL);
+        event.getItemColors().register((stack, index) -> 0x474431, LibItems.SEAWEED_MEAL);
+        event.getItemColors().register((stack, index) -> 0x7e7b76, LibItems.WOOD_ASH);
+        event.getItemColors().register((stack, index) -> 0xdfd8bf, LibItems.LIME_DUST);
     }
 }

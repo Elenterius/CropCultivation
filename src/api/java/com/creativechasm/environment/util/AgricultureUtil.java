@@ -12,7 +12,7 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.FarmlandWaterManager;
 import net.minecraftforge.common.Tags;
 
-import static com.creativechasm.environment.api.soil.SoilPHType.*;
+import static com.creativechasm.environment.api.soil.SoilPH.*;
 
 public class AgricultureUtil {
 

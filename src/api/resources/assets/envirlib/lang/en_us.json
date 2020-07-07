@@ -8,6 +8,9 @@
 
   "item.envirlib.organic_matter": "Organic Matter",
   "item.envirlib.compost": "Compost",
-  "item.envirlib.fertilizer": "Fertilizer",
+  "item.envirlib.fertilizer": "NPK Fertilizer",
+  "item.envirlib.feather_meal": "Feather Meal",
+  "item.envirlib.seaweed_meal": "Seaweed Meal",
+  "item.envirlib.wood_ash": "Wood Ash",
   "item.envirlib.lime_dust": "Lime Dust"
 }

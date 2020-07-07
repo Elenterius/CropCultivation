@@ -7,7 +7,7 @@ import net.minecraft.util.math.MathHelper;
 import java.util.Random;
 
 //https://en.wikipedia.org/wiki/Soil_pH#Classification_of_soil_pH_ranges
-public enum SoilPHType {
+public enum SoilPH {
     ULTRA_ACIDIC(Range.lessThan(3.5f)),
     EXTREMELY_ACIDIC(Range.closed(3.5f, 4.4f)),
     VERY_STRONGLY_ACIDIC(Range.closed(4.5f, 5.0f)),
@@ -20,10 +20,10 @@ public enum SoilPHType {
     STRONGLY_ALKALINE(Range.closed(8.5f, 9.0f)),
     VERY_STRONGLY_ALKALINE(Range.greaterThan(9.0f));
 
-    public static final float MAXIMUM = 14f;
-    public static final int MINIMUM = 0;
+    public static final int MAX_VALUE = 14;
+    public static final int MIN_VALUE = 0;
     private final Range<Float> pHRange;
-    SoilPHType(Range<Float> pHRange) {
+    SoilPH(Range<Float> pHRange) {
         this.pHRange = pHRange;
     }
 
@@ -40,8 +40,8 @@ public enum SoilPHType {
         if (pHRange.hasLowerBound() && pHRange.hasUpperBound()) {
             return MathHelper.lerp(pct, pHRange.lowerEndpoint(), pHRange.upperEndpoint());
         }
-        else if (!pHRange.hasLowerBound()) return MathHelper.lerp(pct, MINIMUM, pHRange.upperEndpoint());
-        else return MathHelper.lerp(pct, pHRange.lowerEndpoint(), MAXIMUM);
+        else if (!pHRange.hasLowerBound()) return MathHelper.lerp(pct, MIN_VALUE, pHRange.upperEndpoint());
+        else return MathHelper.lerp(pct, pHRange.lowerEndpoint(), MAX_VALUE);
     }
 
     public float randomPH(Random rand) {
@@ -57,10 +57,10 @@ public enum SoilPHType {
         }
         else if (!pHRange.hasLowerBound()) {
             if (pickHigherValues) return MathHelper.nextFloat(rand, pHRange.upperEndpoint() * 0.5f, pHRange.upperEndpoint());
-            else return MathHelper.nextFloat(rand, MINIMUM, pHRange.upperEndpoint() * 0.5f);
+            else return MathHelper.nextFloat(rand, MIN_VALUE, pHRange.upperEndpoint() * 0.5f);
         }
         else {
-            if (pickHigherValues) return MathHelper.nextFloat(rand, 11.5f, MAXIMUM);
+            if (pickHigherValues) return MathHelper.nextFloat(rand, 11.5f, MAX_VALUE);
             else return MathHelper.nextFloat(rand, pHRange.lowerEndpoint(), 11.5f);
         }
     }
@@ -69,9 +69,9 @@ public enum SoilPHType {
         return Math.round(pH * 10f) / 10f;
     }
 
-    public static SoilPHType fromPH(float pH) {
+    public static SoilPH fromPH(float pH) {
         pH = roundPH(pH);
-        for (SoilPHType phType : values()) {
+        for (SoilPH phType : values()) {
             if (phType.pHRange.contains(pH)) return phType;
         }
         return NEUTRAL;

@@ -1,8 +1,9 @@
 package com.creativechasm.environment.api.block;
 
 import com.creativechasm.environment.EnvironmentLib;
-import com.creativechasm.environment.api.soil.MoistureType;
 import com.creativechasm.environment.api.soil.PlantNutrient;
+import com.creativechasm.environment.api.soil.SoilMoisture;
+import com.creativechasm.environment.api.soil.SoilPH;
 import com.creativechasm.environment.api.soil.SoilTexture;
 import com.creativechasm.environment.api.tags.EnvirlibTags;
 import com.creativechasm.environment.util.AgricultureUtil;
@@ -12,6 +13,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.state.IntegerProperty;
@@ -63,7 +65,7 @@ public abstract class SoilBlock extends FarmlandBlock {
             throw new RuntimeException("Unable to modify field_176227_L");
         }
 
-        setDefaultState(stateContainer.getBaseState().with(MOISTURE, MoistureType.AVERAGE_0.getMoistureLevel()));
+        setDefaultState(stateContainer.getBaseState().with(MOISTURE, SoilMoisture.AVERAGE_0.getMoistureLevel()));
         this.soilTexture = soilTexture;
     }
 
@@ -91,7 +93,7 @@ public abstract class SoilBlock extends FarmlandBlock {
         int moisture = state.get(MOISTURE);
         float pH = tileState.getPH();
         int nitrogen = tileState.getNitrogen();
-        int phosphorous = tileState.getPhosphorus();
+        int phosphorus = tileState.getPhosphorus();
         int potassium = tileState.getPotassium();
         int organicMatter = state.get(ORGANIC_MATTER);
 
@@ -113,7 +115,6 @@ public abstract class SoilBlock extends FarmlandBlock {
                 moistureGain++;
             }
             moisture += moistureGain;
-            worldIn.spawnParticle(ParticleTypes.SPLASH, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, 2, 0.25, 0.06, 0.25, 0.1);
         }
 
         //evaporation loss in arid biomes
@@ -128,7 +129,7 @@ public abstract class SoilBlock extends FarmlandBlock {
         float drainageLoss = 0f;
         if (moisture >= maxMoistureCapacity - 1) {
             float waterRetentionModifier = organicMatter * SoilTexture.ORGANIC_MATTER_MODIFIER;
-            drainageLoss = soilTexture.getDrainageLoss() - waterRetentionModifier + 0.025f;
+            drainageLoss = soilTexture.getDrainageLoss() - waterRetentionModifier;
             BlockState bottomState = worldIn.getBlockState(pos.down());
             Block bottom = bottomState.getBlock();
             if (bottom == Blocks.CLAY) drainageLoss -= 1f - SoilTexture.CLAY.getDrainageLoss();
@@ -136,13 +137,15 @@ public abstract class SoilBlock extends FarmlandBlock {
             else if (bottom == Blocks.SPONGE) drainageLoss += 1.35f;  // dry sponge drains water "proactively"
             else if (Tags.Blocks.GRAVEL.contains(bottom)) drainageLoss += 0.68f;
             else if (Tags.Blocks.SAND.contains(bottom)) drainageLoss += 0.35f;
-//            System.out.println("drainage: " + drainageLoss);
+            EnvironmentLib.LOGGER.debug(MarkerManager.getMarker("SoilBlock"), "drainage: " + drainageLoss);
         }
 
         //total moisture loss
         moistureLoss = MathHelper.clamp(Math.round(directMoistureLoss + evaporationLoss + drainageLoss), 0, 3);
-        if (moistureLoss > moistureGain){
+        if (moistureLoss > moistureGain) {
             worldIn.spawnParticle(ParticleTypes.MYCELIUM, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, 4, 0.25, 0.02, 0.25, 0.1);
+        } else {
+            worldIn.spawnParticle(ParticleTypes.SPLASH, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, 2, 0.25, 0.06, 0.25, 0.1);
         }
         moisture -= moistureLoss;
 
@@ -151,11 +154,11 @@ public abstract class SoilBlock extends FarmlandBlock {
         float PPct = PlantNutrient.PHOSPHORUS.getAvailabilityInSoilForPlant(pH);
         float KPct = PlantNutrient.POTASSIUM.getAvailabilityInSoilForPlant(pH);
         float N = nitrogen * NPct;
-        float P = phosphorous * PPct;
+        float P = phosphorus * PPct;
         float K = potassium * KPct;
 
-        EnvironmentLib.LOGGER.debug(MarkerManager.getMarker("SoilBlock"), "boost growth chance: " + (0.75f * ((NPct+PPct+KPct)/3f)));
-        if (moisture > MoistureType.AVERAGE_0.getMoistureLevel() && N > 0f && P > 0f && K > 0f && worldIn.rand.nextFloat() < 0.75f * ((NPct+PPct+KPct)/3f)) {
+        EnvironmentLib.LOGGER.debug(MarkerManager.getMarker("SoilBlock"), "boost growth chance: " + (0.75f * ((NPct + PPct + KPct) / 3f)));
+        if (moisture > SoilMoisture.AVERAGE_0.getMoistureLevel() && N > 0f && P > 0f && K > 0f && worldIn.rand.nextFloat() < 0.75f * ((NPct + PPct + KPct) / 3f)) {
             BlockState upState = worldIn.getBlockState(pos.up());
             if (upState.getBlock() instanceof IGrowable) {
                 IGrowable growable = (IGrowable) upState.getBlock();
@@ -166,16 +169,13 @@ public abstract class SoilBlock extends FarmlandBlock {
                         int currAge = ages[0], maxAge = ages[1];
                         if (currAge < maxAge * 0.333f) { //root growth phase
                             potassium--;
-                        }
-                        else if (currAge < maxAge * 0.666f) { //foliage growth phase
+                        } else if (currAge < maxAge * 0.666f) { //foliage growth phase
                             nitrogen--;
-                        }
-                        else if (currAge < maxAge) { //flower/fruit growth phase
-                            phosphorous--;
-                        }
-                        else { //fallback, what Growable has no age property? penalize the player for using "illegal" plant
+                        } else if (currAge < maxAge) { //flower/fruit growth phase
+                            phosphorus--;
+                        } else { //fallback, what Growable has no age property? penalize the player for using "illegal" plant
                             nitrogen -= 2;
-                            phosphorous -= 2;
+                            phosphorus -= 2;
                             potassium -= 2;
                         }
                         moisture--;
@@ -191,15 +191,15 @@ public abstract class SoilBlock extends FarmlandBlock {
             if (organicMatter > 0) {
                 organicMatter--;
                 nitrogen++;
-                phosphorous++;
+                phosphorus++;
                 potassium++;
             }
         }
 
-        if (hasCrops && moisture < MoistureType.MOIST.getMoistureLevel()) {
+        if (hasCrops && moisture < SoilMoisture.MOIST.getMoistureLevel()) {
             float fertilizerBurnProbability = 0;
             if (nitrogen > 8) fertilizerBurnProbability += 1f / 3f;
-            if (phosphorous > 8) fertilizerBurnProbability += 1f / 3f;
+            if (phosphorus > 8) fertilizerBurnProbability += 1f / 3f;
             if (potassium > 8) fertilizerBurnProbability += 1f / 3f;
             if (worldIn.rand.nextFloat() <= fertilizerBurnProbability) {
                 //TODO: apply fertilizer burn to plant
@@ -211,7 +211,7 @@ public abstract class SoilBlock extends FarmlandBlock {
 //            moisture = MoistureType.STANDING_WATER.getMoistureLevel(); //TODO: handle waterlogged state
         }
 
-        updateState(worldIn, pos, state, tileState, moisture, pH, nitrogen, phosphorous, potassium, organicMatter);
+        updateState(worldIn, pos, state, tileState, moisture, pH, nitrogen, phosphorus, potassium, organicMatter);
     }
 
     public int getMaxMoistureLevel() {
@@ -252,7 +252,7 @@ public abstract class SoilBlock extends FarmlandBlock {
 
                 //decrease pH (rain is slightly acidic)
                 float pH = tileState.getPH();
-                if(worldIn.rand.nextFloat() < 0.2f) {
+                if (worldIn.rand.nextFloat() < 0.2f) {
                     pH -= 0.1f;
                 }
 
@@ -295,27 +295,82 @@ public abstract class SoilBlock extends FarmlandBlock {
 
     @Override
     @Nonnull
-    public ActionResultType onBlockActivated(BlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos, PlayerEntity player, @Nonnull Hand handIn, @Nonnull BlockRayTraceResult hit) {
-        int organic = state.get(ORGANIC_MATTER);
+    public ActionResultType onBlockActivated(@Nonnull BlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos, PlayerEntity player, @Nonnull Hand handIn, @Nonnull BlockRayTraceResult hit) {
         ItemStack stack = player.getHeldItem(handIn);
-        if (organic < 4 && EnvirlibTags.COMPOST_ITEM.contains(stack.getItem())) {
+        Item item = stack.getItem();
+        ActionResultType result = ActionResultType.PASS;
+        boolean shrinkStack = false;
+
+        if (EnvirlibTags.COMPOST_MATERIAL.contains(item) && state.get(ORGANIC_MATTER) < 4) {
             if (!worldIn.isRemote) {
-                worldIn.setBlockState(pos, state.with(ORGANIC_MATTER, organic + 1), Constants.BlockFlags.BLOCK_UPDATE);
+                worldIn.setBlockState(pos, state.cycle(ORGANIC_MATTER), Constants.BlockFlags.BLOCK_UPDATE);
+                shrinkStack = true;
+            }
+            result = ActionResultType.SUCCESS;
+        }
+
+        if (!worldIn.isRemote) {
+            boolean isLimingMaterial = EnvirlibTags.LIMING_MATERIAL.contains(item);
+            boolean isFertilizer = EnvirlibTags.FERTILIZER_GROUP.contains(item);
+
+            if (isLimingMaterial || isFertilizer) {
+                TileEntity tileEntity = worldIn.getTileEntity(pos);
+                if (tileEntity instanceof SoilStateTileEntity) {
+                    SoilStateTileEntity tileState = (SoilStateTileEntity) tileEntity;
+
+                    if (isLimingMaterial) { // increase soil pH
+                        float pH = tileState.getPH();
+                        if (pH < (float) SoilPH.MAX_VALUE) {
+                            tileState.setPH(pH + soilTexture.getLimingModifier()); //reflects lime effectiveness for increasing pH depending on soil consistency
+                            shrinkStack = true;
+                            result = ActionResultType.SUCCESS;
+                        }
+                    }
+
+                    if (isFertilizer) { // increase nutrients in soil
+                        boolean fertilizerUsed = false;
+                        boolean isNFertilizer = EnvirlibTags.N_FERTILIZER.contains(item);
+                        boolean isPFertilizer = EnvirlibTags.P_FERTILIZER.contains(item);
+                        boolean isKFertilizer = EnvirlibTags.K_FERTILIZER.contains(item);
+                        boolean isSuperFertilizer = !isNFertilizer && !isPFertilizer && !isKFertilizer; // illegal/creative fertilizer (any item directly added to the fertilizer_group tag)
+                        int max = tileState.getMaxNutrientAmount();
+                        if (tileState.getNitrogen() < max && (isNFertilizer || isSuperFertilizer)) {
+                            tileState.addNitrogen(1);
+                            fertilizerUsed = true;
+                        }
+                        if (tileState.getPhosphorus() < max && (isPFertilizer || isSuperFertilizer)) {
+                            tileState.addPhosphorus(1);
+                            fertilizerUsed = true;
+                        }
+                        if (tileState.getPotassium() < max && (isKFertilizer || isSuperFertilizer)) {
+                            tileState.addPotassium(1);
+                            fertilizerUsed = true;
+                        }
+
+                        if (fertilizerUsed) {
+                            shrinkStack = true;
+                            result = ActionResultType.SUCCESS;
+                        }
+                    }
+                }
+            }
+
+            if (shrinkStack) {
                 if (!player.abilities.isCreativeMode) {
                     stack.shrink(1);
                 }
             }
-            return ActionResultType.SUCCESS;
         }
-        return ActionResultType.PASS;
+
+        return result;
     }
 
-    public static void updateState(ServerWorld worldIn, BlockPos pos, BlockState state, SoilStateTileEntity tileState, int moisture, float pH, int nitrogen, int phosphorous, int potassium, int organicMatter) {
+    public static void updateState(ServerWorld worldIn, BlockPos pos, BlockState state, SoilStateTileEntity tileState, int moisture, float pH, int nitrogen, int phosphorus, int potassium, int organicMatter) {
         moisture = MathHelper.clamp(moisture, 0, 10);
         organicMatter = MathHelper.clamp(organicMatter, 0, 4);
         tileState.setPH(pH);
         tileState.setNitrogen(nitrogen);
-        tileState.setPhosphorus(phosphorous);
+        tileState.setPhosphorus(phosphorus);
         tileState.setPotassium(potassium);
         worldIn.setBlockState(pos, state.with(MOISTURE, moisture).with(ORGANIC_MATTER, organicMatter), Constants.BlockFlags.BLOCK_UPDATE);
     }

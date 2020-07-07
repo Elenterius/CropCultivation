@@ -23,4 +23,13 @@ public class LibItems {
 
     @ObjectHolder("fertilizer")
     public static Item FERTILIZER;
+
+    @ObjectHolder("feather_meal")
+    public static Item FEATHER_MEAL;
+
+    @ObjectHolder("seaweed_meal")
+    public static Item SEAWEED_MEAL;
+
+    @ObjectHolder("wood_ash")
+    public static Item WOOD_ASH;
 }

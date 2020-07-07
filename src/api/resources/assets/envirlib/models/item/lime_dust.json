@@ -1,3 +1,6 @@
 {
-  "parent": "item/sugar"
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "item/sugar"
+  }
 }

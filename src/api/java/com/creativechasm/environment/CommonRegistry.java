@@ -74,7 +74,10 @@ public class CommonRegistry {
                 createItemForBlock(LibBlocks.CLAY_SOIL, properties),
                 new Item(properties).setRegistryName("compost"),
                 new Item(properties).setRegistryName("lime_dust"),
-                new Item(properties).setRegistryName("fertilizer")
+                new Item(properties).setRegistryName("fertilizer"),
+                new Item(properties).setRegistryName("feather_meal"),
+                new Item(properties).setRegistryName("seaweed_meal"),
+                new Item(properties).setRegistryName("wood_ash")
         );
     }
 

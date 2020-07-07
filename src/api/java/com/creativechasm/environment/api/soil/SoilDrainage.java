@@ -1,6 +1,6 @@
 package com.creativechasm.environment.api.soil;
 
-public enum DrainageType {
+public enum SoilDrainage {
     NOT_DRAINED(0f),
     VERY_POORLY_DRAINED(1/6f),
     POORLY_DRAINED(2/6f),
@@ -11,7 +11,7 @@ public enum DrainageType {
 
     private final float drainMultiplier;
 
-    DrainageType(float drainMultiplier) {
+    SoilDrainage(float drainMultiplier) {
         this.drainMultiplier = drainMultiplier;
     }
 

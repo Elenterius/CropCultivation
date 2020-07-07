@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "item/gunpowder"
+    "layer0": "item/sugar"
   }
 }
