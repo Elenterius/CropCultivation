@@ -12,5 +12,16 @@
   "item.envirlib.feather_meal": "Feather Meal",
   "item.envirlib.seaweed_meal": "Seaweed Meal",
   "item.envirlib.wood_ash": "Wood Ash",
-  "item.envirlib.lime_dust": "Lime Dust"
+  "item.envirlib.lime_dust": "Lime Dust",
+  "item.envirlib.soil_test_kit": "Soil Test Kit",
+
+  "soilKit.results": "::Results::",
+  "soilKit.texture": "Texture: %s",
+  "soilKit.moisture": "Moisture: %s",
+  "soilKit.organic": "Organic Matter: %s",
+  "soilKit.nutrients": "Nutrients: %s",
+
+  "nutrient.nitrogen": "Nitrogen: %s",
+  "nutrient.phosphorus": "Phosphorus: %s",
+  "nutrient.potassium": "Potassium: %s"
 }

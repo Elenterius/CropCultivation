@@ -18,6 +18,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
@@ -43,7 +44,7 @@ import java.util.Random;
 
 public abstract class SoilBlock extends FarmlandBlock {
 
-    public static final IntegerProperty MOISTURE = IntegerProperty.create("moisture", 0, 10);
+    public static final IntegerProperty MOISTURE = IntegerProperty.create("moisture", 0, SoilMoisture.MAX_VALUE);
     public static final IntegerProperty ORGANIC_MATTER = IntegerProperty.create("organic_matter", 0, 4);
 
     public final SoilTexture soilTexture;
@@ -98,7 +99,7 @@ public abstract class SoilBlock extends FarmlandBlock {
         int organicMatter = state.get(ORGANIC_MATTER);
 
         int moistureGain = 0, moistureLoss = 0;
-        int maxMoistureCapacity = getMaxMoistureCapacity(organicMatter);
+        int maxMoistureCapacity = soilTexture.getMaxMoistureCapacity(organicMatter);
         boolean hasCrops = hasCrops(worldIn, pos);
         Biome biome = worldIn.getBiome(pos);
         boolean isRaining = worldIn.isRainingAt(pos.up());
@@ -125,23 +126,27 @@ public abstract class SoilBlock extends FarmlandBlock {
         }
 
         //drainage loss
-        //TODO: rework this!
         float drainageLoss = 0f;
         if (moisture >= maxMoistureCapacity - 1) {
-            float waterRetentionModifier = organicMatter * SoilTexture.ORGANIC_MATTER_MODIFIER;
+            BlockState downState = worldIn.getBlockState(pos.down());
+            Block subsoil = downState.getBlock();
+            float waterRetentionModifier = organicMatter * SoilTexture.ORGANIC_MATTER_MULTIPLIER;
             drainageLoss = soilTexture.getDrainageLoss() - waterRetentionModifier;
-            BlockState bottomState = worldIn.getBlockState(pos.down());
-            Block bottom = bottomState.getBlock();
-            if (bottom == Blocks.CLAY) drainageLoss -= 1f - SoilTexture.CLAY.getDrainageLoss();
-            else if (Tags.Blocks.STONE.contains(bottom)) drainageLoss -= 0.5f;
-            else if (bottom == Blocks.SPONGE) drainageLoss += 1.35f;  // dry sponge drains water "proactively"
-            else if (Tags.Blocks.GRAVEL.contains(bottom)) drainageLoss += 0.68f;
-            else if (Tags.Blocks.SAND.contains(bottom)) drainageLoss += 0.35f;
+            if (subsoil == Blocks.CLAY) drainageLoss -= 1f - SoilTexture.CLAY.getDrainageLoss();
+            else if (Tags.Blocks.SANDSTONE.contains(subsoil)) drainageLoss -= 0.45f;
+            else if (Tags.Blocks.STONE.contains(subsoil)) drainageLoss -= 0.5f;
+            else if (BlockTags.STONE_BRICKS.contains(subsoil)) drainageLoss -= 0.48f;
+            else if (Tags.Blocks.ORES.contains(subsoil)) drainageLoss -= 0.45f;
+            else if (Tags.Blocks.GRAVEL.contains(subsoil)) drainageLoss += 0.68f;
+            else if (Tags.Blocks.SAND.contains(subsoil)) drainageLoss += 0.35f;
+            else if (subsoil instanceof WetSpongeBlock) drainageLoss -= 1.35f; // wet sponge provides moisture
+            else if (subsoil instanceof SpongeBlock) drainageLoss += 1.35f;  // dry sponge drains water "proactively"
             EnvironmentLib.LOGGER.debug(MarkerManager.getMarker("SoilBlock"), "drainage: " + drainageLoss);
         }
 
         //total moisture loss
         moistureLoss = MathHelper.clamp(Math.round(directMoistureLoss + evaporationLoss + drainageLoss), 0, 3);
+        EnvironmentLib.LOGGER.debug(MarkerManager.getMarker("SoilBlock"), "total moisture loss: " + moistureLoss);
         if (moistureLoss > moistureGain) {
             worldIn.spawnParticle(ParticleTypes.MYCELIUM, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, 4, 0.25, 0.02, 0.25, 0.1);
         } else {
@@ -168,15 +173,17 @@ public abstract class SoilBlock extends FarmlandBlock {
                         int[] ages = AgricultureUtil.getCurrentAgeAndMaxAge(upState);
                         int currAge = ages[0], maxAge = ages[1];
                         if (currAge < maxAge * 0.333f) { //root growth phase
-                            potassium--;
+                            phosphorus--;
+                            nitrogen--;
                         } else if (currAge < maxAge * 0.666f) { //foliage growth phase
                             nitrogen--;
+                            potassium--;
                         } else if (currAge < maxAge) { //flower/fruit growth phase
                             phosphorus--;
-                        } else { //fallback, what Growable has no age property? penalize the player for using "illegal" plant
+                        } else { //fallback, what Growable has no age property? (flowers) penalize the player for using "illegal" plant
                             nitrogen -= 2;
                             phosphorus -= 2;
-                            potassium -= 2;
+                            potassium -= 1;
                         }
                         moisture--;
 
@@ -206,21 +213,20 @@ public abstract class SoilBlock extends FarmlandBlock {
             }
         }
 
+/*
+//      removed, makes no sense with current moisture system. --> Currently: Soil becomes waterlogged through rain or subsoil reducing water seepage
         if (moisture > maxMoistureCapacity) {
-//            moisture = maxMoistureCapacity;
-//            moisture = MoistureType.STANDING_WATER.getMoistureLevel(); //TODO: handle waterlogged state
+            moisture = maxMoistureCapacity;
+            // or force "fake" waterlogged state?
+            moisture = MoistureType.STANDING_WATER.getMoistureLevel();
         }
+*/
 
         updateState(worldIn, pos, state, tileState, moisture, pH, nitrogen, phosphorus, potassium, organicMatter);
     }
 
     public int getMaxMoistureLevel() {
-        return 10;
-    }
-
-    public int getMaxMoistureCapacity(int organicMatter) {
-        int capacity = MathHelper.floor(getMaxMoistureLevel() * (soilTexture.getWaterHoldingCapacity() + organicMatter * SoilTexture.ORGANIC_MATTER_MODIFIER + soilTexture.getWaterHoldingCapacity()));
-        return MathHelper.clamp(capacity, 0, getMaxMoistureLevel() - 1);
+        return SoilMoisture.MAX_VALUE;
     }
 
     protected boolean hasCrops(IBlockReader worldIn, BlockPos pos) {
@@ -241,35 +247,38 @@ public abstract class SoilBlock extends FarmlandBlock {
 
     @Override
     public void fillWithRain(@Nonnull World worldIn, @Nonnull BlockPos pos) {
-        if (worldIn instanceof ServerWorld && worldIn.rand.nextFloat() < 0.05f) { // 1/20
+        if (worldIn instanceof ServerWorld && worldIn.rand.nextFloat() < 0.36f) {
             if (worldIn.getBiome(pos).getTemperature(pos) >= 0.15F) {
                 TileEntity tileEntity = worldIn.getTileEntity(pos);
                 if (!(tileEntity instanceof SoilStateTileEntity)) return;
+                EnvironmentLib.LOGGER.debug(MarkerManager.getMarker("SoilBlock"), "filling with rain...");
+
                 SoilStateTileEntity tileState = (SoilStateTileEntity) tileEntity;
-                BlockState state = worldIn.getBlockState(pos);
-                int moisture = state.get(MOISTURE);
+                BlockState blockState = worldIn.getBlockState(pos);
+                int moisture = blockState.get(MOISTURE);
                 moisture++; //increase moisture
 
                 //decrease pH (rain is slightly acidic)
-                float pH = tileState.getPH();
-                if (worldIn.rand.nextFloat() < 0.2f) {
-                    pH -= 0.1f;
-                }
+                float pH = tileState.getPH() - 0.2f;
 
                 //wash away nutrients
-                int organicMatter = state.get(ORGANIC_MATTER);
-                if (moisture > getMaxMoistureCapacity(organicMatter) && worldIn.getRainStrength(1f) > 0.75f) {
-                    float nutrientsRetention = organicMatter * SoilTexture.ORGANIC_MATTER_MODIFIER; // max = 0.5f
+                int organicMatter = blockState.get(ORGANIC_MATTER);
+                EnvironmentLib.LOGGER.debug(MarkerManager.getMarker("SoilBlock"), "rain strength: " + worldIn.getRainStrength(1f));
+                EnvironmentLib.LOGGER.debug(MarkerManager.getMarker("SoilBlock"), "moisture: " + moisture);
+                EnvironmentLib.LOGGER.debug(MarkerManager.getMarker("SoilBlock"), "max moisture: " + soilTexture.getMaxMoistureCapacity(organicMatter));
+                if (moisture > soilTexture.getMaxMoistureCapacity(organicMatter) && worldIn.getRainStrength(1f) > 0.75f) {
+                    float nutrientsRetention = organicMatter * SoilTexture.ORGANIC_MATTER_MULTIPLIER; // max = 0.5f
                     if (worldIn.rand.nextFloat() < 0.9f - nutrientsRetention) {
                         int nitrogen = tileState.getNitrogen() - 1;
                         int phosphorous = tileState.getPhosphorus() - 1;
                         int potassium = tileState.getPotassium() - 1;
-                        updateState((ServerWorld) worldIn, pos, state, tileState, moisture, pH, nitrogen, phosphorous, potassium, organicMatter);
+                        updateState((ServerWorld) worldIn, pos, blockState, tileState, moisture, pH, nitrogen, phosphorous, potassium, organicMatter);
                         return;
                     }
                 }
 
-                worldIn.setBlockState(pos, state.with(MOISTURE, moisture), Constants.BlockFlags.BLOCK_UPDATE);
+                tileState.setPH(pH);
+                worldIn.setBlockState(pos, blockState.with(MOISTURE, MathHelper.clamp(moisture, 0, SoilMoisture.MAX_VALUE)), Constants.BlockFlags.BLOCK_UPDATE);
             }
         }
     }
@@ -366,7 +375,7 @@ public abstract class SoilBlock extends FarmlandBlock {
     }
 
     public static void updateState(ServerWorld worldIn, BlockPos pos, BlockState state, SoilStateTileEntity tileState, int moisture, float pH, int nitrogen, int phosphorus, int potassium, int organicMatter) {
-        moisture = MathHelper.clamp(moisture, 0, 10);
+        moisture = MathHelper.clamp(moisture, 0, SoilMoisture.MAX_VALUE);
         organicMatter = MathHelper.clamp(organicMatter, 0, 4);
         tileState.setPH(pH);
         tileState.setNitrogen(nitrogen);

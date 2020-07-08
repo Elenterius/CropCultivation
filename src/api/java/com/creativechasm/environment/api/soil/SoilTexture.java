@@ -20,10 +20,9 @@ public enum SoilTexture {
     SAND(0.1f, SoilDrainage.RAPIDLY_DRAINED, 3, SoilPH.NEUTRAL, MathHelper.hsvToRGB(57f, 0.21f, 0.99f)); //0xfcf9c7
 
     public static float MAX_DRAINAGE_AMOUNT = 2f;
-    public static float ORGANIC_MATTER_MODIFIER = 0.125f;
-    public static int maxMoistureContent = 10;
-    public static float depletionPointPct = 0.25f;
-    public static float wiltingPointPct = 0.25f;
+    public static float ORGANIC_MATTER_MULTIPLIER = 0.125f;
+    public static float DEPLETION_POINT_PCT = 0.25f;
+    public static float WILTING_POINT_PCT = 0.5f;
 
     private final float fieldCapacity;
     private final SoilDrainage drainageType;
@@ -43,8 +42,31 @@ public enum SoilTexture {
         return fieldCapacity;
     }
 
+    public float getDepletionPoint() {
+        return fieldCapacity * DEPLETION_POINT_PCT;
+    }
+
+    public float getWiltingPoint() {
+        return fieldCapacity * WILTING_POINT_PCT;
+    }
+
+    public int getMaxMoistureCapacity(int organicMatter) {
+        int capacity = MathHelper.floor(SoilMoisture.MAX_VALUE * (2f * fieldCapacity + organicMatter * ORGANIC_MATTER_MULTIPLIER));
+        return MathHelper.clamp(capacity, 0, SoilMoisture.MAX_VALUE - 1);
+    }
+
+    public int getMinMoistureCapacity(int organicMatter, int maxMoistureCapacity) {
+        float retentionModifier = organicMatter * ORGANIC_MATTER_MULTIPLIER;
+        int capacity = MathHelper.floor(maxMoistureCapacity - SoilMoisture.MAX_VALUE * (2f * getWiltingPoint() + retentionModifier) - retentionModifier + organicMatter);
+        return MathHelper.clamp(capacity, 1, SoilMoisture.MAX_VALUE);
+    }
+
     public int getMaxWaterDistance() {
         return maxWaterDistance;
+    }
+
+    public SoilDrainage getDrainageType() {
+        return drainageType;
     }
 
     public float getDrainageLoss() {
@@ -54,6 +76,7 @@ public enum SoilTexture {
     /**
      * Depending on the soil consistency, returns the amount by how much the the pH can be increased.<br>
      * Implicitly reflects amount of lime needed for increasing pH depending on soil consistency.
+     *
      * @return pH increase amount
      */
     public float getLimingModifier() {

@@ -4,14 +4,12 @@ import com.creativechasm.environment.api.block.LibBlocks;
 import com.creativechasm.environment.api.block.SoilBlock;
 import com.creativechasm.environment.api.block.SoilStateTileEntity;
 import com.creativechasm.environment.api.soil.SoilTexture;
+import com.creativechasm.environment.common.item.SoilTestKitItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.world.IBlockReader;
@@ -72,12 +70,13 @@ public class CommonRegistry {
                 createItemForBlock(LibBlocks.SILT_SOIL, properties),
                 createItemForBlock(LibBlocks.SAND_SOIL, properties),
                 createItemForBlock(LibBlocks.CLAY_SOIL, properties),
-                new Item(properties).setRegistryName("compost"),
-                new Item(properties).setRegistryName("lime_dust"),
-                new Item(properties).setRegistryName("fertilizer"),
-                new Item(properties).setRegistryName("feather_meal"),
-                new Item(properties).setRegistryName("seaweed_meal"),
-                new Item(properties).setRegistryName("wood_ash")
+                new Item(new Item.Properties().group(ITEM_GROUP)).setRegistryName("compost"),
+                new Item(new Item.Properties().group(ITEM_GROUP)).setRegistryName("lime_dust"),
+                new Item(new Item.Properties().rarity(Rarity.RARE).group(ITEM_GROUP)).setRegistryName("fertilizer"),
+                new Item(new Item.Properties().group(ITEM_GROUP)).setRegistryName("feather_meal"),
+                new Item(new Item.Properties().group(ITEM_GROUP)).setRegistryName("seaweed_meal"),
+                new Item(new Item.Properties().group(ITEM_GROUP)).setRegistryName("wood_ash"),
+                new SoilTestKitItem(new Item.Properties().maxStackSize(1).rarity(Rarity.UNCOMMON).group(ITEM_GROUP)).setRegistryName("soil_test_kit")
         );
     }
 

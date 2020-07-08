@@ -32,4 +32,7 @@ public class LibItems {
 
     @ObjectHolder("wood_ash")
     public static Item WOOD_ASH;
+
+    @ObjectHolder("soil_test_kit")
+    public static Item SOIL_TEST_KIT;
 }
