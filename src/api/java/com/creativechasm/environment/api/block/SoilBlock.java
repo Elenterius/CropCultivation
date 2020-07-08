@@ -71,12 +71,47 @@ public abstract class SoilBlock extends FarmlandBlock {
     }
 
     @Override
-    public boolean hasTileEntity(BlockState state) {
+    public BlockState getStateForPlacement(@Nonnull BlockItemUseContext context) {
+        return getDefaultState();
+    }
+
+    @Override
+    public void onBlockPlacedBy(World worldIn, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nullable LivingEntity placer, @Nonnull ItemStack stack) {
+        TileEntity tile = worldIn.getTileEntity(pos);
+        if (tile instanceof SoilStateTileEntity) {
+            ((SoilStateTileEntity) tile).setPH(soilTexture.pHType.randomPHAffectedByTemperature(worldIn.rand, worldIn.getBiome(pos).getTemperature(pos)));
+        }
+    }
+
+    public int getMaxMoistureLevel() {
+        return SoilMoisture.MAX_VALUE;
+    }
+
+    protected boolean hasCrops(IBlockReader worldIn, BlockPos pos) {
+        BlockState state = worldIn.getBlockState(pos.up());
+        return state.getBlock() instanceof IPlantable && canSustainPlant(state, worldIn, pos, Direction.UP, (IPlantable) state.getBlock());
+    }
+
+    @Override
+    public boolean canSustainPlant(@Nonnull BlockState state, @Nonnull IBlockReader world, @Nonnull BlockPos pos, @Nonnull Direction facing, @Nonnull IPlantable plantable) {
+//        PlantType plantType = plantable.getPlantType(world, pos);
+//        if(plantType == plantType.Nether)
         return true;
     }
 
     @Override
-    public abstract TileEntity createTileEntity(BlockState state, IBlockReader world);
+    public boolean isFertile(BlockState blockState, IBlockReader world, BlockPos pos) {
+        if (world instanceof ServerWorld) {
+            TileEntity tileEntity = world.getTileEntity(pos);
+            if (!(tileEntity instanceof SoilStateTileEntity)) return false;
+            SoilStateTileEntity tileState = (SoilStateTileEntity) tileEntity;
+
+            if (tileState.getNitrogen() > 0 && tileState.getPhosphorus() > 0) {
+                return blockState.get(MOISTURE) > SoilMoisture.AVERAGE_1.getMoistureLevel();
+            }
+        }
+        return false;
+    }
 
     @Override
     public void tick(@Nonnull BlockState state, @Nonnull ServerWorld worldIn, @Nonnull BlockPos pos, @Nonnull Random rand) {
@@ -162,14 +197,13 @@ public abstract class SoilBlock extends FarmlandBlock {
         float P = phosphorus * PPct;
         float K = potassium * KPct;
 
-        EnvironmentLib.LOGGER.debug(MarkerManager.getMarker("SoilBlock"), "boost growth chance: " + (0.75f * ((NPct + PPct + KPct) / 3f)));
+//        EnvironmentLib.LOGGER.debug(MarkerManager.getMarker("SoilBlock"), "boost growth chance: " + (0.75f * ((NPct + PPct + KPct) / 3f)));
         if (moisture > SoilMoisture.AVERAGE_0.getMoistureLevel() && N > 0f && P > 0f && K > 0f && worldIn.rand.nextFloat() < 0.75f * ((NPct + PPct + KPct) / 3f)) {
             BlockState upState = worldIn.getBlockState(pos.up());
             if (upState.getBlock() instanceof IGrowable) {
                 IGrowable growable = (IGrowable) upState.getBlock();
                 if (growable.canGrow(worldIn, pos, upState, false)) {
-                    if (growable.canUseBonemeal(worldIn, worldIn.rand, pos, upState)) {
-
+                    if (growable.canUseBonemeal(worldIn, worldIn.rand, pos, upState) || upState.getBlock() instanceof NetherWartBlock) {
                         int[] ages = AgricultureUtil.getCurrentAgeAndMaxAge(upState);
                         int currAge = ages[0], maxAge = ages[1];
                         if (currAge < maxAge * 0.333f) { //root growth phase
@@ -194,7 +228,7 @@ public abstract class SoilBlock extends FarmlandBlock {
         }
 
         //decompose organic matter into nutrients
-        if (worldIn.rand.nextFloat() < 0.025f) { // 1/40
+        if (worldIn.rand.nextFloat() < 0.025f) {
             if (organicMatter > 0) {
                 organicMatter--;
                 nitrogen++;
@@ -223,26 +257,6 @@ public abstract class SoilBlock extends FarmlandBlock {
 */
 
         updateState(worldIn, pos, state, tileState, moisture, pH, nitrogen, phosphorus, potassium, organicMatter);
-    }
-
-    public int getMaxMoistureLevel() {
-        return SoilMoisture.MAX_VALUE;
-    }
-
-    protected boolean hasCrops(IBlockReader worldIn, BlockPos pos) {
-        BlockState state = worldIn.getBlockState(pos.up());
-        return state.getBlock() instanceof IPlantable && canSustainPlant(state, worldIn, pos, Direction.UP, (IPlantable) state.getBlock());
-    }
-
-    @Override
-    public boolean canSustainPlant(@Nonnull BlockState state, @Nonnull IBlockReader world, @Nonnull BlockPos pos, @Nonnull Direction facing, @Nonnull IPlantable plantable) {
-        return true;
-    }
-
-    @Override
-    public boolean isFertile(BlockState state, IBlockReader world, BlockPos pos) {
-        //TODO: improve this
-        return state.get(MOISTURE) > 0;
     }
 
     @Override
@@ -385,22 +399,16 @@ public abstract class SoilBlock extends FarmlandBlock {
     }
 
     @Override
-    public void onBlockPlacedBy(World worldIn, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nullable LivingEntity placer, @Nonnull ItemStack stack) {
-        TileEntity tile = worldIn.getTileEntity(pos);
-        if (tile instanceof SoilStateTileEntity) {
-            ((SoilStateTileEntity) tile).setPH(soilTexture.pHType.randomPHAffectedByTemperature(worldIn.rand, worldIn.getBiome(pos).getTemperature(pos)));
-        }
-    }
-
-    @Override
-    public BlockState getStateForPlacement(@Nonnull BlockItemUseContext context) {
-        return getDefaultState();
-    }
-
-    @Override
     public void onFallenUpon(@Nonnull World worldIn, @Nonnull BlockPos pos, Entity entityIn, float fallDistance) {
         //removed farmland trampling!
         entityIn.onLivingFall(fallDistance, 1.0F);
     }
 
+    @Override
+    public boolean hasTileEntity(BlockState state) {
+        return true;
+    }
+
+    @Override
+    public abstract TileEntity createTileEntity(BlockState state, IBlockReader world);
 }
