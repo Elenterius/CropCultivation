@@ -25,15 +25,13 @@ import java.util.Random;
 
 /**
  * Composter changes:<br>
- * - work slower<br>
+ * - nerf speed<br>
  * - return compost instead of bone meal
  */
 @Mixin(ComposterBlock.class)
 public abstract class MixinComposterBlock extends Block {
 
-    @Shadow
-    @Final
-    public static IntegerProperty LEVEL;
+    @Shadow @Final public static IntegerProperty LEVEL;
 
     public MixinComposterBlock(Properties properties) {
         super(properties);
@@ -61,7 +59,7 @@ public abstract class MixinComposterBlock extends Block {
             index = 2
     )
     protected int adjustOnBlockAddedTicks(int ticks) {
-        return ticks * 4; //increases time needed to convert compost to item
+        return ticks * 4; //increases time needed to convert material to compost
     }
 
     @ModifyArg(
@@ -70,7 +68,7 @@ public abstract class MixinComposterBlock extends Block {
             index = 2
     )
     private static int adjustAddItemTicks(int ticks) {
-        return ticks * 4; //increases time needed to convert compost to item
+        return ticks * 4; //increases time needed to convert material to compost
     }
 
     @Override

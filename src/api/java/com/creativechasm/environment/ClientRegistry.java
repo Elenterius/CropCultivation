@@ -60,7 +60,7 @@ public class ClientRegistry {
 
         event.getItemColors().register((stack, index) -> SoilTexture.SILT.color, LibBlocks.SILT);
 
-        event.getItemColors().register((stack, index) -> 0x4f9ad8, LibItems.FERTILIZER);
+        event.getItemColors().register((stack, index) -> 0x4f9ad8, LibItems.NPK_FERTILIZER);
         event.getItemColors().register((stack, index) -> 0xdfd8bf, LibItems.FEATHER_MEAL);
         event.getItemColors().register((stack, index) -> 0x474431, LibItems.SEAWEED_MEAL);
         event.getItemColors().register((stack, index) -> 0x7e7b76, LibItems.WOOD_ASH);

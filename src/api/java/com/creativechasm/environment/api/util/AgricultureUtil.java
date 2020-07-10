@@ -1,4 +1,4 @@
-package com.creativechasm.environment.util;
+package com.creativechasm.environment.api.util;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;

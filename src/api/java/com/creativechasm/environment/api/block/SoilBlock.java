@@ -1,13 +1,13 @@
 package com.creativechasm.environment.api.block;
 
 import com.creativechasm.environment.EnvironmentLib;
-import com.creativechasm.environment.api.soil.PlantNutrient;
+import com.creativechasm.environment.api.plant.PlantMacronutrient;
 import com.creativechasm.environment.api.soil.SoilMoisture;
 import com.creativechasm.environment.api.soil.SoilPH;
 import com.creativechasm.environment.api.soil.SoilTexture;
 import com.creativechasm.environment.api.tags.EnvirlibTags;
-import com.creativechasm.environment.util.AgricultureUtil;
-import com.creativechasm.environment.util.ClimateUtil;
+import com.creativechasm.environment.api.util.AgricultureUtil;
+import com.creativechasm.environment.api.world.ClimateUtil;
 import net.minecraft.block.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -190,15 +190,15 @@ public abstract class SoilBlock extends FarmlandBlock {
         moisture -= moistureLoss;
 
         //boost plant growth by consuming water with nutrients
-        float NPct = PlantNutrient.NITROGEN.getAvailabilityInSoilForPlant(pH);
-        float PPct = PlantNutrient.PHOSPHORUS.getAvailabilityInSoilForPlant(pH);
-        float KPct = PlantNutrient.POTASSIUM.getAvailabilityInSoilForPlant(pH);
+        float NPct = PlantMacronutrient.NITROGEN.getAvailabilityPctInSoilForPlant(pH);
+        float PPct = PlantMacronutrient.PHOSPHORUS.getAvailabilityPctInSoilForPlant(pH);
+        float KPct = PlantMacronutrient.POTASSIUM.getAvailabilityPctInSoilForPlant(pH);
         float N = nitrogen * NPct;
         float P = phosphorus * PPct;
         float K = potassium * KPct;
 
 //        EnvironmentLib.LOGGER.debug(MarkerManager.getMarker("SoilBlock"), "boost growth chance: " + (0.75f * ((NPct + PPct + KPct) / 3f)));
-        if (moisture > SoilMoisture.AVERAGE_0.getMoistureLevel() && N > 0f && P > 0f && K > 0f && worldIn.rand.nextFloat() < 0.75f * ((NPct + PPct + KPct) / 3f)) {
+        if (moisture > SoilMoisture.AVERAGE_1.getMoistureLevel() && N > 0f && P > 0f && K > 0f && worldIn.rand.nextFloat() < 0.75f * ((NPct + PPct + KPct) / 3f)) {
             BlockState upState = worldIn.getBlockState(pos.up());
             if (upState.getBlock() instanceof IGrowable) {
                 IGrowable growable = (IGrowable) upState.getBlock();

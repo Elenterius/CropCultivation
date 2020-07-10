@@ -1,4 +1,4 @@
-package com.creativechasm.environment.util;
+package com.creativechasm.environment.api.world;
 
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.Dimension;

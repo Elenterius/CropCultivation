@@ -1,6 +1,6 @@
 package com.creativechasm.environment.api.soil;
 
-import com.creativechasm.environment.util.ClimateUtil;
+import com.creativechasm.environment.api.world.ClimateUtil;
 import com.google.common.collect.Range;
 import net.minecraft.util.math.MathHelper;
 

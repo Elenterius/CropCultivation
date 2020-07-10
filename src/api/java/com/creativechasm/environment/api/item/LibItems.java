@@ -22,7 +22,7 @@ public class LibItems {
     public static Item LIME_DUST;
 
     @ObjectHolder("fertilizer")
-    public static Item FERTILIZER;
+    public static Item NPK_FERTILIZER;
 
     @ObjectHolder("feather_meal")
     public static Item FEATHER_MEAL;
