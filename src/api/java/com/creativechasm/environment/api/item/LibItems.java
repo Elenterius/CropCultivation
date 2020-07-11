@@ -30,6 +30,9 @@ public class LibItems {
     @ObjectHolder("seaweed_meal")
     public static Item SEAWEED_MEAL;
 
+    @ObjectHolder("fish_meal")
+    public static Item FISH_MEAL;
+
     @ObjectHolder("wood_ash")
     public static Item WOOD_ASH;
 

@@ -1,6 +1,7 @@
 package com.creativechasm.environment;
 
 import com.creativechasm.environment.api.world.ClimateUtil;
+import com.creativechasm.environment.init.CommonRegistry;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -20,6 +21,8 @@ public class EnvironmentLib {
     }
 
     private void onCommonSetup(FMLCommonSetupEvent event) {
+        CommonRegistry.registerCompostableItems();
+
         ClimateUtil.determineTemperatureScale();
     }
 }

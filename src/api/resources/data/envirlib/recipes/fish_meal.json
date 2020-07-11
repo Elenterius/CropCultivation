@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "forge:cooked_fishes"
+    }
+  ],
+  "result": {
+    "item": "envirlib:fish_meal",
+    "count": 3
+  }
+}

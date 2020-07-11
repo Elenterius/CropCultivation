@@ -1,5 +1,6 @@
-package com.creativechasm.environment;
+package com.creativechasm.environment.init;
 
+import com.creativechasm.environment.EnvironmentLib;
 import com.creativechasm.environment.api.block.LibBlocks;
 import com.creativechasm.environment.api.block.SoilBlock;
 import com.creativechasm.environment.api.item.LibItems;
@@ -63,6 +64,7 @@ public class ClientRegistry {
         event.getItemColors().register((stack, index) -> 0x4f9ad8, LibItems.NPK_FERTILIZER);
         event.getItemColors().register((stack, index) -> 0xdfd8bf, LibItems.FEATHER_MEAL);
         event.getItemColors().register((stack, index) -> 0x474431, LibItems.SEAWEED_MEAL);
+        event.getItemColors().register((stack, index) -> 0x73868c, LibItems.FISH_MEAL);
         event.getItemColors().register((stack, index) -> 0x7e7b76, LibItems.WOOD_ASH);
         event.getItemColors().register((stack, index) -> 0xdfd8bf, LibItems.LIME_DUST);
     }

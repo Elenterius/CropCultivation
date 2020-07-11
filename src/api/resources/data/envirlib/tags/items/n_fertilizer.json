@@ -1,6 +1,7 @@
 {
   "values": [
     "envirlib:fertilizer",
-    "envirlib:feather_meal"
+    "envirlib:feather_meal",
+    "envirlib:fish_meal"
   ]
 }
