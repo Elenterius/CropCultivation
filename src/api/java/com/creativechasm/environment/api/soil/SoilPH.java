@@ -1,5 +1,6 @@
 package com.creativechasm.environment.api.soil;
 
+import com.creativechasm.environment.api.util.MathHelperX;
 import com.creativechasm.environment.api.world.ClimateUtil;
 import com.google.common.collect.Range;
 import net.minecraft.util.math.MathHelper;
@@ -66,7 +67,7 @@ public enum SoilPH {
     }
 
     public static float roundPH(float pH) {
-        return Math.round(pH * 10f) / 10f;
+        return MathHelperX.roundTo1Decimal(pH);
     }
 
     public static SoilPH fromPH(float pH) {

@@ -1,6 +1,7 @@
 package com.creativechasm.environment.api.world;
 
 import com.creativechasm.environment.EnvironmentLib;
+import com.creativechasm.environment.api.util.MathHelperX;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
@@ -9,16 +10,20 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Objects;
+
 public class ClimateUtil {
 
     public static Marker LOG_MARKER = MarkerManager.getMarker("Climate");
 
-    private static float TEMP_MIN = 2f;
-    private static float TEMP_MAX = -0.5f;
-    private static float TEMP_DIFF;
+    private static float TEMP_MIN = -0.5f;
+    private static float TEMP_MAX = 2f;
+    private static float TEMP_DIFF = TEMP_MAX - TEMP_MIN;
 
-    public static void determineTemperatureScale() {
-
+    public static void resetTemperatureScaler() {
         EnvironmentLib.LOGGER.debug(LOG_MARKER, "Determining temperature scale of Biomes...");
         ForgeRegistries.BIOMES.getValues().stream().map(Biome::getDefaultTemperature).forEach(f -> {
             if (f < TEMP_MIN) TEMP_MIN = f;
@@ -28,9 +33,19 @@ public class ClimateUtil {
         EnvironmentLib.LOGGER.debug(LOG_MARKER, "Global Temperature Range: {" + TEMP_MIN + ", ... , " + TEMP_MAX + "}");
     }
 
+    public static void dumpBiomeTemperatureAndHumidity() {
+        EnvironmentLib.LOGGER.info(LOG_MARKER, "dumping biome default temperatures to biome_temperatures.csv...");
+        try {
+            Files.write(Paths.get("biome_temperatures.csv"), (Iterable<String>) ForgeRegistries.BIOMES.getValues().stream().map(biome -> Objects.requireNonNull(biome.getRegistryName()).toString() + "," + biome.getDefaultTemperature() + "," + biome.getDownfall())::iterator);
+        } catch (IOException e) {
+            EnvironmentLib.LOGGER.error(LOG_MARKER, "Failed to dump biome temps!", e);
+        }
+    }
+
     /**
      * Rescales input temperature using min-max-scalar based on the default temperature of all registered biomes.<br>
      * Modded biomes with unusual temperatures will greatly effect the result.
+     *
      * @param t temperature
      * @return temperature rescaled between 0.0 and 1.0 (inclusive)
      */
@@ -38,8 +53,14 @@ public class ClimateUtil {
         return (t - TEMP_MIN) / TEMP_DIFF;
     }
 
-    public static boolean isHighHumidity(float relativeHumidity) {
-        return relativeHumidity > 0.85F;
+
+    public static float convertTemperatureMCToCelsius(float mcTemp) {
+        return 27.8f * mcTemp - 4.17f;
+    }
+
+    public static float convertTemperatureCelsiusToMC(float celsiusTemp) {
+        float mcTemp = 0.036f * celsiusTemp + 0.15f;
+        return MathHelperX.roundTo2Decimals(mcTemp);
     }
 
     public static boolean isFreezingTemp(float temperature) {
@@ -48,6 +69,10 @@ public class ClimateUtil {
 
     public static boolean isArid(Biome biome) {
         return biome.getDefaultTemperature() > 0.85F && biome.getDownfall() < 0.15f;
+    }
+
+    public static boolean isHighHumidity(float relativeHumidity) {
+        return relativeHumidity > 0.85F;
     }
 
     public static float calcDewPointTemperature(float temperature, float relativeHumidity) {

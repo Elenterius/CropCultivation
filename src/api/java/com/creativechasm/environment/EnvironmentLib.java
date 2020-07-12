@@ -23,6 +23,7 @@ public class EnvironmentLib {
     private void onCommonSetup(FMLCommonSetupEvent event) {
         CommonRegistry.registerCompostableItems();
 
-        ClimateUtil.determineTemperatureScale();
+        ClimateUtil.dumpBiomeTemperatureAndHumidity();
+//        ClimateUtil.resetTemperatureScaler();
     }
 }
