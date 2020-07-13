@@ -34,6 +34,8 @@ public interface ICrop extends IGrowable, IPlantable {
 
     boolean isGrowthSeason(World world);
 
+    float growthChanceMultiplier();
+
     /**
      * @return true if the plant is healthy and can grow
      */

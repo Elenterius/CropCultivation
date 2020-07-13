@@ -230,6 +230,7 @@ public abstract class SoilBlock extends FarmlandBlock {
         //decompose organic matter into nutrients
         if (worldIn.rand.nextFloat() < 0.025f) {
             if (organicMatter > 0) {
+                pH -= 0.1f;
                 organicMatter--;
                 nitrogen++;
                 phosphorus++;
@@ -334,9 +335,10 @@ public abstract class SoilBlock extends FarmlandBlock {
 
         if (!worldIn.isRemote) {
             boolean isLimingMaterial = EnvirlibTags.LIMING_MATERIAL.contains(item);
+            boolean isAcidifyingMaterial = EnvirlibTags.ACIDIFYING_MATERIAL.contains(item);
             boolean isFertilizer = EnvirlibTags.FERTILIZER_GROUP.contains(item);
 
-            if (isLimingMaterial || isFertilizer) {
+            if (isFertilizer || isLimingMaterial || isAcidifyingMaterial) {
                 TileEntity tileEntity = worldIn.getTileEntity(pos);
                 if (tileEntity instanceof SoilStateTileEntity) {
                     SoilStateTileEntity tileState = (SoilStateTileEntity) tileEntity;
@@ -345,6 +347,15 @@ public abstract class SoilBlock extends FarmlandBlock {
                         float pH = tileState.getPH();
                         if (pH < (float) SoilPH.MAX_VALUE) {
                             tileState.setPH(pH + soilTexture.getLimingModifier()); //reflects lime effectiveness for increasing pH depending on soil consistency
+                            shrinkStack = true;
+                            result = ActionResultType.SUCCESS;
+                        }
+                    }
+
+                    if (isAcidifyingMaterial) { // decrease soil pH
+                        float pH = tileState.getPH();
+                        if (pH > (float) SoilPH.MIN_VALUE) {
+                            tileState.setPH(pH - soilTexture.getAcidifyingModifier());
                             shrinkStack = true;
                             result = ActionResultType.SUCCESS;
                         }

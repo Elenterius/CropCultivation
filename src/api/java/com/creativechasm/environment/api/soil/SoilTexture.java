@@ -80,6 +80,10 @@ public enum SoilTexture {
      * @return pH increase amount
      */
     public float getLimingModifier() {
-        return drainageType.getMultiplier() * 0.6f;
+        return (drainageType.getMultiplier() + 0.01f) * 0.6f;
+    }
+
+    public float getAcidifyingModifier() {
+        return getLimingModifier();
     }
 }

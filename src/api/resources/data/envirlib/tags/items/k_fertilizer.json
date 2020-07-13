@@ -2,6 +2,7 @@
   "values": [
     "envirlib:fertilizer",
     "envirlib:seaweed_meal",
-    "envirlib:wood_ash"
+    "envirlib:wood_ash",
+    "minecraft:gunpowder"
   ]
 }

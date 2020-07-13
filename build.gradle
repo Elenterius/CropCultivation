@@ -107,6 +107,11 @@ repositories {
     maven { url 'https://jitpack.io' }
 }
 
+//configurations {
+//    inJar
+//}
+//configurations.compile.extendsFrom(configurations.inJar)
+
 dependencies {
     minecraft 'net.minecraftforge:forge:1.15.2-31.2.0'
 
@@ -115,6 +120,7 @@ dependencies {
     // These dependencies get remapped to your current MCP mappings
     // deobf 'com.mod-buildcraft:buildcraft:6.0.8:dev'
 
+//    inJar fg.deobf('com.github.bernie-g:geckolib:1.15-1.0.2')
     implementation fg.deobf('com.github.bernie-g:geckolib:1.15-1.0.2')
     implementation 'org.spongepowered:mixin:0.8'
 }
@@ -137,6 +143,9 @@ jar {
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
+//    from(configurations.inJar) {
+//        into 'META-INF/libraries'
+//    }
 }
 
 task buildApi(type: Jar) {

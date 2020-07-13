@@ -15,4 +15,5 @@ public class EnvirlibTags {
     public static final Tag<Item> K_FERTILIZER = new ItemTags.Wrapper(new ResourceLocation(EnvironmentLib.MOD_ID, "k_fertilizer"));
 
     public static final Tag<Item> LIMING_MATERIAL = new ItemTags.Wrapper(new ResourceLocation(EnvironmentLib.MOD_ID, "liming_material"));
+    public static final Tag<Item> ACIDIFYING_MATERIAL = new ItemTags.Wrapper(new ResourceLocation(EnvironmentLib.MOD_ID, "acidifying_material"));
 }
