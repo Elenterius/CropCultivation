@@ -78,8 +78,8 @@ public abstract class MixinComposterBlock extends Block {
             if (stateIn.get(LEVEL) > 2) {
                 BlockState blockstate = worldIn.getBlockState(pos);
                 double yOffset = blockstate.getShape(worldIn, pos).max(Direction.Axis.Y, 0.5D, 0.5D) + 0.03125D;
-                for (int i = 0; i < rand.nextInt(stateIn.get(LEVEL)); ++i) {
-                    worldIn.addParticle(ParticleTypes.MYCELIUM,pos.getX() + 0.13125F + 0.7375F * rand.nextFloat(), pos.getY() + yOffset + (1d - yOffset), pos.getZ() + 0.13125F + 0.7375F * rand.nextFloat(), 0, 0, 0);
+                for (int i = 0; i < rand.nextInt(stateIn.get(LEVEL)) + 2; ++i) {
+                    worldIn.addParticle(ParticleTypes.ENTITY_EFFECT,pos.getX() + 0.13125F + 0.7375F * rand.nextFloat(), pos.getY() + yOffset + (1d - yOffset), pos.getZ() + 0.13125F + 0.7375F * rand.nextFloat(), 1.8f, 1.8f, 1.8f);
                 }
             }
         }
