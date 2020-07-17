@@ -1,9 +1,8 @@
 {
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    {
-      "item": "minecraft:charcoal"
-    }
+    { "item": "minecraft:charcoal" },
+    { "item": "envirlib:mortar_pestle" }
   ],
   "result": {
     "item": "envirlib:wood_ash",

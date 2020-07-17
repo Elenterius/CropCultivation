@@ -105,6 +105,7 @@ minecraft {
 
 repositories {
     maven { url 'https://jitpack.io' }
+    flatDir { dirs 'libs' }
 }
 
 //configurations {
@@ -121,6 +122,8 @@ dependencies {
     // deobf 'com.mod-buildcraft:buildcraft:6.0.8:dev'
 
 //    inJar fg.deobf('com.github.bernie-g:geckolib:1.15-1.0.2')
+
+    implementation fg.deobf('enemeez.simplefarming:simplefarming:1.15.2-1.2.9')
     implementation fg.deobf('com.github.bernie-g:geckolib:1.15-1.0.2')
     implementation 'org.spongepowered:mixin:0.8'
 }

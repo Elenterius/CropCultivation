@@ -1,5 +1,6 @@
 {
   "values": [
-    "envirlib:compost"
+    "envirlib:compost",
+    "#envirlib:modcompat/cannycomposter_compost"
   ]
 }

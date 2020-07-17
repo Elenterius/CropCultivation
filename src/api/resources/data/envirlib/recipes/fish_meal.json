@@ -1,9 +1,9 @@
 {
   "type": "minecraft:crafting_shapeless",
+  "group": "fertilizer",
   "ingredients": [
-    {
-      "tag": "forge:cooked_fishes"
-    }
+    { "tag": "forge:cooked_fishes" },
+    { "item": "envirlib:mortar_pestle" }
   ],
   "result": {
     "item": "envirlib:fish_meal",

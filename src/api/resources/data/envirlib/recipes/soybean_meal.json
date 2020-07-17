@@ -2,11 +2,14 @@
   "type": "minecraft:crafting_shapeless",
   "group": "fertilizer",
   "ingredients": [
-    { "item": "minecraft:feather" },
+    [
+      { "tag": "forge:vegetables/soybean" },
+      { "tag": "forge:crops/soybean" }
+    ],
     { "item": "envirlib:mortar_pestle" }
   ],
   "result": {
-    "item": "envirlib:feather_meal",
+    "item": "envirlib:soybean_meal",
     "count": 3
   }
 }

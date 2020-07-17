@@ -18,6 +18,9 @@ public class LibItems {
     @ObjectHolder("compost")
     public static Item COMPOST;
 
+    @ObjectHolder("mortar_pestle")
+    public static Item MORTAR_AND_PESTLE;
+
     @ObjectHolder("lime_dust")
     public static Item LIME_DUST;
 

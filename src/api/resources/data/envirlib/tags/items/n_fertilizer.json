@@ -2,6 +2,7 @@
   "values": [
     "envirlib:fertilizer",
     "envirlib:feather_meal",
-    "envirlib:fish_meal"
+    "envirlib:fish_meal",
+    "#envirlib:modcompat/soybean_meal"
   ]
 }

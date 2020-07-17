@@ -1,7 +1,6 @@
 {
   "values": [
     "envirlib:fertilizer",
-    "envirlib:fish_meal",
     "minecraft:bone_meal"
   ]
 }
