@@ -41,4 +41,7 @@ public class LibItems {
 
     @ObjectHolder("soil_test_kit")
     public static Item SOIL_TEST_KIT;
+
+    @ObjectHolder("thermo_hygrometer")
+    public static Item THERMO_HYGROMETER;
 }

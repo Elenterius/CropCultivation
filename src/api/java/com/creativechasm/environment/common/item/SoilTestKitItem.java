@@ -14,7 +14,6 @@ import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
-import net.minecraft.util.StringUtils;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -38,17 +37,14 @@ public class SoilTestKitItem extends Item {
     @OnlyIn(Dist.CLIENT)
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        if (stack.hasTag()) {
+        if (stack.hasTag() && stack.getTag() != null) {
             CompoundNBT nbtTag = stack.getTag();
 
             tooltip.add((new StringTextComponent("")));
             tooltip.add((new TranslationTextComponent("soilKit.results")));
 
-            //noinspection ConstantConditions
             String soilTexture = nbtTag.getString("texture");
-            if (!StringUtils.isNullOrEmpty(soilTexture)) {
-                tooltip.add((new TranslationTextComponent("soilKit.texture", soilTexture)).applyTextStyle(TextFormatting.GRAY));
-            }
+            tooltip.add((new TranslationTextComponent("soilKit.texture", soilTexture)).applyTextStyle(TextFormatting.GRAY));
 
             int moisture = Math.round((nbtTag.getInt("moisture") / 9f) * 100);
             tooltip.add((new TranslationTextComponent("soilKit.moisture", moisture + "%")).applyTextStyle(TextFormatting.GRAY));

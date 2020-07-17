@@ -4,6 +4,7 @@ import com.creativechasm.environment.init.CommonRegistry;
 import com.creativechasm.environment.optionaldependency.HarvestCraftAddon;
 import com.creativechasm.environment.optionaldependency.OptionalRegistry;
 import com.creativechasm.environment.optionaldependency.SimpleFarmingAddon;
+import com.creativechasm.environment.optionaldependency.XLFoodAddon;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -41,6 +42,7 @@ public class EnvironmentLib {
 
         HarvestCraftAddon.getInstance().onCommonSetup();
         SimpleFarmingAddon.getInstance().onCommonSetup();
+        XLFoodAddon.getInstance().onCommonSetup();
         OptionalRegistry.Common.onSetup();
 
         CommonRegistry.registerCompostableItems();

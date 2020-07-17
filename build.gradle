@@ -20,6 +20,7 @@ group = 'com.creativechasm.blightbiome'
 archivesBaseName = 'blightbiome'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+compileJava.options.encoding = 'UTF-8'
 
 sourceSets {
     api {
@@ -135,6 +136,7 @@ mixin {
 }
 
 jar {
+    exclude '**/*.psd'
     manifest {
         attributes([
                 "Specification-Title"     : "blightbiome",
@@ -152,6 +154,7 @@ jar {
 }
 
 task buildApi(type: Jar) {
+    exclude '**/*.psd'
     group = 'com.creativechasm.environment'
     baseName = 'envirlib' // 'archivesBaseName' breaks file naming, use deprecated 'baseName' instead
     version = '1.0.0-aplha.2'

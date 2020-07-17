@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "envirlib:item/soil_test_kit"
+    "layer0": "envirlib:item/thermo_hygrometer"
   }
 }
