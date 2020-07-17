@@ -27,9 +27,13 @@
   "soilKit.organic": "Organic Matter: %s",
   "soilKit.nutrients": "Nutrients: %s",
 
+  "thermo_hygrometer.desc": "Measures Air Temperature and Humidity",
+  "measurement.desc": "-- Last Measurement --",
   "measurement.temperature": "Temperature: %s",
+  "measurement.default_temperature": "Default Temperature: %s",
   "measurement.dew_point": "Dew Point: %s",
   "measurement.humidity": "Humidity: %s",
+  "measurement.default_humidity": "Default Humidity: %s",
 
   "nutrient.nitrogen": "Nitrogen: %s",
   "nutrient.phosphorus": "Phosphorus: %s",
