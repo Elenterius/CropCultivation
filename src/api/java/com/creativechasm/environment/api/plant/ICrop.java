@@ -1,5 +1,6 @@
 package com.creativechasm.environment.api.plant;
 
+import com.creativechasm.environment.api.block.BlockPropertyUtil;
 import com.creativechasm.environment.api.soil.SoilStateContext;
 import com.creativechasm.environment.api.util.AgricultureUtil;
 import net.minecraft.block.BlockState;
@@ -97,7 +98,7 @@ public interface ICrop {
     }
 
     static void consumeSoilMoistureAndNutrients(ServerWorld world, BlockPos cropPos, BlockState cropState, ICrop iCrop, SoilStateContext soilContext) {
-        int[] ages = AgricultureUtil.getCurrentAgeAndMaxAge(cropState);
+        int[] ages = BlockPropertyUtil.getCurrentAgeAndMaxAge(cropState);
         int currAge = ages[0], maxAge = ages[1];
 
         if (currAge < maxAge * (1f / 3f)) { //root growth phase

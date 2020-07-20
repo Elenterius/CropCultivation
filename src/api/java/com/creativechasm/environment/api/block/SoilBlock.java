@@ -46,8 +46,8 @@ import java.util.Random;
 
 public abstract class SoilBlock extends FarmlandBlock {
 
-    public static final IntegerProperty MOISTURE = IntegerProperty.create("moisture", 0, SoilMoisture.MAX_VALUE);
-    public static final IntegerProperty ORGANIC_MATTER = IntegerProperty.create("organic_matter", 0, 4);
+    public static final IntegerProperty MOISTURE = BlockPropertyUtil.MOISTURE;
+    public static final IntegerProperty ORGANIC_MATTER = BlockPropertyUtil.ORGANIC_MATTER;
 
     public final SoilTexture soilTexture;
 
@@ -204,7 +204,7 @@ public abstract class SoilBlock extends FarmlandBlock {
                     IGrowable iGrowable = (IGrowable) cropBlock;
                     if (iGrowable.canGrow(worldIn, pos, cropState, false)) {
                         if (worldIn.rand.nextFloat() < AgricultureUtil.BASE_GROWTH_CHANCE) {
-                            int[] ages = AgricultureUtil.getCurrentAgeAndMaxAge(cropState);
+                            int[] ages = BlockPropertyUtil.getCurrentAgeAndMaxAge(cropState);
                             int currAge = ages[0], maxAge = ages[1];
                             if (currAge < maxAge * 0.333f) { //root growth phase
                                 if (worldIn.rand.nextFloat() < 0.25f) phosphorus--;
