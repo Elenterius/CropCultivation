@@ -35,6 +35,7 @@
   "measurement.humidity": "Humidity: %s",
   "measurement.default_humidity": "Default Humidity: %s",
 
+  "fertilizer.desc": "%s Fertilizer",
   "nutrient.nitrogen": "Nitrogen: %s",
   "nutrient.phosphorus": "Phosphorus: %s",
   "nutrient.potassium": "Potassium: %s"

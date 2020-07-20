@@ -19,31 +19,41 @@ public class SoilStateContext {
     public int phosphorus;
     public int potassium;
 
-    private BlockPos pos = null;
+    private World world;
+    private BlockPos pos;
     private SoilStateTileEntity tileState = null;
-    private BlockState blockState = null;
+    private BlockState blockState;
     public final boolean isClient;
+    public final boolean isValid;
 
     public SoilStateContext(World world, BlockPos pos) {
         this(world, pos, world.getBlockState(pos));
     }
 
     public SoilStateContext(World world, BlockPos pos, BlockState blockState) {
+        this.world = world;
         this.pos = pos;
         this.blockState = blockState;
-        moisture = blockState.get(SoilBlock.MOISTURE);
-        organicMatter = blockState.get(SoilBlock.ORGANIC_MATTER);
-        if (!world.isRemote) {
-            TileEntity tileEntity = world.getTileEntity(pos);
-            if (tileEntity instanceof SoilStateTileEntity) {
-                tileState = (SoilStateTileEntity) tileEntity;
-                pH = tileState.getPH();
-                nitrogen = tileState.getNitrogen();
-                phosphorus = tileState.getPhosphorus();
-                potassium = tileState.getPotassium();
+        boolean isValid_ = blockState.getBlock() instanceof SoilBlock;
+        if (isValid_) {
+            moisture = blockState.get(SoilBlock.MOISTURE);
+            organicMatter = blockState.get(SoilBlock.ORGANIC_MATTER);
+            if (!world.isRemote) {
+                TileEntity tileEntity = world.getTileEntity(pos);
+                if (tileEntity instanceof SoilStateTileEntity) {
+                    tileState = (SoilStateTileEntity) tileEntity;
+                    pH = tileState.getPH();
+                    nitrogen = tileState.getNitrogen();
+                    phosphorus = tileState.getPhosphorus();
+                    potassium = tileState.getPotassium();
+                }
+                else {
+                    isValid_ = false;
+                }
             }
         }
-        isClient = tileState == null;
+        isValid = isValid_;
+        isClient = world.isRemote;
     }
 
     public SoilStateTileEntity getTileState() {
@@ -56,6 +66,14 @@ public class SoilStateContext {
 
     public BlockPos getBlockPos() {
         return pos;
+    }
+
+    public World getWorld() {
+        return world;
+    }
+
+    public int getMaxNutrientAmount() {
+        return tileState.getMaxNutrientAmount();
     }
 
     public int getMaxMoistureLevel() {
