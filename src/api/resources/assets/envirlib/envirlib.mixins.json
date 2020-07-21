@@ -1,8 +1,5 @@
 {
   "required": true, "package": "com.creativechasm.environment.mixin", "compatibilityLevel": "JAVA_8", "refmap": "mixins.envirlib.refmap.json", "mixins": [
-  "MixinCactusBlock",
-  "MixinComposterBlock",
-  "MixinComposterBlock_FullInventory",
-  "MixinNetherWartBlock"
+  "MixinCactusBlock", "MixinComposterBlock", "MixinComposterBlock_FullInventory", "MixinNetherWartBlock", "MixinSugarCaneBlock"
 ], "injectors": {"defaultRequire": 1}, "minVersion": "0.8"
 }
