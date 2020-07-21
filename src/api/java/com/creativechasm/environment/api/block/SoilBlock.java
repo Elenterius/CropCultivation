@@ -40,6 +40,7 @@ import org.apache.logging.log4j.MarkerManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.lang.reflect.Field;
 import java.util.Optional;
 import java.util.Random;
@@ -64,7 +65,7 @@ public abstract class SoilBlock extends FarmlandBlock {
             field.setAccessible(true);
             field.set(this, container); //replace stateContainer
         } catch (Exception e) {
-            EnvironmentLib.LOGGER.error("Unable to replace stateContainer of SoilBlock", e);
+            EnvironmentLib.LOGGER.error(MarkerManager.getMarker("SoilBlock"), "Unable to replace stateContainer of SoilBlock", e);
             throw new RuntimeException("Unable to modify field_176227_L");
         }
 
@@ -109,7 +110,7 @@ public abstract class SoilBlock extends FarmlandBlock {
             SoilStateTileEntity tileState = (SoilStateTileEntity) tileEntity;
 
             if (tileState.getNitrogen() > 0 && tileState.getPhosphorus() > 0) {
-                return blockState.get(MOISTURE) > SoilMoisture.AVERAGE_1.getMoistureLevel();
+                return blockState.get(MOISTURE) > 0;
             }
         }
         return false;
@@ -178,12 +179,12 @@ public abstract class SoilBlock extends FarmlandBlock {
             else if (Tags.Blocks.SAND.contains(subsoil)) drainageLoss += 0.35f;
             else if (subsoil instanceof WetSpongeBlock) drainageLoss -= 1.35f; // wet sponge provides moisture
             else if (subsoil instanceof SpongeBlock) drainageLoss += 1.35f;  // dry sponge drains water "proactively"
-            EnvironmentLib.LOGGER.debug(MarkerManager.getMarker("SoilBlock"), "drainage: " + drainageLoss);
+//            EnvironmentLib.LOGGER.debug(MarkerManager.getMarker("SoilBlock"), "drainage: " + drainageLoss);
         }
 
         //total moisture loss
         moistureLoss = MathHelper.clamp(Math.round(directMoistureLoss + evaporationLoss + drainageLoss), 0, 3);
-        EnvironmentLib.LOGGER.debug(MarkerManager.getMarker("SoilBlock"), "total moisture loss: " + moistureLoss);
+//        EnvironmentLib.LOGGER.debug(MarkerManager.getMarker("SoilBlock"), "total moisture loss: " + moistureLoss);
         if (moistureLoss > moistureGain) {
             worldIn.spawnParticle(ParticleTypes.MYCELIUM, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, 4, 0.25, 0.02, 0.25, 0.1);
         } else {
@@ -191,19 +192,21 @@ public abstract class SoilBlock extends FarmlandBlock {
         }
         moisture -= moistureLoss;
 
-        //"boost" growth speed
-        BlockState cropState = worldIn.getBlockState(pos.up());
+        //"boost" crop growth
+        BlockPos cropPos = pos.up();
+        BlockState cropState = worldIn.getBlockState(cropPos);
         Block cropBlock = cropState.getBlock();
         if (cropBlock instanceof IPlantable || cropBlock instanceof IGrowable) {
             Optional<ICrop> optionalICrop = CropRegistry.getInstance().get(cropBlock.getRegistryName());
             if (optionalICrop.isPresent()) {
-                worldIn.getPendingBlockTicks().scheduleTick(pos.up(), cropBlock, 1); //we are lazy and tick the crop instead
+                worldIn.getPendingBlockTicks().scheduleTick(cropPos, cropBlock, 2); //we are lazy and tick the crop instead
             }
             else { // not compatible plants
                 if (cropBlock instanceof IGrowable) {
                     IGrowable iGrowable = (IGrowable) cropBlock;
-                    if (iGrowable.canGrow(worldIn, pos, cropState, false)) {
+                    if (iGrowable.canGrow(worldIn, cropPos, cropState, false)) {
                         if (worldIn.rand.nextFloat() < AgricultureUtil.BASE_GROWTH_CHANCE) {
+
                             int[] ages = BlockPropertyUtil.getCurrentAgeAndMaxAge(cropState);
                             int currAge = ages[0], maxAge = ages[1];
                             if (currAge < maxAge * 0.333f) { //root growth phase
@@ -224,7 +227,8 @@ public abstract class SoilBlock extends FarmlandBlock {
                             }
                             moisture--;
 
-                            iGrowable.grow(worldIn, worldIn.rand, pos, cropState);
+                            EnvironmentLib.LOGGER.debug(MarkerManager.getMarker("SoilBlock"), "force growing of crop: " + cropState.getBlock());
+                            iGrowable.grow(worldIn, worldIn.rand, cropPos, cropState);
                         }
                     }
                 }
@@ -426,4 +430,12 @@ public abstract class SoilBlock extends FarmlandBlock {
 
     @Override
     public abstract TileEntity createTileEntity(BlockState state, IBlockReader world);
+
+    @Override
+    @ParametersAreNonnullByDefault
+    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+        if(state.getBlock() != newState.getBlock()) {
+            super.onReplaced(state, worldIn, pos, newState, isMoving);
+        }
+    }
 }

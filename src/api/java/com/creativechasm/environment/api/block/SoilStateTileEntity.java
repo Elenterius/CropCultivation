@@ -16,7 +16,7 @@ public class SoilStateTileEntity extends TileEntity {
     private final byte[] nutrients = new byte[]{4, 3, 3};
 
     @Unsigned
-    private byte pH = SoilPH.MAX_VALUE / 2; // init as perfect neutral pH value (fallback)
+    private byte pH = (SoilPH.MAX_VALUE * 10) / 2; // init as perfect neutral pH value (fallback)
 
     private SoilPH cachedSoilPH = null;
 
