@@ -2,7 +2,6 @@ package com.creativechasm.environment.api.plant;
 
 import com.creativechasm.environment.api.block.BlockPropertyUtil;
 import com.creativechasm.environment.api.soil.SoilStateContext;
-import com.creativechasm.environment.api.util.AgricultureUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.util.math.BlockPos;
@@ -15,6 +14,9 @@ import java.util.Random;
 
 @ParametersAreNonnullByDefault
 public interface ICrop {
+
+    float BASE_GROWTH_CHANCE = 0.4f; //0.33f
+    float BASE_YIELD_MULTIPLIER = 1.65f;
 
     float getNitrogenNeed();
 
@@ -90,14 +92,31 @@ public interface ICrop {
         //nutrients available in the soil depending on soil pH
         float currN = soilContext.nitrogen * nPct, currP = soilContext.phosphorus * pPct, currK = soilContext.potassium * kPct;
 
-        return currN >= reqN && currP >= reqP && currK >= reqK ? AgricultureUtil.BASE_GROWTH_CHANCE * ((nPct + pPct + kPct) / 3f) : 0.0f;
+        return currN >= reqN && currP >= reqP && currK >= reqK ? BASE_GROWTH_CHANCE * ((nPct + pPct + kPct) / 3f) : 0.0f;
+    }
+
+    static void updateYield(ServerWorld world, BlockPos cropPos, BlockState prevCropState, BlockState newCropState, ICrop iCrop, SoilStateContext soilContext) {
+        int prevCropAge = BlockPropertyUtil.getAge(prevCropState);
+        int newCropAge = BlockPropertyUtil.getAge(newCropState);
+
+        if (prevCropAge <= 0 || newCropAge == 0) {
+            soilContext.getTileState().resetCropYield();
+        }
+        if (newCropAge > 0) {
+            //get yield based on PK concentration in soil
+            float currP = soilContext.phosphorus * PlantMacronutrient.PHOSPHORUS.getAvailabilityPctInSoilForPlant(soilContext.pH);
+            float currK = soilContext.potassium * PlantMacronutrient.POTASSIUM.getAvailabilityPctInSoilForPlant(soilContext.pH);
+            float yieldModifier = (currP / soilContext.getMaxNutrientAmount() + currK / soilContext.getMaxNutrientAmount()) * 0.5f * BASE_YIELD_MULTIPLIER;
+
+            soilContext.getTileState().addCropYield(yieldModifier); //store yield in tile entity of soil block
+        }
     }
 
     static boolean canConsumeNutrient(Random rand, float nutrientNeed) {
         return rand.nextFloat() < nutrientNeed * 1.25f;
     }
 
-    static void consumeSoilMoistureAndNutrients(ServerWorld world, BlockPos cropPos, BlockState cropState, ICrop iCrop, SoilStateContext soilContext) {
+    static void consumeSoilMoistureAndNutrients(ServerWorld world, BlockPos cropPos, BlockState prevCropState, BlockState cropState, ICrop iCrop, SoilStateContext soilContext) {
         int[] ages = BlockPropertyUtil.getCurrentAgeAndMaxAge(cropState);
         int currAge = ages[0], maxAge = ages[1];
 

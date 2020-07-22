@@ -17,10 +17,10 @@ import net.minecraftforge.fml.common.Mod;
 import java.util.Optional;
 
 @Mod.EventBusSubscriber(modid = EnvironmentLib.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-public class CropHandler {
+public abstract class CropHandler {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onCropGrowth(BlockEvent.CropGrowEvent.Pre event) {
+    public static void onCropGrowth(final BlockEvent.CropGrowEvent.Pre event) {
 
         Optional<ICrop> optionalICrop = CropRegistry.getInstance().get(event.getState().getBlock().getRegistryName());
         if (optionalICrop.isPresent()) {
@@ -45,7 +45,7 @@ public class CropHandler {
     }
 
     @SubscribeEvent
-    public void onCropGrowth(BlockEvent.CropGrowEvent.Post event) {
+    public static void onCropGrowth(final BlockEvent.CropGrowEvent.Post event) {
         World world = event.getWorld().getWorld();
         BlockState cropState = event.getState();
 
@@ -54,9 +54,14 @@ public class CropHandler {
         if (optionalICrop.isPresent()) {
             SoilStateContext soilContext = new SoilStateContext(world, event.getPos().down());
             if (soilContext.isValid && !soilContext.isClient) {
-                ICrop.consumeSoilMoistureAndNutrients((ServerWorld) world, event.getPos(), cropState, optionalICrop.get(), soilContext);
+                ICrop.updateYield((ServerWorld) world, event.getPos(), event.getOriginalState(), cropState, optionalICrop.get(), soilContext);
+                ICrop.consumeSoilMoistureAndNutrients((ServerWorld) world, event.getPos(), event.getOriginalState(), cropState, optionalICrop.get(), soilContext);
                 soilContext.update((ServerWorld) world); // update changes to world
             }
         }
+    }
+
+    public static void onHarvest(final BlockEvent.HarvestDropsEvent event) {
+        //fucking forge not annotating HarvestDropsEvent as Deprecated 🤦
     }
 }

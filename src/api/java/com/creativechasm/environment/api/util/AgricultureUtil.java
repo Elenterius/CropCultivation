@@ -17,8 +17,6 @@ import static com.creativechasm.environment.api.soil.SoilPH.*;
 
 public abstract class AgricultureUtil {
 
-    public static final float BASE_GROWTH_CHANCE = 0.4f; //0.33f
-
     public static boolean doesSoilHaveWater(IWorldReader worldIn, BlockPos pos, int distance) {
         for (BlockPos blockpos : BlockPos.getAllInBoxMutable(pos.add(-distance, 0, -distance), pos.add(distance, 1, distance))) {
             if (worldIn.getFluidState(blockpos).isTagged(FluidTags.WATER)) return true;

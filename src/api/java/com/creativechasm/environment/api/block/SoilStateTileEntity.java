@@ -1,5 +1,6 @@
 package com.creativechasm.environment.api.block;
 
+import com.creativechasm.environment.EnvironmentLib;
 import com.creativechasm.environment.api.soil.SoilPH;
 import com.google.common.primitives.UnsignedBytes;
 import jdk.jfr.Unsigned;
@@ -8,6 +9,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.util.Constants;
+import org.apache.logging.log4j.MarkerManager;
 
 import javax.annotation.Nonnull;
 
@@ -17,6 +19,8 @@ public class SoilStateTileEntity extends TileEntity {
 
     @Unsigned
     private byte pH = (SoilPH.MAX_VALUE * 10) / 2; // init as perfect neutral pH value (fallback)
+
+    private float cropYield = 0f; //TODO: store as unsigned byte
 
     private SoilPH cachedSoilPH = null;
 
@@ -111,6 +115,26 @@ public class SoilStateTileEntity extends TileEntity {
         setPotassium(getPotassium() + amount);
     }
 
+    public void addCropYield(float value) {
+        EnvironmentLib.LOGGER.debug(MarkerManager.getMarker("ICrop"), "increasing crop yield...");
+        markDirty();
+        cropYield += value;
+    }
+
+    public void resetCropYield() {
+        EnvironmentLib.LOGGER.debug(MarkerManager.getMarker("ICrop"), "resetting crop yield...");
+        markDirty();
+        cropYield = 0f;
+    }
+
+    public float getCropYieldSum() {
+        return cropYield;
+    }
+
+    public float getCropYieldAveraged(int cropAge) {
+        if (cropYield == 0) return 1f;
+        return cropAge > 0 ? cropYield / cropAge : 1f;
+    }
 
     @Override
     public void read(@Nonnull CompoundNBT compound) {
@@ -122,6 +146,9 @@ public class SoilStateTileEntity extends TileEntity {
         if (compound.contains("pH", Constants.NBT.TAG_BYTE)) {
             pH = compound.getByte("pH");
         }
+        if (compound.contains("cropYield", Constants.NBT.TAG_FLOAT)) {
+            cropYield = compound.getFloat("cropYield");
+        }
     }
 
     @Override
@@ -130,6 +157,7 @@ public class SoilStateTileEntity extends TileEntity {
         super.write(compound);
         compound.putByteArray("nutrients", nutrients);
         compound.putByte("pH", pH);
+        compound.putFloat("cropYield", cropYield);
         return compound;
     }
 

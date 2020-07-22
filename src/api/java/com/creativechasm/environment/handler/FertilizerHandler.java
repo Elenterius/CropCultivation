@@ -18,7 +18,7 @@ import net.minecraftforge.fml.common.Mod;
 import java.util.Optional;
 
 @Mod.EventBusSubscriber(modid = EnvironmentLib.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-public class FertilizerHandler {
+public abstract class FertilizerHandler {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onBonemealUse(BonemealEvent event) {
@@ -40,7 +40,7 @@ public class FertilizerHandler {
         if(EnvirlibTags.FERTILIZER_GROUP.contains(item)) {  // add fertilizer info
             event.getToolTip().add(new StringTextComponent(""));
             String type = String.format("%s%s%s", EnvirlibTags.N_FERTILIZER.contains(item) ? "N" : "", EnvirlibTags.P_FERTILIZER.contains(item) ? "P" : "", EnvirlibTags.K_FERTILIZER.contains(item) ? "K" : "");
-            event.getToolTip().add(new TranslationTextComponent("fertilizer.desc", type).applyTextStyle(TextFormatting.GRAY));
+            event.getToolTip().add(new StringTextComponent(" ").appendSibling(new TranslationTextComponent("fertilizer.desc", type).applyTextStyle(TextFormatting.GRAY)));
         }
     }
 }

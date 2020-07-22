@@ -8,6 +8,8 @@ import net.minecraft.state.IProperty;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.properties.BlockStateProperties;
 
+import java.util.Optional;
+
 public abstract class BlockPropertyUtil {
 
     public static final IntegerProperty MOISTURE = IntegerProperty.create("moisture", 0, SoilMoisture.MAX_VALUE);
@@ -30,10 +32,27 @@ public abstract class BlockPropertyUtil {
     public static int getMaxAge(IntegerProperty property) {
         if (maxAgeMappings.containsKey(property)) {
             return maxAgeMappings.get(property);
-        } else {
+        }
+        else {
             //we can't use the last element of the collection since the order of the underlying HashSet is not guaranteed to remain constant
             return property.getAllowedValues().stream().max(Integer::compareTo).orElse(0);
         }
+    }
+
+    public static Optional<IntegerProperty> getAgeProperty(BlockState state) {
+        if (state.getBlock() instanceof CropsBlock) {
+            return Optional.of(((CropsBlock) state.getBlock()).getAgeProperty());
+        }
+        for (IProperty<?> prop : state.getProperties()) {
+            if (prop.getName().equals("age") && prop instanceof IntegerProperty) {
+                return Optional.of((IntegerProperty) prop);
+            }
+        }
+        return Optional.empty();
+    }
+
+    public static int getAge(BlockState state) {
+        return getAgeProperty(state).map(state::get).orElse(0);
     }
 
     public static int[] getCurrentAgeAndMaxAge(BlockState state) {
@@ -48,6 +67,7 @@ public abstract class BlockPropertyUtil {
                 return new int[]{state.get(ageProperty), getMaxAge(ageProperty)};
             }
         }
+
         return new int[]{0, 0};
     }
 }

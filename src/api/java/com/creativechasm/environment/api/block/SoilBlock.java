@@ -3,6 +3,7 @@ package com.creativechasm.environment.api.block;
 import com.creativechasm.environment.EnvironmentLib;
 import com.creativechasm.environment.api.plant.CropRegistry;
 import com.creativechasm.environment.api.plant.ICrop;
+import com.creativechasm.environment.api.plant.PlantMacronutrient;
 import com.creativechasm.environment.api.soil.SoilMoisture;
 import com.creativechasm.environment.api.soil.SoilPH;
 import com.creativechasm.environment.api.soil.SoilTexture;
@@ -192,43 +193,60 @@ public abstract class SoilBlock extends FarmlandBlock {
         }
         moisture -= moistureLoss;
 
-        //"boost" crop growth
-        BlockPos cropPos = pos.up();
-        BlockState cropState = worldIn.getBlockState(cropPos);
-        Block cropBlock = cropState.getBlock();
-        if (cropBlock instanceof IPlantable || cropBlock instanceof IGrowable) {
-            Optional<ICrop> optionalICrop = CropRegistry.getInstance().get(cropBlock.getRegistryName());
-            if (optionalICrop.isPresent()) {
-                worldIn.getPendingBlockTicks().scheduleTick(cropPos, cropBlock, 2); //we are lazy and tick the crop instead
-            }
-            else { // not compatible plants
-                if (cropBlock instanceof IGrowable) {
-                    IGrowable iGrowable = (IGrowable) cropBlock;
-                    if (iGrowable.canGrow(worldIn, cropPos, cropState, false)) {
-                        if (worldIn.rand.nextFloat() < AgricultureUtil.BASE_GROWTH_CHANCE) {
+        //"boost" crop growth if high N concentration available in soil
+        float boostChance = nitrogen * PlantMacronutrient.NITROGEN.getAvailabilityPctInSoilForPlant(pH) / tileState.getMaxNutrientAmount();
+        if (rand.nextFloat() < boostChance) {
+            BlockPos cropPos = pos.up();
+            BlockState cropState = worldIn.getBlockState(cropPos);
+            Block cropBlock = cropState.getBlock();
+            if (cropBlock instanceof IPlantable || cropBlock instanceof IGrowable) {
+                Optional<ICrop> optionalICrop = CropRegistry.getInstance().get(cropBlock.getRegistryName());
+                if (optionalICrop.isPresent()) {
+                    worldIn.getPendingBlockTicks().scheduleTick(cropPos, cropBlock, 2); //we are lazy and tick the crop instead
+                }
+                else { // not compatible plants
+                    if (cropBlock instanceof IGrowable) {
+                        if (worldIn.rand.nextFloat() < ICrop.BASE_GROWTH_CHANCE) {
+                            IGrowable iGrowable = (IGrowable) cropBlock;
+                            if (iGrowable.canGrow(worldIn, cropPos, cropState, false)) {
 
-                            int[] ages = BlockPropertyUtil.getCurrentAgeAndMaxAge(cropState);
-                            int currAge = ages[0], maxAge = ages[1];
-                            if (currAge < maxAge * 0.333f) { //root growth phase
-                                if (worldIn.rand.nextFloat() < 0.25f) phosphorus--;
-                                if (worldIn.rand.nextFloat() < 0.25f) nitrogen--;
-                            }
-                            else if (currAge < maxAge * 0.666f) { //foliage growth phase
-                                if (worldIn.rand.nextFloat() < 0.25f) nitrogen--;
-                                if (worldIn.rand.nextFloat() < 0.25f) potassium--;
-                            }
-                            else if (currAge < maxAge) { //flower/fruit growth phase
-                                if (worldIn.rand.nextFloat() < 0.25f) phosphorus--;
-                            }
-                            else { //fallback, what IGrowable has no age property? (flowers lol) penalize the player for using "illegal" plant
-                                if (worldIn.rand.nextFloat() < 0.25f) nitrogen -= 2;
-                                if (worldIn.rand.nextFloat() < 0.25f) phosphorus -= 2;
-                                if (worldIn.rand.nextFloat() < 0.25f) potassium -= 1;
-                            }
-                            moisture--;
+                                int[] ages = BlockPropertyUtil.getCurrentAgeAndMaxAge(cropState);
+                                int currAge = ages[0], maxAge = ages[1];
+                                if (currAge < maxAge * 0.333f) { //root growth phase
+                                    if (worldIn.rand.nextFloat() < 0.25f) phosphorus--;
+                                    if (worldIn.rand.nextFloat() < 0.25f) nitrogen--;
+                                }
+                                else if (currAge < maxAge * 0.666f) { //foliage growth phase
+                                    if (worldIn.rand.nextFloat() < 0.25f) nitrogen--;
+                                    if (worldIn.rand.nextFloat() < 0.25f) potassium--;
+                                }
+                                else if (currAge < maxAge) { //flower/fruit growth phase
+                                    if (worldIn.rand.nextFloat() < 0.25f) phosphorus--;
+                                }
+                                else { //fallback, what IGrowable has no age property? (flowers lol) penalize the player for using "illegal" plant
+                                    if (worldIn.rand.nextFloat() < 0.25f) nitrogen -= 2;
+                                    if (worldIn.rand.nextFloat() < 0.25f) phosphorus -= 2;
+                                    if (worldIn.rand.nextFloat() < 0.25f) potassium -= 1;
+                                }
+                                moisture--;
 
-                            EnvironmentLib.LOGGER.debug(MarkerManager.getMarker("SoilBlock"), "force growing of crop: " + cropState.getBlock());
-                            iGrowable.grow(worldIn, worldIn.rand, cropPos, cropState);
+                                EnvironmentLib.LOGGER.debug(MarkerManager.getMarker("SoilBlock"), "force growing of crop: " + cropState.getBlock());
+                                iGrowable.grow(worldIn, worldIn.rand, cropPos, cropState);
+
+                                //update crop yield
+                                int prevCropAge = currAge;
+                                int newCropAge = BlockPropertyUtil.getAge(worldIn.getBlockState(cropPos));
+                                if (prevCropAge <= 0 || newCropAge == 0) {
+                                    tileState.resetCropYield();
+                                }
+                                if (newCropAge > 0) {
+                                    //get yield based on PK concentration in soil
+                                    float currP = phosphorus * PlantMacronutrient.PHOSPHORUS.getAvailabilityPctInSoilForPlant(pH);
+                                    float currK = potassium * PlantMacronutrient.POTASSIUM.getAvailabilityPctInSoilForPlant(pH);
+                                    float yieldModifier = (currP / tileState.getMaxNutrientAmount() + currK / tileState.getMaxNutrientAmount()) * 0.5f * ICrop.BASE_YIELD_MULTIPLIER;
+                                    tileState.addCropYield(yieldModifier); //store yield in tile entity of soil block
+                                }
+                            }
                         }
                     }
                 }
@@ -312,7 +330,7 @@ public abstract class SoilBlock extends FarmlandBlock {
 
 //        if(facingState.getBlock() instanceof SoilBlock && facingState.get(MOISTURE) >= 6)
 //        {
-//            //TODO: causes block update cascade
+//            //NOTICE: causes block update cascade
 //            EnvironmentLib.LOGGER.debug(MarkerManager.getMarker("SoilBlock"),"scheduling tick");
 //            worldIn.getPendingBlockTicks().scheduleTick(currentPos, stateIn.getBlock(), 1);
 //        }
