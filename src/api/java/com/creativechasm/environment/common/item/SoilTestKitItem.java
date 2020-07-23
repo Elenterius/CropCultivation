@@ -3,7 +3,6 @@ package com.creativechasm.environment.common.item;
 import com.creativechasm.environment.api.block.SoilBlock;
 import com.creativechasm.environment.api.block.SoilStateTileEntity;
 import com.creativechasm.environment.api.soil.SoilPH;
-import com.creativechasm.environment.api.soil.SoilTexture;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
@@ -28,7 +27,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
 @ParametersAreNonnullByDefault
-public class SoilTestKitItem extends Item {
+public class SoilTestKitItem extends Item
+{
 
     public SoilTestKitItem(Properties properties) {
         super(properties);
@@ -41,26 +41,21 @@ public class SoilTestKitItem extends Item {
             CompoundNBT nbtTag = stack.getTag();
 
             tooltip.add((new StringTextComponent("")));
-            tooltip.add((new TranslationTextComponent("soilKit.results")));
-
-            String soilTexture = nbtTag.getString("texture");
-            tooltip.add((new TranslationTextComponent("soilKit.texture", soilTexture)).applyTextStyle(TextFormatting.GRAY));
-
-            int moisture = Math.round((nbtTag.getInt("moisture") / 9f) * 100);
-            tooltip.add((new TranslationTextComponent("soilKit.moisture", moisture + "%")).applyTextStyle(TextFormatting.GRAY));
-            int organic = (int) (nbtTag.getInt("organic") / 4f * 100);
-            tooltip.add((new TranslationTextComponent("soilKit.organic", organic + "%")).applyTextStyle(TextFormatting.GRAY));
+            tooltip.add((new TranslationTextComponent("measurement.desc")));
 
             float pH = nbtTag.getFloat("pH");
             tooltip.add(getTextComponentForPH(pH, String.format("pH: %.1f (%s)", pH, SoilPH.fromPH(pH).name())));
 
             tooltip.add(
-                    getTextComponentForNutrient("N: ", nbtTag.getInt("N"), TextFormatting.LIGHT_PURPLE, TextFormatting.DARK_PURPLE)
-                            .appendSibling(new StringTextComponent(" - ").applyTextStyle(TextFormatting.GRAY))
-                            .appendSibling(getTextComponentForNutrient("P: ", nbtTag.getInt("P"), TextFormatting.BLUE, TextFormatting.DARK_BLUE))
-                            .appendSibling(new StringTextComponent(" - ").applyTextStyle(TextFormatting.GRAY))
-                            .appendSibling(getTextComponentForNutrient("K: ", nbtTag.getInt("K"), TextFormatting.YELLOW, TextFormatting.GOLD))
+                    new StringTextComponent("N: " + nbtTag.getInt("N")).applyTextStyle(TextFormatting.GRAY)
+                            .appendSibling(new StringTextComponent(" - ").applyTextStyle(TextFormatting.DARK_GRAY))
+                            .appendSibling(new StringTextComponent("P: " + nbtTag.getInt("P")).applyTextStyle(TextFormatting.GRAY))
+                            .appendSibling(new StringTextComponent(" - ").applyTextStyle(TextFormatting.DARK_GRAY))
+                            .appendSibling(new StringTextComponent("K: " + nbtTag.getInt("K")).applyTextStyle(TextFormatting.GRAY))
             );
+        }
+        else {
+            tooltip.add(new StringTextComponent(" ").appendSibling(new TranslationTextComponent("soilkit.desc").applyTextStyle(TextFormatting.GRAY)));
         }
     }
 
@@ -96,10 +91,6 @@ public class SoilTestKitItem extends Item {
                     nbtTag.putInt("N", tileState.getNitrogen());
                     nbtTag.putInt("P", tileState.getPhosphorus());
                     nbtTag.putInt("K", tileState.getPotassium());
-                    nbtTag.putInt("organic", blockState.get(SoilBlock.ORGANIC_MATTER));
-                    nbtTag.putInt("moisture", blockState.get(SoilBlock.MOISTURE));
-                    SoilTexture texture = ((SoilBlock) blockState.getBlock()).soilTexture;
-                    nbtTag.putString("texture", texture.name() + " (" + texture.getDrainageType().name() + ")");
 
                     PlayerEntity player = context.getPlayer();
                     if (player instanceof ServerPlayerEntity) {

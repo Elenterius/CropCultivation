@@ -54,7 +54,7 @@ public class ThermoHygrometerItem extends Item {
             tooltip.add(new TranslationTextComponent("measurement.default_humidity", String.format("%.2f RH", biomeHumidity)).applyTextStyle(TextFormatting.GRAY));
         }
         else {
-            tooltip.add(new TranslationTextComponent("thermo_hygrometer.desc").applyTextStyle(TextFormatting.GRAY));
+            tooltip.add(new StringTextComponent(" ").appendSibling(new TranslationTextComponent("thermo_hygrometer.desc").applyTextStyle(TextFormatting.GRAY)));
         }
     }
 

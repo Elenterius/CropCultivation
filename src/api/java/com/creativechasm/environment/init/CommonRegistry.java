@@ -8,6 +8,7 @@ import com.creativechasm.environment.api.block.SoilStateTileEntity;
 import com.creativechasm.environment.api.item.LibItems;
 import com.creativechasm.environment.api.soil.SoilTexture;
 import com.creativechasm.environment.common.item.MortarItem;
+import com.creativechasm.environment.common.item.SoilSamplerItem;
 import com.creativechasm.environment.common.item.SoilTestKitItem;
 import com.creativechasm.environment.common.item.ThermoHygrometerItem;
 import com.google.gson.JsonObject;
@@ -98,15 +99,16 @@ public abstract class CommonRegistry
                 createItemForBlock(LibBlocks.SAND_SOIL, properties),
                 createItemForBlock(LibBlocks.CLAY_SOIL, properties),
                 new Item(new Item.Properties().group(ITEM_GROUP)).setRegistryName("compost"),
-                new MortarItem(new Item.Properties().maxStackSize(1).rarity(Rarity.UNCOMMON).group(ITEM_GROUP)).setRegistryName("mortar_pestle"), //mortar and pestle
+                new MortarItem(new Item.Properties().maxStackSize(1).rarity(Rarity.RARE).group(ITEM_GROUP)).setRegistryName("mortar_pestle"), //mortar and pestle
                 new Item(new Item.Properties().group(ITEM_GROUP)).setRegistryName("lime_dust"), //liming material
-                new Item(new Item.Properties().rarity(Rarity.RARE).group(ITEM_GROUP)).setRegistryName("fertilizer"), //NPK fertilizer
+                new Item(new Item.Properties().rarity(Rarity.UNCOMMON).group(ITEM_GROUP)).setRegistryName("fertilizer"), //NPK fertilizer
                 new Item(new Item.Properties().group(ITEM_GROUP)).setRegistryName("feather_meal"), //N fertilizer
                 new Item(new Item.Properties().group(ITEM_GROUP)).setRegistryName("seaweed_meal"), //K fertilizer
                 new Item(new Item.Properties().group(ITEM_GROUP)).setRegistryName("wood_ash"), //K fertilizer, liming material
                 new Item(new Item.Properties().group(ITEM_GROUP)).setRegistryName("fish_meal"), //NP fertilizer
-                new SoilTestKitItem(new Item.Properties().maxStackSize(1).rarity(Rarity.UNCOMMON).group(ITEM_GROUP)).setRegistryName("soil_test_kit"),
-                new ThermoHygrometerItem(new Item.Properties().maxStackSize(1).rarity(Rarity.UNCOMMON).group(ITEM_GROUP)).setRegistryName("thermo_hygrometer")
+                new SoilTestKitItem(new Item.Properties().maxStackSize(1).rarity(Rarity.RARE).group(ITEM_GROUP)).setRegistryName("soil_test_kit"),
+                new ThermoHygrometerItem(new Item.Properties().maxStackSize(1).rarity(Rarity.RARE).group(ITEM_GROUP)).setRegistryName("thermo_hygrometer"),
+                new SoilSamplerItem(new Item.Properties().maxStackSize(1).rarity(Rarity.RARE).group(ITEM_GROUP)).setRegistryName("soil_sampler")
         );
     }
 

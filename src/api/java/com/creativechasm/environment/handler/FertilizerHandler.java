@@ -18,7 +18,8 @@ import net.minecraftforge.fml.common.Mod;
 import java.util.Optional;
 
 @Mod.EventBusSubscriber(modid = EnvironmentLib.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-public abstract class FertilizerHandler {
+public abstract class FertilizerHandler
+{
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onBonemealUse(BonemealEvent event) {
@@ -37,10 +38,12 @@ public abstract class FertilizerHandler {
     @SubscribeEvent
     public static void onItemToolTip(ItemTooltipEvent event) {
         Item item = event.getItemStack().getItem();
-        if(EnvirlibTags.FERTILIZER_GROUP.contains(item)) {  // add fertilizer info
+        if (EnvirlibTags.FERTILIZER_GROUP.contains(item)) {  // add fertilizer info
             event.getToolTip().add(new StringTextComponent(""));
-            String type = String.format("%s%s%s", EnvirlibTags.N_FERTILIZER.contains(item) ? "N" : "", EnvirlibTags.P_FERTILIZER.contains(item) ? "P" : "", EnvirlibTags.K_FERTILIZER.contains(item) ? "K" : "");
-            event.getToolTip().add(new StringTextComponent(" ").appendSibling(new TranslationTextComponent("fertilizer.desc", type).applyTextStyle(TextFormatting.GRAY)));
+            event.getToolTip().add(new TranslationTextComponent("fertilizer.desc").applyTextStyle(TextFormatting.GRAY));
+            if (EnvirlibTags.N_FERTILIZER.contains(item)) event.getToolTip().add(new StringTextComponent(" ").appendSibling(new TranslationTextComponent("nutrient.nitrogen").applyTextStyle(TextFormatting.GRAY)));
+            if (EnvirlibTags.P_FERTILIZER.contains(item)) event.getToolTip().add(new StringTextComponent(" ").appendSibling(new TranslationTextComponent("nutrient.phosphorus").applyTextStyle(TextFormatting.GRAY)));
+            if (EnvirlibTags.K_FERTILIZER.contains(item)) event.getToolTip().add(new StringTextComponent(" ").appendSibling(new TranslationTextComponent("nutrient.potassium").applyTextStyle(TextFormatting.GRAY)));
         }
     }
 }
