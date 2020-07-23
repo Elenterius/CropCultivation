@@ -1,8 +1,7 @@
 package com.creativechasm.environment.api.block;
 
 import com.creativechasm.environment.EnvironmentLib;
-import com.creativechasm.environment.api.plant.CropRegistry;
-import com.creativechasm.environment.api.plant.ICrop;
+import com.creativechasm.environment.api.plant.ICropEntry;
 import com.creativechasm.environment.api.plant.PlantMacronutrient;
 import com.creativechasm.environment.api.soil.SoilMoisture;
 import com.creativechasm.environment.api.soil.SoilPH;
@@ -10,6 +9,7 @@ import com.creativechasm.environment.api.soil.SoilTexture;
 import com.creativechasm.environment.api.tags.EnvirlibTags;
 import com.creativechasm.environment.api.util.AgricultureUtil;
 import com.creativechasm.environment.api.world.ClimateUtil;
+import com.creativechasm.environment.init.CommonRegistry;
 import net.minecraft.block.*;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
@@ -206,13 +206,13 @@ public abstract class SoilBlock extends FarmlandBlock {
             BlockState cropState = worldIn.getBlockState(cropPos);
             Block cropBlock = cropState.getBlock();
             if (cropBlock instanceof IPlantable || cropBlock instanceof IGrowable) {
-                Optional<ICrop> optionalICrop = CropRegistry.getInstance().get(cropBlock.getRegistryName());
+                Optional<ICropEntry> optionalICrop = CommonRegistry.CROP_REGISTRY.get(cropBlock.getRegistryName());
                 if (optionalICrop.isPresent()) {
                     worldIn.getPendingBlockTicks().scheduleTick(cropPos, cropBlock, 2); //we are lazy and tick the crop instead
                 }
                 else { // not compatible plants
                     if (cropBlock instanceof IGrowable) {
-                        if (worldIn.rand.nextFloat() < ICrop.BASE_GROWTH_CHANCE) {
+                        if (worldIn.rand.nextFloat() < ICropEntry.BASE_GROWTH_CHANCE) {
                             IGrowable iGrowable = (IGrowable) cropBlock;
                             if (iGrowable.canGrow(worldIn, cropPos, cropState, false)) {
 
@@ -249,7 +249,7 @@ public abstract class SoilBlock extends FarmlandBlock {
                                     //get yield based on PK concentration in soil
                                     float currP = phosphorus * PlantMacronutrient.PHOSPHORUS.getAvailabilityPctInSoilForPlant(pH);
                                     float currK = potassium * PlantMacronutrient.POTASSIUM.getAvailabilityPctInSoilForPlant(pH);
-                                    float yieldModifier = (currP / tileState.getMaxNutrientAmount() + currK / tileState.getMaxNutrientAmount()) * 0.5f * ICrop.BASE_YIELD_MULTIPLIER;
+                                    float yieldModifier = (currP / tileState.getMaxNutrientAmount() + currK / tileState.getMaxNutrientAmount()) * 0.5f * ICropEntry.BASE_YIELD_MULTIPLIER;
                                     tileState.addCropYield(yieldModifier); //store yield in tile entity of soil block
                                 }
                             }

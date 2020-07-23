@@ -1,9 +1,9 @@
 package com.creativechasm.environment.handler;
 
 import com.creativechasm.environment.EnvironmentLib;
-import com.creativechasm.environment.api.plant.CropRegistry;
-import com.creativechasm.environment.api.plant.ICrop;
+import com.creativechasm.environment.api.plant.ICropEntry;
 import com.creativechasm.environment.api.tags.EnvirlibTags;
+import com.creativechasm.environment.init.CommonRegistry;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.util.text.StringTextComponent;
@@ -29,7 +29,7 @@ public abstract class FertilizerHandler
         }
 
         //disable bone meal for compatible crops/plants
-        Optional<ICrop> optionalICrop = CropRegistry.getInstance().get(event.getBlock().getBlock().getRegistryName());
+        Optional<ICropEntry> optionalICrop = CommonRegistry.CROP_REGISTRY.get(event.getBlock().getBlock().getRegistryName());
         if (optionalICrop.isPresent()) {
             event.setCanceled(true);
         }

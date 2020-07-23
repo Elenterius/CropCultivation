@@ -6,6 +6,7 @@ import com.creativechasm.environment.api.block.LibBlocks;
 import com.creativechasm.environment.api.block.SoilBlock;
 import com.creativechasm.environment.api.block.SoilStateTileEntity;
 import com.creativechasm.environment.api.item.LibItems;
+import com.creativechasm.environment.api.plant.CropRegistry;
 import com.creativechasm.environment.api.soil.SoilTexture;
 import com.creativechasm.environment.common.item.MortarItem;
 import com.creativechasm.environment.common.item.SoilSamplerItem;
@@ -50,6 +51,7 @@ import java.util.Random;
 @Mod.EventBusSubscriber(modid = EnvironmentLib.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public abstract class CommonRegistry
 {
+    public static final CropRegistry CROP_REGISTRY = new CropRegistry("/data/envirlib/crop_registry/mappings.csv", "/data/envirlib/crop_registry/entries.csv");
 
     @ObjectHolder(EnvironmentLib.MOD_ID + ":farm_soil")
     public static TileEntityType<?> FARM_SOIL;
@@ -135,6 +137,16 @@ public abstract class CommonRegistry
 
         // add our stuff
         ComposterBlock.CHANCES.put(LibItems.WOOD_ASH.getItem(), 0.3f);
+    }
+
+    public static void registerCrops() {
+        try {
+            CROP_REGISTRY.buildRegistry();
+        }
+        catch (Exception e) {
+            EnvironmentLib.LOGGER.error(CropRegistry.LOG_MARKER, "failed to populate registry", e);
+            throw new RuntimeException();
+        }
     }
 
     @SubscribeEvent

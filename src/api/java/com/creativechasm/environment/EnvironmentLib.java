@@ -39,6 +39,7 @@ public class EnvironmentLib {
 //            e.printStackTrace();
 //            EnvironmentLib.LOGGER.error(MarkerManager.getMarker("Resource"), "failed to read resource", e);
 //        }
+        CommonRegistry.registerCrops();
 
         HarvestCraftAddon.getInstance().onCommonSetup();
         SimpleFarmingAddon.getInstance().onCommonSetup();

@@ -1,9 +1,9 @@
 package com.creativechasm.environment.handler;
 
 import com.creativechasm.environment.EnvironmentLib;
-import com.creativechasm.environment.api.plant.CropRegistry;
-import com.creativechasm.environment.api.plant.ICrop;
+import com.creativechasm.environment.api.plant.ICropEntry;
 import com.creativechasm.environment.api.soil.SoilStateContext;
+import com.creativechasm.environment.init.CommonRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -22,15 +22,15 @@ public abstract class CropHandler {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onCropGrowth(final BlockEvent.CropGrowEvent.Pre event) {
 
-        Optional<ICrop> optionalICrop = CropRegistry.getInstance().get(event.getState().getBlock().getRegistryName());
+        Optional<ICropEntry> optionalICrop = CommonRegistry.CROP_REGISTRY.get(event.getState().getBlock().getRegistryName());
         if (optionalICrop.isPresent()) {
             World world = event.getWorld().getWorld();
             BlockPos pos = event.getPos();
             SoilStateContext soilContext = new SoilStateContext(world, pos.down());
             if (soilContext.isValid && !soilContext.isClient) {
-                ICrop iCrop = optionalICrop.get();
-                if (ICrop.canCropGrow(world, pos, event.getState(), iCrop, soilContext)) {
-                    float growthChance = ICrop.getGrowthChance((ServerWorld) world, pos, event.getState(), iCrop, soilContext);
+                ICropEntry iCrop = optionalICrop.get();
+                if (ICropEntry.canCropGrow(world, pos, event.getState(), iCrop, soilContext)) {
+                    float growthChance = ICropEntry.getGrowthChance((ServerWorld) world, pos, event.getState(), iCrop, soilContext);
                     if (world.rand.nextFloat() < growthChance) {
                         event.setResult(Event.Result.ALLOW);
                         return;
@@ -50,12 +50,12 @@ public abstract class CropHandler {
         BlockState cropState = event.getState();
 
         // consume moisture & nutrients of the soil
-        Optional<ICrop> optionalICrop = CropRegistry.getInstance().get(cropState.getBlock().getRegistryName());
+        Optional<ICropEntry> optionalICrop = CommonRegistry.CROP_REGISTRY.get(cropState.getBlock().getRegistryName());
         if (optionalICrop.isPresent()) {
             SoilStateContext soilContext = new SoilStateContext(world, event.getPos().down());
             if (soilContext.isValid && !soilContext.isClient) {
-                ICrop.updateYield((ServerWorld) world, event.getPos(), event.getOriginalState(), cropState, optionalICrop.get(), soilContext);
-                ICrop.consumeSoilMoistureAndNutrients((ServerWorld) world, event.getPos(), event.getOriginalState(), cropState, optionalICrop.get(), soilContext);
+                ICropEntry.updateYield((ServerWorld) world, event.getPos(), event.getOriginalState(), cropState, optionalICrop.get(), soilContext);
+                ICropEntry.consumeSoilMoistureAndNutrients((ServerWorld) world, event.getPos(), event.getOriginalState(), cropState, optionalICrop.get(), soilContext);
                 soilContext.update((ServerWorld) world); // update changes to world
             }
         }
