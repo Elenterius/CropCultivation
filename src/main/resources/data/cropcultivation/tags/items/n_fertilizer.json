@@ -1,0 +1,11 @@
+{
+  "values": [
+    "cropcultivation:fertilizer",
+    "cropcultivation:feather_meal",
+    "cropcultivation:fish_meal"
+  ],
+  "optional": [
+    "cropcultivation:soybean_meal",
+    "farmingforblockheads:red_fertilizer"
+  ]
+}

@@ -1,9 +1,0 @@
-{
-  "parent": "envirlib:block/soil_template",
-  "textures": {
-    "particle": "block/dirt",
-    "dirt": "block/dirt",
-    "top": "block/farmland_moist",
-    "water": "envirlib:block/wet_spots"
-  }
-}

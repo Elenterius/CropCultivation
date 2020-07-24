@@ -1,0 +1,9 @@
+{
+  "parent": "cropcultivation:block/soil_template",
+  "textures": {
+    "particle": "block/dirt",
+    "dirt": "block/dirt",
+    "top": "block/farmland_moist",
+    "water": "cropcultivation:block/wet_spots"
+  }
+}

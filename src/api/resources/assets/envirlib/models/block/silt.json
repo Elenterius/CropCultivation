@@ -1,6 +1,0 @@
-{
-  "parent": "envirlib:block/cube_tinted_all",
-  "textures": {
-    "all": "block/dirt"
-  }
-}

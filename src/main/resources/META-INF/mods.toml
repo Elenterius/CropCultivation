@@ -1,0 +1,10 @@
+modLoader="javafml"
+loaderVersion="[31,)"
+
+[[mods]]
+modId="cropcultivation"
+version="1.0.0"
+displayName="Crop Cultivation"
+authors="Elenterius"
+description='''
+Mod that changes the cultivation of Crops.'''

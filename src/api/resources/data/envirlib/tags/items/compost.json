@@ -1,8 +1,0 @@
-{
-  "values": [
-    "envirlib:compost"
-  ],
-  "optional": [
-    "cannycomposter:compost"
-  ]
-}

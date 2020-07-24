@@ -1,0 +1,13 @@
+{
+  "values": [
+    "cropcultivation:fertilizer",
+    "cropcultivation:seaweed_meal",
+    "cropcultivation:fish_meal",
+    "cropcultivation:wood_ash",
+    "minecraft:gunpowder"
+  ],
+  "optional": [
+    "cropcultivation:soybean_meal",
+    "farmingforblockheads:green_fertilizer"
+  ]
+}

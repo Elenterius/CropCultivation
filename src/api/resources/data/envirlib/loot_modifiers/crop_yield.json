@@ -1,5 +1,0 @@
-{
-  "type": "envirlib:crop_yield",
-  "conditions": [],
-  "comment": "loot condition dummy. conditions defined in here are ignored"
-}

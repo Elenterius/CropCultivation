@@ -1,9 +1,0 @@
-{
-  "values": [
-    "minecraft:farmland",
-    "#envirlib:farmland/silt_soil",
-    "#envirlib:farmland/clay_soil",
-    "#envirlib:farmland/loam_soil",
-    "#envirlib:farmland/sand_soil"
-  ]
-}

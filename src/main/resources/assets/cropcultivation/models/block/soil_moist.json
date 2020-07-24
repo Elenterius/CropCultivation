@@ -1,0 +1,8 @@
+{
+  "parent": "cropcultivation:block/soil_template_no_water",
+  "textures": {
+    "particle": "block/dirt",
+    "dirt": "block/dirt",
+    "top": "block/farmland_moist"
+  }
+}

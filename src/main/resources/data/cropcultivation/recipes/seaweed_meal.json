@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "fertilizer",
+  "ingredients": [
+    { "item": "minecraft:dried_kelp" },
+    { "item": "cropcultivation:mortar_pestle" }
+  ],
+  "result": {
+    "item": "cropcultivation:seaweed_meal",
+    "count": 3
+  }
+}

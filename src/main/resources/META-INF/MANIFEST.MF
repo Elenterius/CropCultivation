@@ -1,0 +1,1 @@
+MixinConnector: com.creativechasm.cropcultivation.mixin.Connector

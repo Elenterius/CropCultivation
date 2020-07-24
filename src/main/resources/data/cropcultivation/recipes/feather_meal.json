@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "fertilizer",
+  "ingredients": [
+    { "item": "minecraft:feather" },
+    { "item": "cropcultivation:mortar_pestle" }
+  ],
+  "result": {
+    "item": "cropcultivation:feather_meal",
+    "count": 3
+  }
+}

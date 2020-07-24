@@ -1,0 +1,9 @@
+{
+  "values": [
+    "minecraft:farmland",
+    "#cropcultivation:farmland/silt_soil",
+    "#cropcultivation:farmland/clay_soil",
+    "#cropcultivation:farmland/loam_soil",
+    "#cropcultivation:farmland/sand_soil"
+  ]
+}

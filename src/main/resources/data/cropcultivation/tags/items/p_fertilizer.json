@@ -1,0 +1,9 @@
+{
+  "values": [
+    "cropcultivation:fertilizer",
+    "minecraft:bone_meal"
+  ],
+  "optional": [
+    "farmingforblockheads:green_fertilizer"
+  ]
+}

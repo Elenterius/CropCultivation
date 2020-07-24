@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "fertilizer",
+  "ingredients": [
+    [
+      { "tag": "forge:vegetables/soybean" },
+      { "tag": "forge:crops/soybean" }
+    ],
+    { "item": "cropcultivation:mortar_pestle" }
+  ],
+  "result": {
+    "item": "cropcultivation:soybean_meal",
+    "count": 3
+  }
+}

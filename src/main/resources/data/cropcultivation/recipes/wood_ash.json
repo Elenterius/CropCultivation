@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    { "item": "minecraft:charcoal" },
+    { "item": "cropcultivation:mortar_pestle" }
+  ],
+  "result": {
+    "item": "cropcultivation:wood_ash",
+    "count": 3
+  }
+}

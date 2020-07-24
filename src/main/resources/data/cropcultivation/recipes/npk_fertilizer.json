@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    { "tag": "cropcultivation:n_fertilizer" },
+    { "tag": "cropcultivation:p_fertilizer" },
+    { "tag": "cropcultivation:k_fertilizer" }
+  ],
+  "result": {
+    "item": "cropcultivation:fertilizer",
+    "count": 1
+  }
+}
