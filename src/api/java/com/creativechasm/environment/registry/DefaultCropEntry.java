@@ -1,5 +1,6 @@
-package com.creativechasm.environment.api.plant;
+package com.creativechasm.environment.registry;
 
+import com.creativechasm.environment.api.plant.ICropEntry;
 import com.creativechasm.environment.api.world.ClimateUtil;
 
 import javax.annotation.ParametersAreNonnullByDefault;

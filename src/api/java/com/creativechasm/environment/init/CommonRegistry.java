@@ -6,19 +6,17 @@ import com.creativechasm.environment.api.block.LibBlocks;
 import com.creativechasm.environment.api.block.SoilBlock;
 import com.creativechasm.environment.api.block.SoilStateTileEntity;
 import com.creativechasm.environment.api.item.LibItems;
-import com.creativechasm.environment.api.plant.CropRegistry;
 import com.creativechasm.environment.api.soil.SoilTexture;
+import com.creativechasm.environment.api.util.MiscUtil;
 import com.creativechasm.environment.common.item.MortarItem;
 import com.creativechasm.environment.common.item.SoilSamplerItem;
 import com.creativechasm.environment.common.item.SoilTestKitItem;
 import com.creativechasm.environment.common.item.ThermoHygrometerItem;
+import com.creativechasm.environment.registry.CropRegistry;
 import com.google.gson.JsonObject;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.*;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
@@ -164,26 +162,14 @@ public abstract class CommonRegistry
         @Override
         protected List<ItemStack> doApply(List<ItemStack> generatedLoot, LootContext context) {
 
-            EnvironmentLib.LOGGER.debug(MarkerManager.getMarker("CropYieldModifier"), "loot: " +generatedLoot.toString());
+            EnvironmentLib.LOGGER.debug(MarkerManager.getMarker("CropYieldModifier"), "loot: " + generatedLoot.toString());
             BlockState state = context.get(LootParameters.BLOCK_STATE);
             BlockPos pos = context.get(LootParameters.POSITION);
 
             ItemStack toolStack = context.get(LootParameters.TOOL);
             Entity entity = context.get(LootParameters.THIS_ENTITY);
-            int fortuneModifier = 0;
-            if (entity instanceof LivingEntity) {
-                fortuneModifier = EnchantmentHelper.getMaxEnchantmentLevel(Enchantments.FORTUNE, (LivingEntity) entity);
-
-//                float luck = context.getLuck(); //applies only to loot from chests and fishing :(
-//                Alternative:
-//                EffectInstance luckEffect = ((LivingEntity) entity).getActivePotionEffect(Effects.LUCK);
-//                int lucky = luckEffect != null ? luckEffect.getAmplifier() + 1 : 0;
-//                EffectInstance unluckEffect = ((LivingEntity) entity).getActivePotionEffect(Effects.UNLUCK);
-//                int unlucky = unluckEffect != null ? unluckEffect.getAmplifier() + 1 : 0;
-//                EnvironmentLib.LOGGER.debug(MarkerManager.getMarker("CropYieldModifier"), String.format("luck: %s [lucky: %s, unlucky: %s]", lucky - unlucky, lucky, unlucky));
-            }
-            EnvironmentLib.LOGGER.debug(MarkerManager.getMarker("CropYieldModifier"), String.format("tool: %s, fortuneModifier: %s", toolStack, fortuneModifier));
-
+//            float luck = context.getLuck(); //applies only to loot from chests and fishing loot, hmm...
+            EnvironmentLib.LOGGER.debug(MarkerManager.getMarker("CropYieldModifier"), String.format("tool: %s, fortuneModifier: %s", toolStack, MiscUtil.getFortuneLevel(entity)));
 
             if (state != null && pos != null) {
                 World world = context.getWorld();
@@ -207,6 +193,7 @@ public abstract class CommonRegistry
                 }
             }
 
+            EnvironmentLib.LOGGER.debug(MarkerManager.getMarker("CropYieldModifier"), "out: " + generatedLoot.toString());
             return generatedLoot;
         }
 

@@ -24,19 +24,19 @@ public abstract class AgricultureUtil {
         return FarmlandWaterManager.hasBlockWaterTicket(worldIn, pos);
     }
 
-    public static float calculateMoistureAmbiance(IWorldReader worldIn, BlockPos pos, int distance) {
-        float score = 0f;
-
-        for (BlockPos blockpos : BlockPos.getAllInBoxMutable(pos.add(-distance, 0, -distance), pos.add(distance, 1, distance))) {
-            if (worldIn.getFluidState(blockpos).isTagged(FluidTags.WATER)) {
-                score += (distance - blockpos.manhattanDistance(pos) + 0.5f) / distance;
-            }
-        }
-        if (FarmlandWaterManager.hasBlockWaterTicket(worldIn, pos)) score += 1f;
-
-        float n = (distance + distance) * (distance + distance) - 1;
-        return score / n;
-    }
+//    public static float calculateMoistureAmbiance(IWorldReader worldIn, BlockPos pos, int distance) {
+//        float score = 0f;
+//
+//        for (BlockPos blockpos : BlockPos.getAllInBoxMutable(pos.add(-distance, 0, -distance), pos.add(distance, 1, distance))) {
+//            if (worldIn.getFluidState(blockpos).isTagged(FluidTags.WATER)) {
+//                score += (distance - blockpos.manhattanDistance(pos) + 0.5f) / distance;
+//            }
+//        }
+//        if (FarmlandWaterManager.hasBlockWaterTicket(worldIn, pos)) score += 1f;
+//
+//        float n = (distance + distance) * (distance + distance) - 1;
+//        return score / n;
+//    }
 
     public static boolean canGrow(World world, BlockPos pos, BlockState state) {
         return state.getBlock() instanceof IGrowable;

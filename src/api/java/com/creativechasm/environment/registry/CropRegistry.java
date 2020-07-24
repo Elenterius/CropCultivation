@@ -1,6 +1,7 @@
-package com.creativechasm.environment.api.plant;
+package com.creativechasm.environment.registry;
 
 import com.creativechasm.environment.EnvironmentLib;
+import com.creativechasm.environment.api.plant.ICropEntry;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.MultimapBuilder;
 import net.minecraft.util.ResourceLocation;

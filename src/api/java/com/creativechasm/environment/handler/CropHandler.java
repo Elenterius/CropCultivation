@@ -14,6 +14,8 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @Mod.EventBusSubscriber(modid = EnvironmentLib.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
@@ -58,6 +60,10 @@ public abstract class CropHandler {
                 ICropEntry.consumeSoilMoistureAndNutrients((ServerWorld) world, event.getPos(), event.getOriginalState(), cropState, optionalICrop.get(), soilContext);
                 soilContext.update((ServerWorld) world); // update changes to world
             }
+        }
+        else {
+            //TODO: consume nutrients
+            List<String> list = Arrays.asList("", "");
         }
     }
 
