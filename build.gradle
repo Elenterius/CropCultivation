@@ -37,7 +37,7 @@ minecraft {
     // snapshot_YYYYMMDD   Snapshot are built nightly.
     // stable_#            Stables are built at the discretion of the MCP team.
     // Simply re-run your setup task after changing the mappings to update your workspace.
-    mappings channel: 'snapshot', version: '20200624-1.15.1'
+    mappings channel: 'snapshot', version: '20200723-1.15.1'
     // makeObfSourceJar = false
 
      accessTransformer = file('src/api/resources/META-INF/accesstransformer.cfg')
@@ -106,6 +106,7 @@ minecraft {
 
 repositories {
     maven { url 'https://jitpack.io' }
+//    maven { url "https://minecraft.curseforge.com/api/maven/" }
     flatDir { dirs 'libs' }
 }
 
@@ -117,15 +118,11 @@ repositories {
 dependencies {
     minecraft 'net.minecraftforge:forge:1.15.2-31.2.0'
 
-    // You may put jars on which you depend on in ./libs or you may define them like so..
-
-    // These dependencies get remapped to your current MCP mappings
-    // deobf 'com.mod-buildcraft:buildcraft:6.0.8:dev'
-
 //    inJar fg.deobf('com.github.bernie-g:geckolib:1.15-1.0.2')
 
+//    implementation fg.deobf('farming-for-blockheads:FarmingForBlockheads_1.15.2-6.1.5')
     implementation fg.deobf('enemeez.simplefarming:simplefarming:1.15.2-1.2.9')
-    implementation fg.deobf('com.github.bernie-g:geckolib:1.15-1.0.2')
+//    implementation fg.deobf('com.github.bernie-g:geckolib:1.15-1.0.2')
     implementation 'org.spongepowered:mixin:0.8'
 }
 

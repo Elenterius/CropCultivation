@@ -2,7 +2,10 @@
   "values": [
     "envirlib:fertilizer",
     "envirlib:feather_meal",
-    "envirlib:fish_meal",
-    "#envirlib:modcompat/soybean_meal"
+    "envirlib:fish_meal"
+  ],
+  "optional": [
+    "envirlib:soybean_meal",
+    "farmingforblockheads:red_fertilizer"
   ]
 }

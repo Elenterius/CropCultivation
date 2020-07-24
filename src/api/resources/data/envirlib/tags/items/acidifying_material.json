@@ -1,7 +1,9 @@
 {
   "values": [
     "minecraft:blaze_powder",
-    "minecraft:gunpowder",
-    "#envirlib:modcompat/simplysalty_sulphur"
+    "minecraft:gunpowder"
+  ],
+  "optional": [
+    "simplysalty:sulphur"
   ]
 }

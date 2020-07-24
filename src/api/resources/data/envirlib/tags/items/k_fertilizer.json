@@ -4,7 +4,10 @@
     "envirlib:seaweed_meal",
     "envirlib:fish_meal",
     "envirlib:wood_ash",
-    "#envirlib:modcompat/soybean_meal",
     "minecraft:gunpowder"
+  ],
+  "optional": [
+    "envirlib:soybean_meal",
+    "farmingforblockheads:green_fertilizer"
   ]
 }
