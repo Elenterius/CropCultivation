@@ -108,7 +108,7 @@ repositories {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.15.2-31.2.0'
+    minecraft 'net.minecraftforge:forge:1.15.2-31.2.31'
 
 //    implementation fg.deobf('farming-for-blockheads:FarmingForBlockheads_1.15.2-6.1.5')
     implementation fg.deobf('enemeez.simplefarming:simplefarming:1.15.2-1.2.9')
