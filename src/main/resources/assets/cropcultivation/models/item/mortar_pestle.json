@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "envirlib:item/mortar_and_pestle"
+    "layer0": "cropcultivation:item/mortar_and_pestle"
   }
 }
