@@ -17,7 +17,7 @@ A Minecraft Forge Mod that changes the cultivation of crops.
 
 ## Different Soils
 ```diff
-! The Mod removes the ability to create farmland from dirt with the hoe!
+! The Mod removes the ability to create farmland from dirt with the hoe
 ```
 
 ### Soil Properties
@@ -67,12 +67,12 @@ Applied to the soil to increase the organic matter content of soil.
 ! The Mod removes the ability to use bone meal on compatible crops
 ```
 Fertilizers are to be applied to the soil instead of the crop.
-- `bone meal`
+- `Bone Meal`
 - `Industrial Fertilizer`
-- `feather meal`
-- `seaweed meal`
-- `fish meal`
-- `soybean meal`
+- `Feather Meal`
+- `Seaweed Meal`
+- `Fish Meal`
+- `Soybean Meal`
 ### Liming Material
 Increases the Soil pH.
 - `Lime Dust`
