@@ -1,6 +1,6 @@
 # Crop Cultivation
 [![Forge Version](https://img.shields.io/badge/Minecraft%20Forge-1.15.2%20--%2031.2.31-orange)](https://files.minecraftforge.net/maven/net/minecraftforge/forge/index_1.15.2.html)
-[![CropCultivation Version](https://img.shields.io/badge/Crop%20Cultivation-ALpha-red)](https://github.com/Elenterius/CropCultivation)
+[![CropCultivation Version](https://img.shields.io/badge/CropCultivation-Alpha-red)](https://github.com/Elenterius/CropCultivation)
 
 A Minecraft Forge Mod that changes the cultivation of crops.
 
@@ -15,11 +15,10 @@ A Minecraft Forge Mod that changes the cultivation of crops.
 - crop yield
     - based on nutrient concentration in soil
 
-### Plant Macronutrients
-
-
 ## Different Soils
-    **The Mod removes the ability to create farmland from dirt with the hoe!**
+```diff
+! The Mod removes the ability to create farmland from dirt with the hoe!
+```
 
 ### Soil Properties
 - Soil Texture
@@ -41,17 +40,32 @@ A Minecraft Forge Mod that changes the cultivation of crops.
 - Overall pH doesn't change much by itself, the player is the only big influence through the application of liming or acidifying material
 - Basically macronutrients and compost are the only things that should be checked before planting
 
-## Composter Changes
-- produces now `compost` instead of `bone meal`
-- increased the composting delay
+## Vanilla Changes (requires Mixin)
+### Composter Block
+- produces now three `compost` items instead of one `bone meal` item
+- increased the composting delay to 120 ticks
 - spawns "heat" particles
+### Sugarcane, Cactus & Nether Wart
+Implemented the IGrowable Interface for these Plant Blocks
+- this makes them possible to be force grown through code without scheduling a tick update
+<br>**Note:** the (Forge) CropGrowthEvent will not be fired as with all other IGrowable implementations
+
+
+- it's now possible to apply `bone meal` on them
+<br>**Note:** this will not work when the plant has been registered in the `CropRegistry`
+
+
+- retained the vanilla feature that `bone meal` cannot be used on Nether Wart
+
 
 ## Soil Amendments
 ### Compost
 Applied to the soil to increase the organic matter content of soil.
 
 ### Fertilizer
-    **The Mod removes the ability to use bone meal on compatible crops!**
+```diff
+! The Mod removes the ability to use bone meal on compatible crops
+```
 Fertilizers are to be applied to the soil instead of the crop.
 - `bone meal`
 - `Industrial Fertilizer`
