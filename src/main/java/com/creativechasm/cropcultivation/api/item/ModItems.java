@@ -46,6 +46,9 @@ public class ModItems
     @ObjectHolder("thermo_hygrometer")
     public static Item THERMO_HYGROMETER;
 
+    @ObjectHolder("soil_sampler")
+    public static Item SOIL_SAMPLER;
+
     @ObjectHolder("soil_meter")
     public static Item SOIL_METER;
 }

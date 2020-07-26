@@ -8,7 +8,7 @@ import com.creativechasm.cropcultivation.api.soil.SoilMoisture;
 import com.creativechasm.cropcultivation.api.soil.SoilPH;
 import com.creativechasm.cropcultivation.api.soil.SoilStateContext;
 import com.creativechasm.cropcultivation.api.soil.SoilTexture;
-import com.creativechasm.cropcultivation.api.tags.EnvirlibTags;
+import com.creativechasm.cropcultivation.api.util.ModTags;
 import com.creativechasm.cropcultivation.api.world.ClimateUtil;
 import com.creativechasm.cropcultivation.init.CommonRegistry;
 import net.minecraft.block.*;
@@ -344,7 +344,7 @@ public abstract class SoilBlock extends FarmlandBlock {
         ActionResultType result = ActionResultType.PASS;
         boolean shrinkStack = false;
 
-        if (EnvirlibTags.COMPOST_MATERIAL.contains(item) && state.get(ORGANIC_MATTER) < 4) {
+        if (ModTags.Items.COMPOST_MATERIAL.contains(item) && state.get(ORGANIC_MATTER) < 4) {
             if (!worldIn.isRemote) {
                 worldIn.setBlockState(pos, state.cycle(ORGANIC_MATTER), Constants.BlockFlags.BLOCK_UPDATE);
                 shrinkStack = true;
@@ -353,9 +353,9 @@ public abstract class SoilBlock extends FarmlandBlock {
         }
 
         if (!worldIn.isRemote) {
-            boolean isLimingMaterial = EnvirlibTags.LIMING_MATERIAL.contains(item);
-            boolean isAcidifyingMaterial = EnvirlibTags.ACIDIFYING_MATERIAL.contains(item);
-            boolean isFertilizer = EnvirlibTags.FERTILIZER_GROUP.contains(item);
+            boolean isLimingMaterial = ModTags.Items.LIMING_MATERIAL.contains(item);
+            boolean isAcidifyingMaterial = ModTags.Items.ACIDIFYING_MATERIAL.contains(item);
+            boolean isFertilizer = ModTags.Items.FERTILIZER_GROUP.contains(item);
 
             if (isFertilizer || isLimingMaterial || isAcidifyingMaterial) {
                 TileEntity tileEntity = worldIn.getTileEntity(pos);
@@ -382,9 +382,9 @@ public abstract class SoilBlock extends FarmlandBlock {
 
                     if (isFertilizer) { // increase nutrients in soil
                         boolean fertilizerUsed = false;
-                        boolean isNFertilizer = EnvirlibTags.N_FERTILIZER.contains(item);
-                        boolean isPFertilizer = EnvirlibTags.P_FERTILIZER.contains(item);
-                        boolean isKFertilizer = EnvirlibTags.K_FERTILIZER.contains(item);
+                        boolean isNFertilizer = ModTags.Items.N_FERTILIZER.contains(item);
+                        boolean isPFertilizer = ModTags.Items.P_FERTILIZER.contains(item);
+                        boolean isKFertilizer = ModTags.Items.K_FERTILIZER.contains(item);
                         boolean isSuperFertilizer = !isNFertilizer && !isPFertilizer && !isKFertilizer; // illegal/creative fertilizer (any item directly added to the fertilizer_group tag)
                         int max = tileState.getMaxNutrientAmount();
                         if (tileState.getNitrogen() < max && (isNFertilizer || isSuperFertilizer)) {
