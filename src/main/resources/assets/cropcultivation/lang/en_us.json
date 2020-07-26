@@ -21,10 +21,12 @@
   "item.cropcultivation.soil_test_kit": "Soil Test Kit",
   "item.cropcultivation.thermo_hygrometer": "Thermo-Hygrometer",
   "item.cropcultivation.soil_sampler": "Soil Auger",
+  "item.cropcultivation.soil_meter": "Soil Meter",
 
   "thermo_hygrometer.desc": "Measures Air Temperature and Humidity",
   "soilkit.desc": "Measures Soil pH and Macronutrient Concentration",
   "soil_sampler.desc": "Samples the soil for moisture and soil texture",
+  "soil_meter.desc": "Its long probe allows it to measure the soil beneath the plants. This multi tool measures skylight levels, soil moisture, temperature, pH & nutrients all at once.",
 
   "measurement.desc": " -- Last Measurement -- ",
   "measurement.temperature": "Temperature: %s",
@@ -32,6 +34,7 @@
   "measurement.dew_point": "Dew Point: %s",
   "measurement.humidity": "Humidity: %s",
   "measurement.default_humidity": "Default Humidity: %s",
+  "measurement.light_level": "Light Level: %s",
   "measurement.soil_texture": "Texture: %s",
   "measurement.drainage_type": "Drainage: %s",
   "measurement.soil_moisture": "Moisture: %s",

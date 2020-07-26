@@ -30,4 +30,5 @@ public abstract class MiscUtil
     public static int getFortuneLevel(@Nullable Entity entity) {
         return entity instanceof LivingEntity ? EnchantmentHelper.getMaxEnchantmentLevel(Enchantments.FORTUNE, (LivingEntity) entity) : 0;
     }
+
 }

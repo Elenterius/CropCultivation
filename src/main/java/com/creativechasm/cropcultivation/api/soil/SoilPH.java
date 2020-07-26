@@ -7,6 +7,9 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.Tags;
 
@@ -81,6 +84,18 @@ public enum SoilPH {
             if (phType.pHRange.contains(pH)) return phType;
         }
         return NEUTRAL;
+    }
+
+    public static ITextComponent getTextComponentForPH(float pH, String str) {
+        TextFormatting color = TextFormatting.GREEN;
+        if (pH <= 4f) color = TextFormatting.DARK_RED;
+        if (pH < 5.5f) color = TextFormatting.RED;
+        if (pH < 7.5f) color = TextFormatting.GOLD;
+        if (pH > 7.5f) color = TextFormatting.DARK_GREEN;
+        if (pH > 8f) color = TextFormatting.DARK_AQUA;
+        if (pH >= 9f) color = TextFormatting.BLUE;
+        if (pH > 11.5f) color = TextFormatting.DARK_BLUE;
+        return new StringTextComponent(str).applyTextStyle(color);
     }
 
     public static float getPHForNonSoilBlockInWorld(ServerWorld world, BlockPos pos, BlockState state) {

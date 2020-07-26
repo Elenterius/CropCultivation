@@ -8,10 +8,7 @@ import com.creativechasm.cropcultivation.api.block.SoilStateTileEntity;
 import com.creativechasm.cropcultivation.api.item.ModItems;
 import com.creativechasm.cropcultivation.api.soil.SoilTexture;
 import com.creativechasm.cropcultivation.api.util.MiscUtil;
-import com.creativechasm.cropcultivation.item.MortarItem;
-import com.creativechasm.cropcultivation.item.SoilSamplerItem;
-import com.creativechasm.cropcultivation.item.SoilTestKitItem;
-import com.creativechasm.cropcultivation.item.ThermoHygrometerItem;
+import com.creativechasm.cropcultivation.item.*;
 import com.creativechasm.cropcultivation.registry.CropRegistry;
 import com.google.gson.JsonObject;
 import net.minecraft.block.*;
@@ -108,7 +105,8 @@ public abstract class CommonRegistry
                 new Item(new Item.Properties().group(ITEM_GROUP)).setRegistryName("fish_meal"), //NP fertilizer
                 new SoilTestKitItem(new Item.Properties().maxStackSize(1).rarity(Rarity.RARE).group(ITEM_GROUP)).setRegistryName("soil_test_kit"),
                 new ThermoHygrometerItem(new Item.Properties().maxStackSize(1).rarity(Rarity.RARE).group(ITEM_GROUP)).setRegistryName("thermo_hygrometer"),
-                new SoilSamplerItem(new Item.Properties().maxStackSize(1).rarity(Rarity.RARE).group(ITEM_GROUP)).setRegistryName("soil_sampler")
+                new SoilSamplerItem(new Item.Properties().maxStackSize(1).rarity(Rarity.RARE).group(ITEM_GROUP)).setRegistryName("soil_sampler"),
+                new SoilMeterItem(new Item.Properties().maxStackSize(1).rarity(Rarity.RARE).group(ITEM_GROUP)).setRegistryName("soil_meter")
         );
     }
 
