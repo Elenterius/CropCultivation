@@ -1,6 +1,7 @@
 package com.creativechasm.cropcultivation.api.plant;
 
 import com.creativechasm.cropcultivation.api.block.BlockPropertyUtil;
+import com.creativechasm.cropcultivation.api.soil.SoilMoisture;
 import com.creativechasm.cropcultivation.api.soil.SoilStateContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.IGrowable;
@@ -34,7 +35,7 @@ public abstract class CropUtil
             }
 
             //check soil moisture
-            if (soilContext.moisture < iCrop.getMinSoilMoisture() || soilContext.moisture > iCrop.getMaxSoilMoisture()) {
+            if (soilContext.moisture < iCrop.getMinSoilMoisture() * SoilMoisture.MAX_VALUE || soilContext.moisture > iCrop.getMaxSoilMoisture() * SoilMoisture.MAX_VALUE) {
                 return false; //don't grow outside the moisture tolerance range
             }
 

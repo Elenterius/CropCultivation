@@ -24,13 +24,14 @@ public abstract class FertilizerHandler
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onBonemealUse(BonemealEvent event) {
 
-        if (event.getBlock().getBlock() == Blocks.NETHER_WART) { //temporary fix to prevent bone meal particle spawning
-            event.setCanceled(true);
-        }
-
-        //disable bone meal for compatible crops/plants
+        //disable bone meal for supported crops/plants
         Optional<ICropEntry> optionalICrop = CommonRegistry.CROP_REGISTRY.get(event.getBlock().getBlock().getRegistryName());
         if (optionalICrop.isPresent()) {
+            event.setCanceled(true);
+            return;
+        }
+
+        if (event.getBlock().getBlock() == Blocks.NETHER_WART) { //temporary fix to prevent bone meal particle spawning
             event.setCanceled(true);
         }
     }

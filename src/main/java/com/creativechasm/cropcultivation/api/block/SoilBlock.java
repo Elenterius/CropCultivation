@@ -203,6 +203,7 @@ public abstract class SoilBlock extends FarmlandBlock {
             Block cropBlock = cropState.getBlock();
             Optional<ICropEntry> optionalICrop = CommonRegistry.CROP_REGISTRY.get(cropBlock.getRegistryName());
             if (optionalICrop.isPresent()) {
+                CropCultivationMod.LOGGER.debug(MarkerManager.getMarker("SoilBlock"), "force growing of crop: " + cropState.getBlock());
                 worldIn.getPendingBlockTicks().scheduleTick(cropPos, cropBlock, 2); //we are lazy and tick the crop instead
             }
             else if (cropBlock instanceof IGrowable) { //fallback for not registered crops
@@ -228,7 +229,7 @@ public abstract class SoilBlock extends FarmlandBlock {
                             int newCropAge = BlockPropertyUtil.getAge(newCropState);
                             CropUtil.GenericCrop.updateYield(cropAge, newCropAge, soilContext);
                         }
-                        else {//fallback, what IGrowable has no age property? (flowers! lol)
+                        else {//fallback, what IGrowable has no age property? (tall flowers! lol)
                             soilContext.getTileState().resetCropYield();
 
                             // penalize the player for using "illegal" plant
