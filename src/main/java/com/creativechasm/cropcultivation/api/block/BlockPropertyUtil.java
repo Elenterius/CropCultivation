@@ -55,19 +55,19 @@ public abstract class BlockPropertyUtil {
         return getAgeProperty(state).map(state::get).orElse(0);
     }
 
-    public static int[] getCurrentAgeAndMaxAge(BlockState state) {
+    public static Optional<int[]> getCurrentAgeAndMaxAge(BlockState state) {
         if (state.getBlock() instanceof CropsBlock) {
             CropsBlock block = (CropsBlock) state.getBlock();
-            return new int[]{state.get(block.getAgeProperty()), block.getMaxAge()};
+            return Optional.of(new int[]{state.get(block.getAgeProperty()), block.getMaxAge()});
         }
 
         for (IProperty<?> prop : state.getProperties()) {
             if (prop.getName().equals("age") && prop instanceof IntegerProperty) {
                 IntegerProperty ageProperty = (IntegerProperty) prop;
-                return new int[]{state.get(ageProperty), getMaxAge(ageProperty)};
+                return Optional.of(new int[]{state.get(ageProperty), getMaxAge(ageProperty)});
             }
         }
 
-        return new int[]{0, 0};
+        return Optional.empty();
     }
 }

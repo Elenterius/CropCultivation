@@ -1,10 +1,13 @@
 package com.creativechasm.cropcultivation.handler;
 
 import com.creativechasm.cropcultivation.CropCultivationMod;
+import com.creativechasm.cropcultivation.api.block.BlockPropertyUtil;
+import com.creativechasm.cropcultivation.api.plant.CropUtil;
 import com.creativechasm.cropcultivation.api.plant.ICropEntry;
 import com.creativechasm.cropcultivation.api.soil.SoilStateContext;
 import com.creativechasm.cropcultivation.init.CommonRegistry;
 import net.minecraft.block.BlockState;
+import net.minecraft.state.IntegerProperty;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -14,12 +17,11 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 @Mod.EventBusSubscriber(modid = CropCultivationMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-public abstract class CropHandler {
+public abstract class CropHandler
+{
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onCropGrowth(final BlockEvent.CropGrowEvent.Pre event) {
@@ -31,8 +33,8 @@ public abstract class CropHandler {
             SoilStateContext soilContext = new SoilStateContext(world, pos.down());
             if (soilContext.isValid && !soilContext.isClient) {
                 ICropEntry iCrop = optionalICrop.get();
-                if (ICropEntry.canCropGrow(world, pos, event.getState(), iCrop, soilContext)) {
-                    float growthChance = ICropEntry.getGrowthChance((ServerWorld) world, pos, event.getState(), iCrop, soilContext);
+                if (CropUtil.RegisteredCrop.canCropGrow(world, pos, event.getState(), iCrop, soilContext)) {
+                    float growthChance = CropUtil.RegisteredCrop.getGrowthChance((ServerWorld) world, pos, event.getState(), iCrop, soilContext);
                     if (world.rand.nextFloat() < growthChance) {
                         event.setResult(Event.Result.ALLOW);
                         return;
@@ -41,7 +43,7 @@ public abstract class CropHandler {
                 event.setResult(Event.Result.DENY);
             }
         }
-        else { //unknown crop, fallback to minecraft behavior
+        else { //unknown crop, fallback to default behavior
             event.setResult(Event.Result.DEFAULT);
         }
     }
@@ -49,25 +51,45 @@ public abstract class CropHandler {
     @SubscribeEvent
     public static void onCropGrowth(final BlockEvent.CropGrowEvent.Post event) {
         World world = event.getWorld().getWorld();
-        BlockState cropState = event.getState();
+        BlockState newCropState = event.getState();
 
         // consume moisture & nutrients of the soil
-        Optional<ICropEntry> optionalICrop = CommonRegistry.CROP_REGISTRY.get(cropState.getBlock().getRegistryName());
+
+        Optional<ICropEntry> optionalICrop = CommonRegistry.CROP_REGISTRY.get(newCropState.getBlock().getRegistryName());
+        SoilStateContext soilContext = new SoilStateContext(world, event.getPos().down());
         if (optionalICrop.isPresent()) {
-            SoilStateContext soilContext = new SoilStateContext(world, event.getPos().down());
             if (soilContext.isValid && !soilContext.isClient) {
-                ICropEntry.updateYield((ServerWorld) world, event.getPos(), event.getOriginalState(), cropState, optionalICrop.get(), soilContext);
-                ICropEntry.consumeSoilMoistureAndNutrients((ServerWorld) world, event.getPos(), event.getOriginalState(), cropState, optionalICrop.get(), soilContext);
+                CropUtil.RegisteredCrop.updateYield((ServerWorld) world, event.getPos(), event.getOriginalState(), newCropState, optionalICrop.get(), soilContext);
+                CropUtil.RegisteredCrop.consumeSoilNutrients((ServerWorld) world, event.getPos(), event.getOriginalState(), newCropState, optionalICrop.get(), soilContext);
+                CropUtil.RegisteredCrop.consumeSoilMoisture(event.getPos(), newCropState, soilContext);
                 soilContext.update((ServerWorld) world); // update changes to world
             }
         }
-        else {
-            //TODO: consume nutrients
-            List<String> list = Arrays.asList("", "");
+        else { //fallback for not registered crops
+            if (soilContext.isValid && !soilContext.isClient) {
+                Optional<IntegerProperty> ageProperty = BlockPropertyUtil.getAgeProperty(newCropState);
+                if (ageProperty.isPresent()) {
+                    IntegerProperty age = ageProperty.get();
+                    int prevCropAge = event.getOriginalState().get(age);
+                    int newCropAge = newCropState.get(age);
+                    int maxCropAge = BlockPropertyUtil.getMaxAge(age);
+                    CropUtil.GenericCrop.updateYield(prevCropAge, newCropAge, soilContext);
+                    CropUtil.GenericCrop.consumeSoilNutrients(world.rand, newCropAge, maxCropAge, soilContext);
+                }
+                else { //fallback, what crop/plant has no age property??
+                    soilContext.getTileState().resetCropYield(); //reset yield to default!
+                    //penalize the player for using "illegal" plant
+                    if (world.rand.nextFloat() < 0.35f) soilContext.nitrogen -= 2;
+                    if (world.rand.nextFloat() < 0.35f) soilContext.phosphorus -= 2;
+                    if (world.rand.nextFloat() < 0.35f) soilContext.potassium -= 1;
+                }
+                CropUtil.GenericCrop.consumeSoilMoisture(event.getPos(), newCropState, soilContext);
+                soilContext.update((ServerWorld) world); // update changes to world
+            }
         }
     }
 
     public static void onHarvest(final BlockEvent.HarvestDropsEvent event) {
-        //fucking forge not annotating HarvestDropsEvent as Deprecated 🤦
+        //fucking forge waisting my time by not annotating HarvestDropsEvent as Deprecated 🤦
     }
 }

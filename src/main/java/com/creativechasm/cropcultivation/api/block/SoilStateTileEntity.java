@@ -15,7 +15,7 @@ import javax.annotation.Nonnull;
 
 public class SoilStateTileEntity extends TileEntity {
     @Unsigned
-    private final byte[] nutrients = new byte[]{4, 3, 3};
+    private final byte[] nutrients = new byte[]{4, 5, 3};
 
     @Unsigned
     private byte pH = (SoilPH.MAX_VALUE * 10) / 2; // init as perfect neutral pH value (fallback)

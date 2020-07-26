@@ -28,18 +28,6 @@ public class CropCultivationMod
 //        ClimateUtil.dumpBiomeTemperatureAndHumidity();
 //        ClimateUtil.resetTemperatureScaler();
 
-//        try {
-//            InputStream in = getClass().getResourceAsStream("/assets/settlements/foobar.txt");
-//            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-//            String line = reader.readLine();
-//            while (line != null) {
-//                EnvironmentLib.LOGGER.info(MarkerManager.getMarker("Resource"), line);
-//                line = reader.readLine();
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            EnvironmentLib.LOGGER.error(MarkerManager.getMarker("Resource"), "failed to read resource", e);
-//        }
         CommonRegistry.registerCrops();
 
         HarvestCraftAddon.getInstance().onCommonSetup();

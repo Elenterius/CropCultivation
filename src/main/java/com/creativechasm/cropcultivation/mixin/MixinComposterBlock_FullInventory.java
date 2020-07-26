@@ -1,6 +1,6 @@
 package com.creativechasm.cropcultivation.mixin;
 
-import com.creativechasm.cropcultivation.api.item.LibItems;
+import com.creativechasm.cropcultivation.api.item.ModItems;
 import net.minecraft.block.ComposterBlock;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.Inventory;
@@ -23,7 +23,7 @@ public abstract class MixinComposterBlock_FullInventory extends Inventory implem
             at = @At(value = "FIELD", target = "Lnet/minecraft/item/Items;BONE_MEAL:Lnet/minecraft/item/Item;", opcode = Opcodes.GETSTATIC)
     )
     protected Item redirectCanExtractItem() {
-        return LibItems.COMPOST; //replaces bone meal
+        return ModItems.COMPOST; //replaces bone meal
     }
 
     @Inject(method = "getInventoryStackLimit", at = @At("HEAD"), cancellable = true)

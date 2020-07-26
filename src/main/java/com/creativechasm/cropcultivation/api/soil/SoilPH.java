@@ -3,7 +3,12 @@ package com.creativechasm.cropcultivation.api.soil;
 import com.creativechasm.cropcultivation.api.util.MathHelperX;
 import com.creativechasm.cropcultivation.api.world.ClimateUtil;
 import com.google.common.collect.Range;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.Tags;
 
 import java.util.Random;
 
@@ -76,5 +81,15 @@ public enum SoilPH {
             if (phType.pHRange.contains(pH)) return phType;
         }
         return NEUTRAL;
+    }
+
+    public static float getPHForNonSoilBlockInWorld(ServerWorld world, BlockPos pos, BlockState state) {
+        float temperature = world.getBiome(pos).getTemperature(pos);
+        if (state.getBlock() == Blocks.PODZOL) return STRONGLY_ACIDIC.randomPHAffectedByTemperature(world.rand, temperature);
+        if (state.getBlock() == Blocks.MYCELIUM) return MODERATELY_ACIDIC.randomPHAffectedByTemperature(world.rand, temperature);
+        if (state.getBlock() == Blocks.CLAY) return SLIGHTLY_ALKALINE.randomPHAffectedByTemperature(world.rand, temperature);
+        if (Tags.Blocks.SAND.contains(state.getBlock())) return NEUTRAL.randomPHAffectedByTemperature(world.rand, temperature);
+        if (Tags.Blocks.DIRT.contains(state.getBlock())) return SLIGHTLY_ACIDIC.randomPHAffectedByTemperature(world.rand, temperature);
+        return NEUTRAL.randomPHAffectedByTemperature(world.rand, temperature);
     }
 }

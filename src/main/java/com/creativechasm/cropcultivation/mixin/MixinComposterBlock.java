@@ -1,6 +1,6 @@
 package com.creativechasm.cropcultivation.mixin;
 
-import com.creativechasm.cropcultivation.api.item.LibItems;
+import com.creativechasm.cropcultivation.api.item.ModItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ComposterBlock;
@@ -51,7 +51,7 @@ public abstract class MixinComposterBlock extends Block {
             at = @At(value = "NEW", target = "net/minecraft/entity/item/ItemEntity")
     )
     protected ItemEntity redirectSpawnedItem(World world, double x, double y, double z, ItemStack stack) {
-        return new ItemEntity(world, x, y, z, new ItemStack(LibItems.COMPOST, 3)); //replaces bone meal output
+        return new ItemEntity(world, x, y, z, new ItemStack(ModItems.COMPOST, 3)); //replaces bone meal output
     }
 
 //    @Redirect(
@@ -67,7 +67,7 @@ public abstract class MixinComposterBlock extends Block {
             at = @At(value = "NEW", target = "net/minecraft/block/ComposterBlock$FullInventory") //correct target reference, but intellij mixin plugin can't resolve it?
     )
     protected ComposterBlock.FullInventory redirectInventoryItem(BlockState state, IWorld iWorld, BlockPos pos, ItemStack stack) {
-        return new ComposterBlock.FullInventory(state, iWorld, pos, new ItemStack(LibItems.COMPOST, 3)); //replaces bone meal output
+        return new ComposterBlock.FullInventory(state, iWorld, pos, new ItemStack(ModItems.COMPOST, 3)); //replaces bone meal output
     }
 
     @ModifyArg(

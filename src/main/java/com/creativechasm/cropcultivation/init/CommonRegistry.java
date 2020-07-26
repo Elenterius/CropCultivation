@@ -2,10 +2,10 @@ package com.creativechasm.cropcultivation.init;
 
 import com.creativechasm.cropcultivation.CropCultivationMod;
 import com.creativechasm.cropcultivation.api.block.BlockPropertyUtil;
-import com.creativechasm.cropcultivation.api.block.LibBlocks;
+import com.creativechasm.cropcultivation.api.block.ModBlocks;
 import com.creativechasm.cropcultivation.api.block.SoilBlock;
 import com.creativechasm.cropcultivation.api.block.SoilStateTileEntity;
-import com.creativechasm.cropcultivation.api.item.LibItems;
+import com.creativechasm.cropcultivation.api.item.ModItems;
 import com.creativechasm.cropcultivation.api.soil.SoilTexture;
 import com.creativechasm.cropcultivation.api.util.MiscUtil;
 import com.creativechasm.cropcultivation.item.MortarItem;
@@ -78,14 +78,14 @@ public abstract class CommonRegistry
 
     @SubscribeEvent
     public static void onTileEntityTypeRegistry(final RegistryEvent.Register<TileEntityType<?>> registryEvent) {
-        registryEvent.getRegistry().register(TileEntityType.Builder.create(() -> new SoilStateTileEntity(FARM_SOIL), LibBlocks.LOAM_SOIL, LibBlocks.SILT_SOIL, LibBlocks.SAND_SOIL, LibBlocks.CLAY_SOIL).build(null).setRegistryName("farm_soil"));
+        registryEvent.getRegistry().register(TileEntityType.Builder.create(() -> new SoilStateTileEntity(FARM_SOIL), ModBlocks.LOAM_SOIL, ModBlocks.SILT_SOIL, ModBlocks.SAND_SOIL, ModBlocks.CLAY_SOIL).build(null).setRegistryName("farm_soil"));
     }
 
     public static final ItemGroup ITEM_GROUP = new ItemGroup(-1, CropCultivationMod.MOD_ID)
     {
         @OnlyIn(Dist.CLIENT)
         public ItemStack createIcon() {
-            return new ItemStack(LibBlocks.LOAM_SOIL);
+            return new ItemStack(ModBlocks.LOAM_SOIL);
         }
     };
 
@@ -93,11 +93,11 @@ public abstract class CommonRegistry
     public static void onItemsRegistry(final RegistryEvent.Register<Item> registryEvent) {
         Item.Properties properties = new Item.Properties().group(ITEM_GROUP);
         registryEvent.getRegistry().registerAll(
-                createItemForBlock(LibBlocks.SILT, properties),
-                createItemForBlock(LibBlocks.LOAM_SOIL, properties),
-                createItemForBlock(LibBlocks.SILT_SOIL, properties),
-                createItemForBlock(LibBlocks.SAND_SOIL, properties),
-                createItemForBlock(LibBlocks.CLAY_SOIL, properties),
+                createItemForBlock(ModBlocks.SILT, properties),
+                createItemForBlock(ModBlocks.LOAM_SOIL, properties),
+                createItemForBlock(ModBlocks.SILT_SOIL, properties),
+                createItemForBlock(ModBlocks.SAND_SOIL, properties),
+                createItemForBlock(ModBlocks.CLAY_SOIL, properties),
                 new Item(new Item.Properties().group(ITEM_GROUP)).setRegistryName("compost"),
                 new MortarItem(new Item.Properties().maxStackSize(1).rarity(Rarity.RARE).group(ITEM_GROUP)).setRegistryName("mortar_pestle"), //mortar and pestle
                 new Item(new Item.Properties().group(ITEM_GROUP)).setRegistryName("lime_dust"), //liming material
@@ -134,7 +134,7 @@ public abstract class CommonRegistry
         ComposterBlock.CHANCES.putIfAbsent(Items.PUFFERFISH.getItem(), 0.65f);
 
         // add our stuff
-        ComposterBlock.CHANCES.put(LibItems.WOOD_ASH.getItem(), 0.3f);
+        ComposterBlock.CHANCES.put(ModItems.WOOD_ASH.getItem(), 0.3f);
     }
 
     public static void registerCrops() {

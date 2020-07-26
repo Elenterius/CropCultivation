@@ -1,9 +1,9 @@
 package com.creativechasm.cropcultivation.init;
 
 import com.creativechasm.cropcultivation.CropCultivationMod;
-import com.creativechasm.cropcultivation.api.block.LibBlocks;
+import com.creativechasm.cropcultivation.api.block.ModBlocks;
 import com.creativechasm.cropcultivation.api.block.SoilBlock;
-import com.creativechasm.cropcultivation.api.item.LibItems;
+import com.creativechasm.cropcultivation.api.item.ModItems;
 import com.creativechasm.cropcultivation.api.soil.SoilMoisture;
 import com.creativechasm.cropcultivation.api.soil.SoilTexture;
 import net.minecraft.block.BlockState;
@@ -26,10 +26,10 @@ public class ClientRegistry {
     @SubscribeEvent
     public static void onModelRegistry(final ModelRegistryEvent registryEvent) {
         RenderType translucent = RenderType.getTranslucent();
-        RenderTypeLookup.setRenderLayer(LibBlocks.LOAM_SOIL, translucent);
-        RenderTypeLookup.setRenderLayer(LibBlocks.SAND_SOIL, translucent);
-        RenderTypeLookup.setRenderLayer(LibBlocks.SILT_SOIL, translucent);
-        RenderTypeLookup.setRenderLayer(LibBlocks.CLAY_SOIL, translucent);
+        RenderTypeLookup.setRenderLayer(ModBlocks.LOAM_SOIL, translucent);
+        RenderTypeLookup.setRenderLayer(ModBlocks.SAND_SOIL, translucent);
+        RenderTypeLookup.setRenderLayer(ModBlocks.SILT_SOIL, translucent);
+        RenderTypeLookup.setRenderLayer(ModBlocks.CLAY_SOIL, translucent);
     }
 
     public static IBlockColor soilColors = (state, lightReader, pos, index) -> {
@@ -46,10 +46,10 @@ public class ClientRegistry {
     public static void onBlockColorRegistry(final ColorHandlerEvent.Block event) {
         event.getBlockColors().register(
                 soilColors,
-                LibBlocks.LOAM_SOIL, LibBlocks.SAND_SOIL, LibBlocks.SILT_SOIL, LibBlocks.CLAY_SOIL
+                ModBlocks.LOAM_SOIL, ModBlocks.SAND_SOIL, ModBlocks.SILT_SOIL, ModBlocks.CLAY_SOIL
         );
 
-        event.getBlockColors().register((state, lightReader, pos, index) -> SoilTexture.SILT.color, LibBlocks.SILT);
+        event.getBlockColors().register((state, lightReader, pos, index) -> SoilTexture.SILT.color, ModBlocks.SILT);
     }
 
     @SubscribeEvent
@@ -57,15 +57,15 @@ public class ClientRegistry {
         event.getItemColors().register((stack, index) -> {
             BlockState state = ((BlockItem) stack.getItem()).getBlock().getDefaultState();
             return soilColors.getColor(state, null, null, index);
-        }, LibBlocks.LOAM_SOIL, LibBlocks.SAND_SOIL, LibBlocks.SILT_SOIL, LibBlocks.CLAY_SOIL);
+        }, ModBlocks.LOAM_SOIL, ModBlocks.SAND_SOIL, ModBlocks.SILT_SOIL, ModBlocks.CLAY_SOIL);
 
-        event.getItemColors().register((stack, index) -> SoilTexture.SILT.color, LibBlocks.SILT);
+        event.getItemColors().register((stack, index) -> SoilTexture.SILT.color, ModBlocks.SILT);
 
-        event.getItemColors().register((stack, index) -> 0x4f9ad8, LibItems.NPK_FERTILIZER);
-        event.getItemColors().register((stack, index) -> 0xdfd8bf, LibItems.FEATHER_MEAL);
-        event.getItemColors().register((stack, index) -> 0x474431, LibItems.SEAWEED_MEAL);
-        event.getItemColors().register((stack, index) -> 0x73868c, LibItems.FISH_MEAL);
-        event.getItemColors().register((stack, index) -> 0x7e7b76, LibItems.WOOD_ASH);
-        event.getItemColors().register((stack, index) -> 0xdfd8bf, LibItems.LIME_DUST);
+        event.getItemColors().register((stack, index) -> 0x4f9ad8, ModItems.NPK_FERTILIZER);
+        event.getItemColors().register((stack, index) -> 0xdfd8bf, ModItems.FEATHER_MEAL);
+        event.getItemColors().register((stack, index) -> 0x474431, ModItems.SEAWEED_MEAL);
+        event.getItemColors().register((stack, index) -> 0x73868c, ModItems.FISH_MEAL);
+        event.getItemColors().register((stack, index) -> 0x7e7b76, ModItems.WOOD_ASH);
+        event.getItemColors().register((stack, index) -> 0xdfd8bf, ModItems.LIME_DUST);
     }
 }

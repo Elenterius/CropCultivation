@@ -5,7 +5,8 @@ import net.minecraft.item.Item;
 import net.minecraftforge.registries.ObjectHolder;
 
 @ObjectHolder(CropCultivationMod.MOD_ID)
-public class LibItems {
+public class ModItems
+{
 //    @ObjectHolder("loam_soil")
 //    public static BlockItem LOAM_SOIL;
 //    @ObjectHolder("silt_soil")
