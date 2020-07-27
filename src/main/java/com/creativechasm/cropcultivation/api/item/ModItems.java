@@ -51,4 +51,7 @@ public class ModItems
 
     @ObjectHolder("soil_meter")
     public static Item SOIL_METER;
+
+    @ObjectHolder("crop_reader")
+    public static Item CROP_READER;
 }

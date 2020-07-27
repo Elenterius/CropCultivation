@@ -69,6 +69,7 @@ public final class CropRegistry {
 
     public Optional<String> getCommonId(@Nullable ICropEntry cropEntry) {
         if (cropEntry != null) {
+            if (cropEntry instanceof DefaultCropEntry) return Optional.of(((DefaultCropEntry) cropEntry).commonId);
             return commonIdMapping.entrySet().stream().filter(stringICropEntryEntry -> stringICropEntryEntry.getValue() == cropEntry).findFirst().map(Map.Entry::getKey);
         }
         return Optional.empty();
@@ -103,7 +104,7 @@ public final class CropRegistry {
             while ((line = br.readLine()) != null) {
                 String[] columns = line.split(",");
                 String commonId = columns[0];
-                if (commonId.isEmpty()) throw new IllegalArgumentException("invalid value");
+                if (commonId.isEmpty()) throw new IllegalArgumentException("invalid common id value");
 
                 List<ResourceLocation> list = Arrays.stream(columns).skip(1).filter(s -> !s.isEmpty()).map(ResourceLocation::new).collect(Collectors.toList());
                 commonIdToModIdMapping.putAll(commonId, list);
@@ -118,11 +119,12 @@ public final class CropRegistry {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] columns = line.split(",");
-                if (columns.length != 10) throw new Exception("csv contains illegal amount of values");
+                if (columns.length != 10) throw new Exception("csv contains illegal amount of columns");
                 String commonId = columns[0];
-                if (commonId.isEmpty()) throw new IllegalArgumentException("invalid value");
+                if (commonId.isEmpty()) throw new IllegalArgumentException("invalid common id value");
 
                 ICropEntry cropEntry = new DefaultCropEntry(
+                        commonId,
                         Float.parseFloat(columns[1]), Float.parseFloat(columns[2]), Float.parseFloat(columns[3]),
                         Float.parseFloat(columns[4]), Float.parseFloat(columns[5]),
                         Float.parseFloat(columns[6]), Float.parseFloat(columns[7]),

@@ -1,17 +1,18 @@
 package com.creativechasm.cropcultivation.handler;
 
-import com.creativechasm.cropcultivation.CropCultivationMod;
 import net.minecraft.util.IWorldPosCallable;
-import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(modid = CropCultivationMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+/**
+ * We forgo the use of stonecutter events because we don't need the flexibility at the moment.
+ * @see com.creativechasm.cropcultivation.mixin.MixinStonecutterContainer
+ */
+//@Mod.EventBusSubscriber(modid = CropCultivationMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public abstract class CraftingHandler
 {
+    //we need this though
     public interface IWorldPosCallableProvider {
         IWorldPosCallable getWorldPosCallable();
     }
-
-    // we forgo to use events because we don't need the flexibility at the moment. we only spawn one item on crafting
 
 //    @SubscribeEvent
 //    public static void onStoneCut(StoneCutEvent event) {

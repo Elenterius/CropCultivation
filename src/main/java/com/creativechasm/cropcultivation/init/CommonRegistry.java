@@ -106,7 +106,8 @@ public abstract class CommonRegistry
                 new SoilTestKitItem(new Item.Properties().maxStackSize(1).rarity(Rarity.RARE).group(ITEM_GROUP)).setRegistryName("soil_test_kit"),
                 new ThermoHygrometerItem(new Item.Properties().maxStackSize(1).rarity(Rarity.RARE).group(ITEM_GROUP)).setRegistryName("thermo_hygrometer"),
                 new SoilSamplerItem(new Item.Properties().maxStackSize(1).rarity(Rarity.RARE).group(ITEM_GROUP)).setRegistryName("soil_sampler"),
-                new SoilMeterItem(new Item.Properties().maxStackSize(1).rarity(Rarity.RARE).group(ITEM_GROUP)).setRegistryName("soil_meter")
+                new SoilMeterItem(new Item.Properties().maxStackSize(1).rarity(Rarity.RARE).group(ITEM_GROUP)).setRegistryName("soil_meter"),
+                new CropReaderItem(new Item.Properties().maxStackSize(1).rarity(Rarity.EPIC).group(ITEM_GROUP)).setRegistryName("crop_reader")
         );
     }
 

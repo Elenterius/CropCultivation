@@ -3,6 +3,7 @@
     "cropcultivation:soil_test_kit",
     "cropcultivation:thermo_hygrometer",
     "cropcultivation:soil_sampler",
-    "cropcultivation:soil_meter"
+    "cropcultivation:soil_meter",
+    "cropcultivation:crop_reader"
   ]
 }

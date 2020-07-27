@@ -8,6 +8,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public class DefaultCropEntry implements ICropEntry
 {
+    public final String commonId;
     private final float nitrogen;
     private final float phosphorus;
     private final float potassium;
@@ -18,7 +19,8 @@ public class DefaultCropEntry implements ICropEntry
     private final float minTemperature;
     private final float maxTemperature;
 
-    public DefaultCropEntry(float nitrogen, float phosphorus, float potassium, float minPH, float maxPH, float minMoisture, float maxMoisture, float minTemperature, float maxTemperature) {
+    public DefaultCropEntry(String commonId, float nitrogen, float phosphorus, float potassium, float minPH, float maxPH, float minMoisture, float maxMoisture, float minTemperature, float maxTemperature) {
+        this.commonId = commonId;
         this.nitrogen = nitrogen;
         this.phosphorus = phosphorus;
         this.potassium = potassium;
