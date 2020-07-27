@@ -16,7 +16,7 @@ import net.minecraftforge.fml.common.Mod;
 
 @OnlyIn(Dist.CLIENT)
 @Mod.EventBusSubscriber(modid = CropCultivationMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
-public class ToolTioHandler
+public abstract class ToolTipHandler
 {
     @SubscribeEvent
     public static void onItemToolTip(ItemTooltipEvent event) {

@@ -4,6 +4,8 @@
   "MixinComposterBlock",
   "MixinComposterBlock_FullInventory",
   "MixinNetherWartBlock",
+  "MixinStonecutterContainer$Container",
+  "MixinStonecutterContainer$OutputSlot",
   "MixinSugarCaneBlock"
 ], "injectors": {"defaultRequire": 1}, "minVersion": "0.8"
 }

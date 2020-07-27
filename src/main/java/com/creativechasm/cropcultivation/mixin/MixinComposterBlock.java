@@ -64,7 +64,7 @@ public abstract class MixinComposterBlock extends Block {
 
     @Redirect(
             method = "createInventory",
-            at = @At(value = "NEW", target = "net/minecraft/block/ComposterBlock$FullInventory") //correct target reference, but intellij mixin plugin can't resolve it?
+            at = @At(value = "NEW", target = "net/minecraft/block/ComposterBlock$FullInventory") //target reference is correct
     )
     protected ComposterBlock.FullInventory redirectInventoryItem(BlockState state, IWorld iWorld, BlockPos pos, ItemStack stack) {
         return new ComposterBlock.FullInventory(state, iWorld, pos, new ItemStack(ModItems.COMPOST, 3)); //replaces bone meal output
