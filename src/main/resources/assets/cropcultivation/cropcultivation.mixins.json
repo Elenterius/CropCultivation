@@ -1,8 +1,8 @@
 {
   "required": true, "package": "com.creativechasm.cropcultivation.mixin", "compatibilityLevel": "JAVA_8", "refmap": "mixins.cropcultivation.refmap.json", "mixins": [
   "MixinCactusBlock",
-  "MixinComposterBlock",
-  "MixinComposterBlock_FullInventory",
+  "MixinComposterBlock$Composter",
+  "MixinComposterBlock$FullInventory",
   "MixinNetherWartBlock",
   "MixinStonecutterContainer$Container",
   "MixinStonecutterContainer$OutputSlot",
