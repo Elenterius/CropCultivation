@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "I#I",
+    "#R#",
+    "I#I"
+  ],
+  "key": {
+    "I": { "item": "minecraft:iron_ingot" },
+    "#": { "item": "minecraft:quartz" },
+    "R": { "item": "minecraft:redstone" }
+  },
+  "result": {
+    "item": "cropcultivation:thermo_hygrometer",
+    "count": 1
+  }
+}

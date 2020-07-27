@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "S#S",
+    " # ",
+    " B "
+  ],
+  "key": {
+    "#": { "item": "minecraft:iron_ingot" },
+    "S": { "tag": "forge:rods/wooden" },
+    "B": { "item": "minecraft:bucket" }
+  },
+  "result": {
+    "item": "cropcultivation:soil_sampler",
+    "count": 1
+  }
+}

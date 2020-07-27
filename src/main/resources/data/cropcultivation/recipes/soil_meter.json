@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "KLT",
+    "#I#",
+    " I "
+  ],
+  "key": {
+    "#": { "item": "minecraft:iron_nugget" },
+    "I": { "item": "minecraft:iron_ingot" },
+    "K": { "item": "cropcultivation:soil_test_kit" },
+    "L": { "item": "minecraft:daylight_detector" },
+    "T": { "item": "cropcultivation:thermo_hygrometer" }
+  },
+  "result": {
+    "item": "cropcultivation:soil_meter",
+    "count": 1
+  }
+}
