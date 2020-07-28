@@ -46,18 +46,38 @@ import java.util.Random;
 @Mod.EventBusSubscriber(modid = CropCultivationMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public abstract class CommonRegistry
 {
-    public static final CropRegistry CROP_REGISTRY = new CropRegistry("/data/cropcultivation/crop_registry/mappings.csv", "/data/cropcultivation/crop_registry/entries.csv");
-
     @ObjectHolder(CropCultivationMod.MOD_ID + ":farm_soil")
     public static TileEntityType<?> FARM_SOIL;
+
+    protected static CropRegistry CROP_REGISTRY = null;
+
+    public static CropRegistry getCropRegistry() {
+        return CROP_REGISTRY;
+    }
+
+    public static void init() {
+        CROP_REGISTRY = new CropRegistry("/data/cropcultivation/crop_registry/mappings.csv", "/data/cropcultivation/crop_registry/entries.csv");
+    }
+
+    public static void setupFirst() {
+        registerCrops();
+    }
+
+    public static void setupLast() {
+        registerCompostableItems();
+        MixinHelper.modifyHoeLookup();
+    }
 
     @SubscribeEvent
     public static void onBlocksRegistry(final RegistryEvent.Register<Block> registryEvent) {
         registryEvent.getRegistry().registerAll(
                 new Block(Block.Properties.create(Material.EARTH).hardnessAndResistance(0.65F).sound(SoundType.GROUND)).setRegistryName("silt"),
-                createSoilBlock(Block.Properties.create(Material.EARTH).hardnessAndResistance(0.6F).sound(SoundType.GROUND), SoilTexture.LOAM, "loam_soil"),
                 createSoilBlock(Block.Properties.create(Material.EARTH).hardnessAndResistance(0.65F).sound(SoundType.GROUND), SoilTexture.SILT, "silt_soil"),
+                new Block(Block.Properties.create(Material.EARTH).hardnessAndResistance(0.6F).sound(SoundType.GROUND)).setRegistryName("loam"),
+                createSoilBlock(Block.Properties.create(Material.EARTH).hardnessAndResistance(0.6F).sound(SoundType.GROUND), SoilTexture.LOAM, "loam_soil"),
+                new Block(Block.Properties.create(Material.SAND).hardnessAndResistance(0.5F).sound(SoundType.GROUND)).setRegistryName("sandy_dirt"),
                 createSoilBlock(Block.Properties.create(Material.SAND).hardnessAndResistance(0.5F).sound(SoundType.GROUND), SoilTexture.SAND, "sand_soil"),
+                new Block(Block.Properties.create(Material.CLAY).hardnessAndResistance(0.8F).sound(SoundType.GROUND)).setRegistryName("clayey_dirt"),
                 createSoilBlock(Block.Properties.create(Material.CLAY).hardnessAndResistance(0.8F).sound(SoundType.GROUND), SoilTexture.CLAY, "clay_soil")
         );
     }
@@ -75,14 +95,14 @@ public abstract class CommonRegistry
 
     @SubscribeEvent
     public static void onTileEntityTypeRegistry(final RegistryEvent.Register<TileEntityType<?>> registryEvent) {
-        registryEvent.getRegistry().register(TileEntityType.Builder.create(() -> new SoilStateTileEntity(FARM_SOIL), ModBlocks.LOAM_SOIL, ModBlocks.SILT_SOIL, ModBlocks.SAND_SOIL, ModBlocks.CLAY_SOIL).build(null).setRegistryName("farm_soil"));
+        registryEvent.getRegistry().register(TileEntityType.Builder.create(() -> new SoilStateTileEntity(FARM_SOIL), ModBlocks.LOAMY_SOIL, ModBlocks.SILTY_SOIL, ModBlocks.SANDY_SOIL, ModBlocks.CLAYEY_SOIL).build(null).setRegistryName("farm_soil"));
     }
 
     public static final ItemGroup ITEM_GROUP = new ItemGroup(-1, CropCultivationMod.MOD_ID)
     {
         @OnlyIn(Dist.CLIENT)
         public ItemStack createIcon() {
-            return new ItemStack(ModBlocks.LOAM_SOIL);
+            return new ItemStack(ModBlocks.LOAMY_SOIL);
         }
     };
 
@@ -91,10 +111,14 @@ public abstract class CommonRegistry
         Item.Properties properties = new Item.Properties().group(ITEM_GROUP);
         registryEvent.getRegistry().registerAll(
                 createItemForBlock(ModBlocks.SILT, properties),
-                createItemForBlock(ModBlocks.LOAM_SOIL, properties),
-                createItemForBlock(ModBlocks.SILT_SOIL, properties),
-                createItemForBlock(ModBlocks.SAND_SOIL, properties),
-                createItemForBlock(ModBlocks.CLAY_SOIL, properties),
+                createItemForBlock(ModBlocks.SILTY_SOIL, properties),
+                createItemForBlock(ModBlocks.LOAM, properties),
+                createItemForBlock(ModBlocks.LOAMY_SOIL, properties),
+                createItemForBlock(ModBlocks.SANDY_DIRT, properties),
+                createItemForBlock(ModBlocks.SANDY_SOIL, properties),
+                createItemForBlock(ModBlocks.CLAYEY_DIRT, properties),
+                createItemForBlock(ModBlocks.CLAYEY_SOIL, properties),
+
                 new Item(new Item.Properties().group(ITEM_GROUP)).setRegistryName("compost"),
                 new MortarItem(new Item.Properties().maxStackSize(1).rarity(Rarity.RARE).group(ITEM_GROUP)).setRegistryName("mortar_pestle"), //mortar and pestle
                 new Item(new Item.Properties().group(ITEM_GROUP)).setRegistryName("lime_dust"), //liming material
@@ -103,6 +127,7 @@ public abstract class CommonRegistry
                 new Item(new Item.Properties().group(ITEM_GROUP)).setRegistryName("seaweed_meal"), //K fertilizer
                 new Item(new Item.Properties().group(ITEM_GROUP)).setRegistryName("wood_ash"), //K fertilizer, liming material
                 new Item(new Item.Properties().group(ITEM_GROUP)).setRegistryName("fish_meal"), //NP fertilizer
+
                 new SoilTestKitItem(new Item.Properties().maxStackSize(1).rarity(Rarity.RARE).group(ITEM_GROUP)).setRegistryName("soil_test_kit"),
                 new ThermoHygrometerItem(new Item.Properties().maxStackSize(1).rarity(Rarity.RARE).group(ITEM_GROUP)).setRegistryName("thermo_hygrometer"),
                 new SoilSamplerItem(new Item.Properties().maxStackSize(1).rarity(Rarity.RARE).group(ITEM_GROUP)).setRegistryName("soil_sampler"),
@@ -116,7 +141,7 @@ public abstract class CommonRegistry
         return new BlockItem(block, properties).setRegistryName(block.getRegistryName());
     }
 
-    public static void registerCompostableItems() {
+    protected static void registerCompostableItems() {
         // add more vanilla items to compost
         ComposterBlock.CHANCES.putIfAbsent(Items.POISONOUS_POTATO.getItem(), 0.7f); //higher chance than potato (0.65) ;)
         ComposterBlock.CHANCES.putIfAbsent(Items.PAPER.getItem(), 0.1f);
@@ -136,7 +161,7 @@ public abstract class CommonRegistry
         ComposterBlock.CHANCES.put(ModItems.WOOD_ASH.getItem(), 0.3f);
     }
 
-    public static void registerCrops() {
+    protected static void registerCrops() {
         try {
             CROP_REGISTRY.buildRegistry();
         }

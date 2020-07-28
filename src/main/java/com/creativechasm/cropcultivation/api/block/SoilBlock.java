@@ -201,7 +201,7 @@ public abstract class SoilBlock extends FarmlandBlock {
             BlockPos cropPos = pos.up();
             BlockState cropState = worldIn.getBlockState(cropPos);
             Block cropBlock = cropState.getBlock();
-            Optional<ICropEntry> optionalICrop = CommonRegistry.CROP_REGISTRY.get(cropBlock.getRegistryName());
+            Optional<ICropEntry> optionalICrop = CommonRegistry.getCropRegistry().get(cropBlock.getRegistryName());
             if (optionalICrop.isPresent()) {
                 CropCultivationMod.LOGGER.debug(MarkerManager.getMarker("SoilBlock"), "force growing of crop: " + cropState.getBlock());
                 worldIn.getPendingBlockTicks().scheduleTick(cropPos, cropBlock, 2); //we are lazy and tick the crop instead

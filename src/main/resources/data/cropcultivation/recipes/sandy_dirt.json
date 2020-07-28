@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "soil",
+  "pattern": [
+    "SD",
+    "DS"
+  ],
+  "key": {
+    "S": { "item": "minecraft:sand" },
+    "D": { "item": "minecraft:dirt" }
+  },
+  "result": {
+    "item": "cropcultivation:sandy_dirt",
+    "count": 4
+  }
+}

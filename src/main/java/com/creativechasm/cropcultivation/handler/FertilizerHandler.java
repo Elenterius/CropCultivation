@@ -18,7 +18,7 @@ public abstract class FertilizerHandler
     public static void onBonemealUse(BonemealEvent event) {
 
         //disable bone meal for supported crops/plants
-        Optional<ICropEntry> optionalICrop = CommonRegistry.CROP_REGISTRY.get(event.getBlock().getBlock().getRegistryName());
+        Optional<ICropEntry> optionalICrop = CommonRegistry.getCropRegistry().get(event.getBlock().getBlock().getRegistryName());
         if (optionalICrop.isPresent()) {
             event.setCanceled(true);
             return;

@@ -2,6 +2,9 @@
   "itemGroup.cropcultivation": "Crop Cultivation",
 
   "block.cropcultivation.silt": "Silt",
+  "block.cropcultivation.loam": "Loam",
+  "block.cropcultivation.sandy_dirt": "Sandy Dirt",
+  "block.cropcultivation.clayey_dirt": "Clayey Dirt",
   "block.cropcultivation.loam_soil": "Loamy Soil",
   "block.cropcultivation.silt_soil": "Silty Soil",
   "block.cropcultivation.sand_soil": "Sandy Soil",

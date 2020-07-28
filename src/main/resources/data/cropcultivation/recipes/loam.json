@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "soil",
+  "pattern": [
+    "# ",
+    "CS"
+  ],
+  "key": {
+    "C": { "item": "minecraft:clay" },
+    "S": { "item": "minecraft:sand" },
+    "#": { "item": "cropcultivation:silt" }
+  },
+  "result": {
+    "item": "cropcultivation:loam",
+    "count": 3
+  }
+}

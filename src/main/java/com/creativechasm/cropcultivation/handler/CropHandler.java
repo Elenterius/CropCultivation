@@ -26,7 +26,7 @@ public abstract class CropHandler
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onCropGrowth(final BlockEvent.CropGrowEvent.Pre event) {
 
-        Optional<ICropEntry> optionalICrop = CommonRegistry.CROP_REGISTRY.get(event.getState().getBlock().getRegistryName());
+        Optional<ICropEntry> optionalICrop = CommonRegistry.getCropRegistry().get(event.getState().getBlock().getRegistryName());
         if (optionalICrop.isPresent()) {
             World world = event.getWorld().getWorld();
             BlockPos pos = event.getPos();
@@ -55,7 +55,7 @@ public abstract class CropHandler
 
         // consume moisture & nutrients of the soil
 
-        Optional<ICropEntry> optionalICrop = CommonRegistry.CROP_REGISTRY.get(newCropState.getBlock().getRegistryName());
+        Optional<ICropEntry> optionalICrop = CommonRegistry.getCropRegistry().get(newCropState.getBlock().getRegistryName());
         SoilStateContext soilContext = new SoilStateContext(world, event.getPos().down());
         if (optionalICrop.isPresent()) {
             if (soilContext.isValid && !soilContext.isClient) {

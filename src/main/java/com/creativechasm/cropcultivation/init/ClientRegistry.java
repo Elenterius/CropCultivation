@@ -26,10 +26,10 @@ public class ClientRegistry {
     @SubscribeEvent
     public static void onModelRegistry(final ModelRegistryEvent registryEvent) {
         RenderType translucent = RenderType.getTranslucent();
-        RenderTypeLookup.setRenderLayer(ModBlocks.LOAM_SOIL, translucent);
-        RenderTypeLookup.setRenderLayer(ModBlocks.SAND_SOIL, translucent);
-        RenderTypeLookup.setRenderLayer(ModBlocks.SILT_SOIL, translucent);
-        RenderTypeLookup.setRenderLayer(ModBlocks.CLAY_SOIL, translucent);
+        RenderTypeLookup.setRenderLayer(ModBlocks.LOAMY_SOIL, translucent);
+        RenderTypeLookup.setRenderLayer(ModBlocks.SANDY_SOIL, translucent);
+        RenderTypeLookup.setRenderLayer(ModBlocks.SILTY_SOIL, translucent);
+        RenderTypeLookup.setRenderLayer(ModBlocks.CLAYEY_SOIL, translucent);
     }
 
     public static IBlockColor soilColors = (state, lightReader, pos, index) -> {
@@ -46,10 +46,13 @@ public class ClientRegistry {
     public static void onBlockColorRegistry(final ColorHandlerEvent.Block event) {
         event.getBlockColors().register(
                 soilColors,
-                ModBlocks.LOAM_SOIL, ModBlocks.SAND_SOIL, ModBlocks.SILT_SOIL, ModBlocks.CLAY_SOIL
+                ModBlocks.LOAMY_SOIL, ModBlocks.SANDY_SOIL, ModBlocks.SILTY_SOIL, ModBlocks.CLAYEY_SOIL
         );
 
         event.getBlockColors().register((state, lightReader, pos, index) -> SoilTexture.SILT.color, ModBlocks.SILT);
+        event.getBlockColors().register((state, lightReader, pos, index) -> SoilTexture.LOAM.color, ModBlocks.LOAM);
+        event.getBlockColors().register((state, lightReader, pos, index) -> SoilTexture.SAND.color, ModBlocks.SANDY_DIRT);
+        event.getBlockColors().register((state, lightReader, pos, index) -> SoilTexture.CLAY.color, ModBlocks.CLAYEY_DIRT);
     }
 
     @SubscribeEvent
@@ -57,9 +60,12 @@ public class ClientRegistry {
         event.getItemColors().register((stack, index) -> {
             BlockState state = ((BlockItem) stack.getItem()).getBlock().getDefaultState();
             return soilColors.getColor(state, null, null, index);
-        }, ModBlocks.LOAM_SOIL, ModBlocks.SAND_SOIL, ModBlocks.SILT_SOIL, ModBlocks.CLAY_SOIL);
+        }, ModBlocks.LOAMY_SOIL, ModBlocks.SANDY_SOIL, ModBlocks.SILTY_SOIL, ModBlocks.CLAYEY_SOIL);
 
         event.getItemColors().register((stack, index) -> SoilTexture.SILT.color, ModBlocks.SILT);
+        event.getItemColors().register((state, index) -> SoilTexture.LOAM.color, ModBlocks.LOAM);
+        event.getItemColors().register((state, index) -> SoilTexture.SAND.color, ModBlocks.SANDY_DIRT);
+        event.getItemColors().register((state, index) -> SoilTexture.CLAY.color, ModBlocks.CLAYEY_DIRT);
 
         event.getItemColors().register((stack, index) -> 0x4f9ad8, ModItems.NPK_FERTILIZER);
         event.getItemColors().register((stack, index) -> 0xdfd8bf, ModItems.FEATHER_MEAL);

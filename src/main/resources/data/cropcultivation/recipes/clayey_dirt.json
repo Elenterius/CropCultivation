@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "soil",
+  "pattern": [
+    "CD",
+    "DC"
+  ],
+  "key": {
+    "C": { "item": "minecraft:clay" },
+    "D": { "item": "minecraft:dirt" }
+  },
+  "result": {
+    "item": "cropcultivation:clayey_dirt",
+    "count": 4
+  }
+}

@@ -43,7 +43,7 @@ public class CropReaderItem extends Item implements IMeasuringDevice
             CompoundNBT nbtTag = stack.getTag();
 
             String commonId = nbtTag.getString("commonId");
-            Optional<ICropEntry> optionalCrop = CommonRegistry.CROP_REGISTRY.get(commonId);
+            Optional<ICropEntry> optionalCrop = CommonRegistry.getCropRegistry().get(commonId);
 
             tooltip.add(new StringTextComponent(""));
             tooltip.add(new StringTextComponent(String.format("Common ID: %s", optionalCrop.isPresent() ? commonId : "?")));
@@ -93,10 +93,10 @@ public class CropReaderItem extends Item implements IMeasuringDevice
                 maxAge = "" + maxAgeInt;
             }
 
-            Optional<ICropEntry> optionalCrop = CommonRegistry.CROP_REGISTRY.get(state.getBlock().getRegistryName());
+            Optional<ICropEntry> optionalCrop = CommonRegistry.getCropRegistry().get(state.getBlock().getRegistryName());
             if (optionalCrop.isPresent()) {
                 ICropEntry cropEntry = optionalCrop.get();
-                Optional<String> optionalId = CommonRegistry.CROP_REGISTRY.getCommonId(cropEntry);
+                Optional<String> optionalId = CommonRegistry.getCropRegistry().getCommonId(cropEntry);
                 optionalId.ifPresent(id -> nbtTag.putString("commonId", id));
 
                 boolean canGrow = false; // CropUtil.RegisteredCrop.canCropGrow()
