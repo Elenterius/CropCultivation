@@ -18,26 +18,33 @@ import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 @OnlyIn(Dist.CLIENT)
 @Mod.EventBusSubscriber(modid = CropCultivationMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientRegistry {
 
     @SubscribeEvent
-    public static void onModelRegistry(final ModelRegistryEvent registryEvent) {
+    public static void clientSetup(FMLClientSetupEvent event) {
         RenderType translucent = RenderType.getTranslucent();
-        RenderTypeLookup.setRenderLayer(ModBlocks.LOAMY_SOIL, translucent);
-        RenderTypeLookup.setRenderLayer(ModBlocks.SANDY_SOIL, translucent);
-        RenderTypeLookup.setRenderLayer(ModBlocks.SILTY_SOIL, translucent);
-        RenderTypeLookup.setRenderLayer(ModBlocks.CLAYEY_SOIL, translucent);
+        RenderType solid = RenderType.getSolid();
+        RenderTypeLookup.setRenderLayer(ModBlocks.LOAMY_SOIL, layer -> layer == solid || layer == translucent);
+        RenderTypeLookup.setRenderLayer(ModBlocks.SANDY_SOIL, layer -> layer == solid || layer == translucent);
+        RenderTypeLookup.setRenderLayer(ModBlocks.SILTY_SOIL, layer -> layer == solid || layer == translucent);
+        RenderTypeLookup.setRenderLayer(ModBlocks.CLAYEY_SOIL, layer -> layer == solid || layer == translucent);
+    }
+
+    @SubscribeEvent
+    public static void onModelRegistry(final ModelRegistryEvent registryEvent) {
+
     }
 
     public static IBlockColor soilColors = (state, lightReader, pos, index) -> {
-        if (lightReader != null && pos != null) {
-            if (index == 0) return state.get(SoilBlock.MOISTURE) >= SoilMoisture.WET.getMoistureLevel() ? BiomeColors.getWaterColor(lightReader, pos) : -1;
-        }
-        if (index == 1 && state.getBlock() instanceof SoilBlock) {
+        if (index == 0) {
             return ((SoilBlock) state.getBlock()).soilTexture.color;
+        }
+        if (lightReader != null && pos != null) {
+            if (index == 1) return state.get(SoilBlock.MOISTURE) >= SoilMoisture.WET.getMoistureLevel() ? BiomeColors.getWaterColor(lightReader, pos) : -1;
         }
         return -1;
     };

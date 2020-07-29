@@ -1,8 +1,19 @@
 {
-  "parent": "cropcultivation:block/soil_template_no_water",
+  "parent": "block/block",
+  "loader": "forge:multi-layer",
+  "layers": {
+    "solid": {
+      "parent": "cropcultivation:block/soil_template_soil_layer",
+      "textures": {
+        "dirt": "block/dirt",
+        "top": "block/farmland"
+      }
+    },
+    "translucent": {
+      "_comment": "dummy"
+    }
+  },
   "textures": {
-    "particle": "block/dirt",
-    "dirt": "block/dirt",
-    "top": "block/farmland"
+    "particle": "block/dirt"
   }
 }

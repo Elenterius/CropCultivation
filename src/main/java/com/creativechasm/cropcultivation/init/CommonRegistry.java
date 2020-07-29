@@ -27,11 +27,13 @@ import net.minecraft.world.storage.loot.LootParameters;
 import net.minecraft.world.storage.loot.conditions.ILootCondition;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.ToolType;
 import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
 import net.minecraftforge.common.loot.LootModifier;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.registries.ObjectHolder;
 import org.apache.logging.log4j.MarkerManager;
 
@@ -65,25 +67,27 @@ public abstract class CommonRegistry
 
     public static void setupLast() {
         registerCompostableItems();
-        MixinHelper.modifyHoeLookup();
+        modifyHoeLookup();
+        modifyShovelLookup();
     }
 
     @SubscribeEvent
     public static void onBlocksRegistry(final RegistryEvent.Register<Block> registryEvent) {
         registryEvent.getRegistry().registerAll(
-                new Block(Block.Properties.create(Material.EARTH).hardnessAndResistance(0.65F).sound(SoundType.GROUND)).setRegistryName("silt"),
-                createSoilBlock(Block.Properties.create(Material.EARTH).hardnessAndResistance(0.65F).sound(SoundType.GROUND), SoilTexture.SILT, "silt_soil"),
-                new Block(Block.Properties.create(Material.EARTH).hardnessAndResistance(0.6F).sound(SoundType.GROUND)).setRegistryName("loam"),
-                createSoilBlock(Block.Properties.create(Material.EARTH).hardnessAndResistance(0.6F).sound(SoundType.GROUND), SoilTexture.LOAM, "loam_soil"),
-                new Block(Block.Properties.create(Material.SAND).hardnessAndResistance(0.5F).sound(SoundType.GROUND)).setRegistryName("sandy_dirt"),
-                createSoilBlock(Block.Properties.create(Material.SAND).hardnessAndResistance(0.5F).sound(SoundType.GROUND), SoilTexture.SAND, "sand_soil"),
-                new Block(Block.Properties.create(Material.CLAY).hardnessAndResistance(0.8F).sound(SoundType.GROUND)).setRegistryName("clayey_dirt"),
-                createSoilBlock(Block.Properties.create(Material.CLAY).hardnessAndResistance(0.8F).sound(SoundType.GROUND), SoilTexture.CLAY, "clay_soil")
+                new Block(Block.Properties.create(Material.EARTH).hardnessAndResistance(0.65F).harvestTool(ToolType.SHOVEL).sound(SoundType.GROUND)).setRegistryName("silt"),
+                createSoilBlock(Block.Properties.create(Material.EARTH).hardnessAndResistance(0.65F).harvestTool(ToolType.SHOVEL).sound(SoundType.GROUND), SoilTexture.SILT, "silt_soil"),
+                new Block(Block.Properties.create(Material.EARTH).hardnessAndResistance(0.6F).harvestTool(ToolType.SHOVEL).sound(SoundType.GROUND)).setRegistryName("loam"),
+                createSoilBlock(Block.Properties.create(Material.EARTH).hardnessAndResistance(0.6F).harvestTool(ToolType.SHOVEL).sound(SoundType.GROUND), SoilTexture.LOAM, "loam_soil"),
+                new Block(Block.Properties.create(Material.SAND).hardnessAndResistance(0.5F).harvestTool(ToolType.SHOVEL).sound(SoundType.GROUND)).setRegistryName("sandy_dirt"),
+                createSoilBlock(Block.Properties.create(Material.SAND).hardnessAndResistance(0.5F).harvestTool(ToolType.SHOVEL).sound(SoundType.GROUND), SoilTexture.SAND, "sand_soil"),
+                new Block(Block.Properties.create(Material.CLAY).hardnessAndResistance(0.8F).harvestTool(ToolType.SHOVEL).harvestLevel(ItemTier.IRON.getHarvestLevel()).sound(SoundType.GROUND)).setRegistryName("clayey_dirt"),
+                createSoilBlock(Block.Properties.create(Material.CLAY).hardnessAndResistance(0.8F).harvestTool(ToolType.SHOVEL).harvestLevel(ItemTier.IRON.getHarvestLevel()).sound(SoundType.GROUND), SoilTexture.CLAY, "clay_soil")
         );
     }
 
     private static SoilBlock createSoilBlock(Block.Properties properties, SoilTexture texture, String registryName) {
-        SoilBlock block = new SoilBlock(properties, texture) {
+        SoilBlock block = new SoilBlock(properties, texture)
+        {
             @Override
             public TileEntity createTileEntity(BlockState state, IBlockReader world) {
                 return FARM_SOIL.create();
@@ -161,6 +165,48 @@ public abstract class CommonRegistry
         ComposterBlock.CHANCES.put(ModItems.WOOD_ASH.getItem(), 0.3f);
     }
 
+    protected static void modifyShovelLookup() {
+        CropCultivationMod.LOGGER.info(MarkerManager.getMarker("CommonRegistry"), "modifying Shovel Lookup Table...");
+        Map<Block, BlockState> SHOVEL_LOOKUP = ObfuscationReflectionHelper.getPrivateValue(ShovelItem.class, (ShovelItem) Items.DIAMOND_SHOVEL, "field_195955_e");
+        if (SHOVEL_LOOKUP != null) {
+            SHOVEL_LOOKUP.put(ModBlocks.SILTY_SOIL, ModBlocks.SILT.getDefaultState());
+            SHOVEL_LOOKUP.put(ModBlocks.LOAMY_SOIL, ModBlocks.LOAM.getDefaultState());
+            SHOVEL_LOOKUP.put(ModBlocks.SANDY_SOIL, ModBlocks.SANDY_DIRT.getDefaultState());
+            SHOVEL_LOOKUP.put(ModBlocks.CLAYEY_SOIL, ModBlocks.CLAYEY_DIRT.getDefaultState());
+        }
+        else {
+            throw new RuntimeException("failed to modify shovel lookup table");
+        }
+    }
+
+    private static Map<Block, BlockState> HOE_LOOKUP;
+    public static boolean isBlockTillable(Block block) {
+        return HOE_LOOKUP.containsKey(block);
+    }
+
+    protected static void modifyHoeLookup() {
+        CropCultivationMod.LOGGER.info(MarkerManager.getMarker("CommonRegistry"), "modifying Hoe Lookup Table...");
+        Map<Block, BlockState> HOE_LOOKUP = ObfuscationReflectionHelper.getPrivateValue(HoeItem.class, (HoeItem) Items.DIAMOND_HOE, "field_195973_b");
+        if (HOE_LOOKUP != null) {
+            CommonRegistry.HOE_LOOKUP = HOE_LOOKUP;
+
+            HOE_LOOKUP.remove(Blocks.DIRT);
+            HOE_LOOKUP.replaceAll((block, state) -> {
+                if (state.getBlock() == Blocks.FARMLAND) { //replace all farmland with dirt
+                    return Blocks.DIRT.getDefaultState();
+                }
+                return state;
+            });
+            HOE_LOOKUP.put(ModBlocks.SILT, ModBlocks.SILTY_SOIL.getDefaultState());
+            HOE_LOOKUP.put(ModBlocks.LOAM, ModBlocks.LOAMY_SOIL.getDefaultState());
+            HOE_LOOKUP.put(ModBlocks.SANDY_DIRT, ModBlocks.SANDY_SOIL.getDefaultState());
+            HOE_LOOKUP.put(ModBlocks.CLAYEY_DIRT, ModBlocks.CLAYEY_SOIL.getDefaultState());
+        }
+        else {
+            throw new RuntimeException("failed to modify hoe lookup table");
+        }
+    }
+
     protected static void registerCrops() {
         try {
             CROP_REGISTRY.buildRegistry();
@@ -173,7 +219,7 @@ public abstract class CommonRegistry
 
     @SubscribeEvent
     public static void registerModifierSerializers(final RegistryEvent.Register<GlobalLootModifierSerializer<?>> event) {
-        event.getRegistry().register(new CropYieldModifier.Serializer().setRegistryName(new ResourceLocation(CropCultivationMod.MOD_ID,"crop_yield")));
+        event.getRegistry().register(new CropYieldModifier.Serializer().setRegistryName(new ResourceLocation(CropCultivationMod.MOD_ID, "crop_yield")));
     }
 
     public static class CropYieldModifier extends LootModifier
