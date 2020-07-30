@@ -1,0 +1,67 @@
+{
+  "customCategories": {
+    "measuring_devices": {
+      "name": "marketCategory.cropcultivation.measuring_devices",
+      "icon": {
+        "item": "cropcultivation:soil_test_kit"
+      }
+    }
+  },
+  "customEntries": [
+    {
+      "output": {
+        "item": "cropcultivation:soil_test_kit",
+        "count": 1
+      },
+      "payment": {
+        "item": "minecraft:emerald",
+        "count": 6
+      },
+      "category": "measuring_devices"
+    },
+    {
+      "output": {
+        "item": "cropcultivation:thermo_hygrometer",
+        "count": 1
+      },
+      "payment": {
+        "item": "minecraft:emerald",
+        "count": 6
+      },
+      "category": "measuring_devices"
+    },
+    {
+      "output": {
+        "item": "cropcultivation:soil_sampler",
+        "count": 1
+      },
+      "payment": {
+        "item": "minecraft:emerald",
+        "count": 4
+      },
+      "category": "measuring_devices"
+    },
+    {
+      "output": {
+        "item": "cropcultivation:soil_meter",
+        "count": 1
+      },
+      "payment": {
+        "item": "minecraft:emerald",
+        "count": 10
+      },
+      "category": "measuring_devices"
+    },
+    {
+      "output": {
+        "item": "cropcultivation:crop_reader",
+        "count": 1
+      },
+      "payment": {
+        "item": "minecraft:emerald",
+        "count": 64
+      },
+      "category": "measuring_devices"
+    }
+  ]
+}

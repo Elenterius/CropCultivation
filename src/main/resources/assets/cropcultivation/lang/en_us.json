@@ -86,5 +86,6 @@
   "soil_ph.extremely_alkaline" : "Extremely Alkaline",
   "soil_ph.ultra_alkaline" : "Ultra Alkaline",
 
-  "marketCategory.cropcultivation.fertilizers": "Soil Conditioners"
+  "marketCategory.cropcultivation.fertilizers": "Soil Amendments",
+  "marketCategory.cropcultivation.measuring_devices": "Measuring Devices"
 }

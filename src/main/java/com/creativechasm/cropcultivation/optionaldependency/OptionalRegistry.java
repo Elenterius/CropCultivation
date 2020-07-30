@@ -20,8 +20,7 @@ import java.util.Map;
 public class OptionalRegistry
 {
     public static boolean isSoybeanAvailable() {
-//        return Mods.SIMPLE_FARMING.isPresent() || Mods.HARVEST_CRAFT_2_CROPS.isPresent();
-        return false;
+        return Mods.SIMPLE_FARMING.isPresent() || Mods.HARVEST_CRAFT_2_CROPS.isPresent();
     }
 
     public static class Mods {
