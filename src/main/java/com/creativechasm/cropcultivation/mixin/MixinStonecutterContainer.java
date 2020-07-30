@@ -36,14 +36,14 @@ public abstract class MixinStonecutterContainer
     @Mixin(targets = "net.minecraft.inventory.container.StonecutterContainer$2")
     public static abstract class OutputSlot extends Slot
     {
-        @Shadow(aliases = {"this$0"})
+        @Shadow(aliases = {"this$0"}, remap = false) //TODO: find workaround for this
         StonecutterContainer outerClassRef;
 
         public OutputSlot(IInventory inventoryIn, int index, int xPosition, int yPosition) {
             super(inventoryIn, index, xPosition, yPosition);
         }
 
-        @Inject(method = "onTake", at = @At("HEAD"))
+        @Inject(method = "onTake(Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/item/ItemStack;)Lnet/minecraft/item/ItemStack;", at = @At("HEAD"))
         protected void injectOnTake(PlayerEntity player, ItemStack stack, CallbackInfoReturnable<ItemStack> cir) {
             //normally the stack is the crafted item, but when using shift click to craft several items at once this is an empty stack
             onCraftingCallback(stack);

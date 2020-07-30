@@ -91,12 +91,12 @@ public abstract class MixinComposterBlock
     @Mixin(targets = "net.minecraft.block.ComposterBlock$FullInventory")
     public static abstract class FullInventory extends Inventory implements ISidedInventory
     {
-        @Redirect(method = "canExtractItem", at = @At(value = "FIELD", target = "Lnet/minecraft/item/Items;BONE_MEAL:Lnet/minecraft/item/Item;", opcode = Opcodes.GETSTATIC))
+        @Redirect(method = "canExtractItem(ILnet/minecraft/item/ItemStack;Lnet/minecraft/util/Direction;)Z", at = @At(value = "FIELD", target = "Lnet/minecraft/item/Items;BONE_MEAL:Lnet/minecraft/item/Item;", opcode = Opcodes.GETSTATIC))
         protected Item redirectCanExtractItem() {
             return ModItems.COMPOST; //replaces bone meal
         }
 
-        @Inject(method = "getInventoryStackLimit", at = @At("HEAD"), cancellable = true)
+        @Inject(method = "getInventoryStackLimit()I", at = @At("HEAD"), cancellable = true)
         protected void onGetInventoryStackLimit(CallbackInfoReturnable<Integer> cir) {
             cir.setReturnValue(3);
         }
