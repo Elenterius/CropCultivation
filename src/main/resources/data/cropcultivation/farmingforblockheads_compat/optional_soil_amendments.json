@@ -1,0 +1,15 @@
+{
+  "customEntries": [
+    {
+      "output": {
+        "item": "cropcultivation:soybean_meal",
+        "count": 3
+      },
+      "payment": {
+        "item": "minecraft:emerald",
+        "count": 2
+      },
+      "category": "fertilizers"
+    }
+  ]
+}

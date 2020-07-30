@@ -7,8 +7,7 @@ Currently focuses on soil management, and the plant growth restrictions derived 
 
 This mod will not add new crops to farm but instead modifies the behavior of all vanilla and compatible mod crops.
 
-## Crops
-### Changed Crop Behavior
+## Changed Crop Behavior
 - growth requirements
     - soil moisture need
     - macronutrients need
@@ -19,8 +18,7 @@ This mod will not add new crops to farm but instead modifies the behavior of all
 - crop yield
     - based on nutrient concentration in soil throughout its growth stages
 
----
-
+## Mod Compatibility
 ### Supported Crops
 - Minecraft
 - SimpleFarming
@@ -38,7 +36,12 @@ If you want full support consider helping out.
 - blocks implementing IGrowable
     - should contain a Block Property for age (IntegerProperty with the identifier "age") if not crop yield will not be properly modified
 
-
+### Farming For Blockheads
+**Note:** you will not be able to create their different farmland variants because vanilla farmland is no longer attainable in survival
+- made Red Fertilizer a `Nitrogen Fertilizer`
+- made Green Fertilizer a `Phosphorus & Potassium Fertilizer`
+- added `Soil Amendments` to the market
+- added `Measuring Devices` to the market
 
 ## Soils (Farmland)
 ```diff

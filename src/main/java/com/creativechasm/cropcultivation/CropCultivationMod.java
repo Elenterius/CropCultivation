@@ -1,10 +1,7 @@
 package com.creativechasm.cropcultivation;
 
 import com.creativechasm.cropcultivation.init.CommonRegistry;
-import com.creativechasm.cropcultivation.optionaldependency.HarvestCraftAddon;
 import com.creativechasm.cropcultivation.optionaldependency.OptionalRegistry;
-import com.creativechasm.cropcultivation.optionaldependency.SimpleFarmingAddon;
-import com.creativechasm.cropcultivation.optionaldependency.XLFoodAddon;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -28,12 +25,7 @@ public class CropCultivationMod
 //        ClimateUtil.resetTemperatureScaler();
 
         CommonRegistry.setupFirst();
-
-        HarvestCraftAddon.getInstance().onCommonSetup();
-        SimpleFarmingAddon.getInstance().onCommonSetup();
-        XLFoodAddon.getInstance().onCommonSetup();
         OptionalRegistry.Common.onSetup();
-
         CommonRegistry.setupLast();
     }
 }

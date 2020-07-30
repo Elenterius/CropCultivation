@@ -1,0 +1,89 @@
+{
+  "customCategories": {
+    "fertilizers": {
+      "name": "marketCategory.cropcultivation.fertilizers",
+      "icon": {
+        "item": "cropcultivation:fertilizer"
+      }
+    }
+  },
+  "customEntries": [
+    {
+      "output": {
+        "item": "cropcultivation:fertilizer",
+        "count": 3
+      },
+      "payment": {
+        "item": "minecraft:emerald",
+        "count": 9
+      },
+      "category": "fertilizers"
+    },
+    {
+      "output": {
+        "item": "cropcultivation:fish_meal",
+        "count": 3
+      },
+      "payment": {
+        "item": "minecraft:emerald",
+        "count": 2
+      },
+      "category": "fertilizers"
+    },
+    {
+      "output": {
+        "item": "cropcultivation:seaweed_meal",
+        "count": 3
+      },
+      "payment": {
+        "item": "minecraft:emerald",
+        "count": 2
+      },
+      "category": "fertilizers"
+    },
+    {
+      "output": {
+        "item": "cropcultivation:feather_meal",
+        "count": 3
+      },
+      "payment": {
+        "item": "minecraft:emerald",
+        "count": 1
+      },
+      "category": "fertilizers"
+    },
+    {
+      "output": {
+        "item": "cropcultivation:lime_dust",
+        "count": 3
+      },
+      "payment": {
+        "item": "minecraft:emerald",
+        "count": 1
+      },
+      "category": "fertilizers"
+    },
+    {
+      "output": {
+        "item": "cropcultivation:wood_ash",
+        "count": 3
+      },
+      "payment": {
+        "item": "minecraft:emerald",
+        "count": 1
+      },
+      "category": "fertilizers"
+    },
+    {
+      "output": {
+        "item": "cropcultivation:compost",
+        "count": 3
+      },
+      "payment": {
+        "item": "minecraft:emerald",
+        "count": 1
+      },
+      "category": "fertilizers"
+    }
+  ]
+}

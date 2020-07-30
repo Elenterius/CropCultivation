@@ -3,7 +3,6 @@ package com.creativechasm.cropcultivation.api.block;
 import com.creativechasm.cropcultivation.CropCultivationMod;
 import com.creativechasm.cropcultivation.api.soil.SoilPH;
 import com.google.common.primitives.UnsignedBytes;
-import jdk.jfr.Unsigned;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
@@ -14,10 +13,10 @@ import org.apache.logging.log4j.MarkerManager;
 import javax.annotation.Nonnull;
 
 public class SoilStateTileEntity extends TileEntity {
-    @Unsigned
+//    @Unsigned
     private final byte[] nutrients = new byte[]{4, 5, 3};
 
-    @Unsigned
+//    @Unsigned
     private byte pH = (SoilPH.MAX_VALUE * 10) / 2; // init as perfect neutral pH value (fallback)
 
     private float cropYield = 0f; //TODO: store as unsigned byte

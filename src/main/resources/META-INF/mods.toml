@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[31,)"
+loaderVersion="[31.2,)"
 
 [[mods]]
 modId="cropcultivation"
@@ -8,3 +8,10 @@ displayName="Crop Cultivation"
 authors="Elenterius"
 description='''
 Mod that changes the cultivation of Crops.'''
+
+[[dependencies.cropcultivation]]
+modId="farmingforblockheads"
+mandatory=false
+versionRange="[1.15.2]"
+ordering="AFTER"
+side="BOTH"

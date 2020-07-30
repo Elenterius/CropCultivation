@@ -84,5 +84,7 @@
   "soil_ph.strongly_alkaline" : "Strongly Alkaline",
   "soil_ph.very_strongly_alkaline" : "Very Strongly Alkaline",
   "soil_ph.extremely_alkaline" : "Extremely Alkaline",
-  "soil_ph.ultra_alkaline" : "Ultra Alkaline"
+  "soil_ph.ultra_alkaline" : "Ultra Alkaline",
+
+  "marketCategory.cropcultivation.fertilizers": "Soil Conditioners"
 }
