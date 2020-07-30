@@ -262,11 +262,13 @@ public abstract class SoilBlock extends FarmlandBlock {
         }
 
         //decompose organic matter into nutrients
-        if (worldIn.rand.nextFloat() < 0.025f) {
-            if (soilContext.organicMatter > 0) {
+        if (soilContext.organicMatter > 0) {
+            float threshold = soilContext.getMaxNutrientAmount() * 0.7f;
+            boolean isSoilLowInNutrients = soilContext.nitrogen < threshold && soilContext.phosphorus < threshold || soilContext.potassium < threshold;
+            if (isSoilLowInNutrients && worldIn.rand.nextFloat() < 0.025f) {
                 soilContext.pH -= 0.1f;
                 soilContext.organicMatter--;
-                soilContext.nitrogen++;
+                soilContext.nitrogen += rand.nextInt(2) + 1;
                 soilContext.phosphorus++;
                 soilContext.potassium++;
             }

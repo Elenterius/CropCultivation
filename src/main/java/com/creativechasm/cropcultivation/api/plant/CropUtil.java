@@ -3,11 +3,14 @@ package com.creativechasm.cropcultivation.api.plant;
 import com.creativechasm.cropcultivation.api.block.BlockPropertyUtil;
 import com.creativechasm.cropcultivation.api.soil.SoilMoisture;
 import com.creativechasm.cropcultivation.api.soil.SoilStateContext;
+import com.creativechasm.cropcultivation.api.world.ClimateUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.IGrowable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.IPlantable;
+import net.minecraftforge.common.PlantType;
 
 import java.util.Optional;
 import java.util.Random;
@@ -24,6 +27,16 @@ public abstract class CropUtil
             return true;
         }
         return false;
+    }
+
+    public static void consumeSoilMoisture(BlockPos cropPos, BlockState cropState, SoilStateContext soilContext) {
+        int consumption = 1;
+        if (cropState.getBlock() instanceof IPlantable) {
+            PlantType type = ((IPlantable) cropState.getBlock()).getPlantType(soilContext.getWorld(), cropPos);
+            if (ClimateUtil.isArid(soilContext.getWorld().getBiome(cropPos)) && type != PlantType.Desert || type != PlantType.Nether)
+                consumption++;
+        }
+        soilContext.moisture -= consumption;
     }
 
     public static abstract class RegisteredCrop
@@ -124,7 +137,7 @@ public abstract class CropUtil
         }
 
         public static void consumeSoilMoisture(BlockPos cropPos, BlockState cropState, SoilStateContext soilContext) {
-            soilContext.moisture--;
+            CropUtil.consumeSoilMoisture(cropPos, cropState, soilContext);
         }
     }
 
@@ -164,7 +177,7 @@ public abstract class CropUtil
         }
 
         public static void consumeSoilMoisture(BlockPos cropPos, BlockState cropState, SoilStateContext soilContext) {
-            soilContext.moisture--;
+            CropUtil.consumeSoilMoisture(cropPos, cropState, soilContext);
         }
     }
 }
