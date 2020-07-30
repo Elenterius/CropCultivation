@@ -16,11 +16,13 @@ apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'idea'
 
 version = '1.0.0-aplha.1'
-group = 'com.creativechasm.cropcultivation'
+group = 'com.creativechasm.mods'
 archivesBaseName = 'cropcultivation'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 compileJava.options.encoding = 'UTF-8'
+
+println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 
 sourceSets {
     api {
@@ -37,7 +39,7 @@ minecraft {
     mappings channel: 'snapshot', version: '20200723-1.15.1'
     // makeObfSourceJar = false
 
-     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     runs {
         client {
@@ -103,15 +105,15 @@ minecraft {
 
 repositories {
     maven { url 'https://jitpack.io' }
-//    maven { url "https://minecraft.curseforge.com/api/maven/" }
+    maven { url "https://minecraft.curseforge.com/api/maven/" }
     flatDir { dirs 'libs' }
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.15.2-31.2.31'
+    minecraft 'net.minecraftforge:forge:1.15.2-31.2.33'
 
-//    implementation fg.deobf('farming-for-blockheads:FarmingForBlockheads_1.15.2-6.1.5')
     implementation fg.deobf('enemeez.simplefarming:simplefarming:1.15.2-1.2.9')
+    implementation fg.deobf('net.blay09.mods:FarmingForBlockheads_1.15.2:6.1.5')
     implementation 'org.spongepowered:mixin:0.8'
 }
 
@@ -121,18 +123,32 @@ mixin {
 //    defaultObfuscationEnv searge
 }
 
-jar {
+import groovy.json.JsonSlurper
+import groovy.json.JsonOutput
+
+processResources {
     exclude '**/*.psd'
+    doLast {
+        //minimize json files
+        def startTime = System.currentTimeMillis()
+        for (File file in fileTree(dir: outputs.files.asPath, include: "**/*.json")) {
+            file.text = JsonOutput.toJson(new JsonSlurper().parse(file))
+        }
+        println("minimized json files within " + (System.currentTimeMillis() - startTime) + "ms")
+    }
+}
+
+jar {
     manifest {
         attributes([
                 "Specification-Title"     : "cropcultivation",
                 "Specification-Vendor"    : "creativechasm",
                 "Specification-Version"   : "1",
                 "Implementation-Title"    : project.name,
-                "Implementation-Version"  : "${version}",
+                "Implementation-Version"  : "${archiveVersion.get()}",
                 "Implementation-Vendor"   : "creativechasm",
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-                "MixinConnector": "com.creativechasm.cropcultivation.mixin.Connector"
+                "MixinConnector"          : "com.creativechasm.cropcultivation.mixin.Connector"
         ])
     }
 //    from(configurations.inJar) {
@@ -141,18 +157,17 @@ jar {
 }
 
 task buildApi(type: Jar) {
-    exclude '**/*.psd'
-    group = 'com.creativechasm.environment'
     baseName = 'envirlib' // 'archivesBaseName' breaks file naming, use deprecated 'baseName' instead
     version = '1.0.0-aplha.2'
+
     from sourceSets.api.output
     manifest {
         attributes([
                 "Specification-Title"     : "envirlib",
                 "Specification-Vendor"    : "creativechasm",
                 "Specification-Version"   : "1",
-                "Implementation-Title"    : "envirlib",
-                "Implementation-Version"  : "${version}",
+                "Implementation-Title"    : "Envirlib",
+                "Implementation-Version"  : "${archiveVersion.get()}",
                 "Implementation-Vendor"   : "creativechasm",
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
