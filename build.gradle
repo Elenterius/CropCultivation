@@ -13,7 +13,7 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'idea'
 
-version = '1.0.0-aplha.1'
+version = '0.0.9-aplha.1'
 group = 'com.creativechasm.mods'
 archivesBaseName = 'cropcultivation'
 
@@ -86,16 +86,16 @@ dependencies {
     implementation 'org.spongepowered:mixin:0.8'
 }
 
-//import groovy.json.JsonSlurper
-//import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
+import groovy.json.JsonOutput
 
 processResources {
     exclude '**/*.psd'
-//    doLast {
-//        for (File file in fileTree(dir: outputs.files.asPath, include: "**/*.json")) {
-//            file.text = JsonOutput.toJson(new JsonSlurper().parse(file))
-//        }
-//    }
+    doLast {
+        for (File file in fileTree(dir: outputs.files.asPath, include: "**/*.json")) {
+            file.text = JsonOutput.toJson(new JsonSlurper().parse(file))
+        }
+    }
 }
 
 jar {
