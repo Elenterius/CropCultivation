@@ -1,7 +1,5 @@
 package com.creativechasm.cropcultivation.handler;
 
-import net.minecraft.util.IWorldPosCallable;
-
 /**
  * We forgo the use of stonecutter events because we don't need the flexibility at the moment.
  * @see com.creativechasm.cropcultivation.mixin.MixinStonecutterContainer
@@ -9,11 +7,6 @@ import net.minecraft.util.IWorldPosCallable;
 //@Mod.EventBusSubscriber(modid = CropCultivationMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public abstract class CraftingHandler
 {
-    //we need this though
-    public interface IWorldPosCallableProvider {
-        IWorldPosCallable getWorldPosCallable();
-    }
-
 //    @SubscribeEvent
 //    public static void onStoneCut(StoneCutEvent event) {
 //

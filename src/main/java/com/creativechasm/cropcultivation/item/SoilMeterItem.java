@@ -1,10 +1,10 @@
 package com.creativechasm.cropcultivation.item;
 
-import com.creativechasm.cropcultivation.api.block.SoilBlock;
-import com.creativechasm.cropcultivation.api.block.SoilStateTileEntity;
-import com.creativechasm.cropcultivation.api.plant.PlantMacronutrient;
-import com.creativechasm.cropcultivation.api.soil.SoilPH;
-import com.creativechasm.cropcultivation.api.world.ClimateUtil;
+import com.creativechasm.cropcultivation.block.SoilBlock;
+import com.creativechasm.cropcultivation.block.SoilStateTileEntity;
+import com.creativechasm.cropcultivation.environment.ClimateUtil;
+import com.creativechasm.cropcultivation.environment.plant.PlantMacronutrient;
+import com.creativechasm.cropcultivation.environment.soil.SoilPH;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
@@ -167,11 +167,12 @@ public class SoilMeterItem extends Item implements IMeasuringDevice
                     nbtTag.putInt("K", tileState.getPotassium());
 
                     if (player instanceof ServerPlayerEntity) {
-                        player.sendStatusMessage(new TranslationTextComponent("measurement.soil_moisture", Math.round(moisture / 9f * 100) + "%").applyTextStyle(moisture >= 5 ? TextFormatting.AQUA : TextFormatting.WHITE)
+                        player.sendStatusMessage(
+                                new TranslationTextComponent("measurement.soil_moisture", Math.round(moisture / 9f * 100) + "%").applyTextStyle(moisture >= 5 ? TextFormatting.AQUA : TextFormatting.WHITE)
                                         .appendSibling(new StringTextComponent(" - ").applyTextStyle(TextFormatting.GRAY))
-                                        .appendSibling(new StringTextComponent(String.format("%.2f\u00B0C (%.2f)", ClimateUtil.convertTemperatureMCToCelsius(localTemperature), localTemperature)))
+                                        .appendSibling(new StringTextComponent(String.format("%.2f\u00B0C (%.2f)", ClimateUtil.convertTemperatureMCToCelsius(localTemperature), localTemperature)).applyTextStyle(TextFormatting.WHITE))
                                         .appendSibling(new StringTextComponent(" - ").applyTextStyle(TextFormatting.GRAY))
-                                        .appendSibling(new TranslationTextComponent("measurement.light_level", lightLevel))
+                                        .appendSibling(new TranslationTextComponent("measurement.light_level", lightLevel).applyTextStyle(TextFormatting.YELLOW))
                                         .appendSibling(new StringTextComponent(" - ").applyTextStyle(TextFormatting.GRAY))
                                         .appendSibling(SoilPH.getTextComponentForPH(tileState.getPH(), String.format("pH: %.1f", tileState.getPH()))
                                                 .appendSibling(new StringTextComponent(" - ").applyTextStyle(TextFormatting.GRAY))

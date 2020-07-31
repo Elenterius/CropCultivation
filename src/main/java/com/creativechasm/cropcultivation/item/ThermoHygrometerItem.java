@@ -1,6 +1,6 @@
 package com.creativechasm.cropcultivation.item;
 
-import com.creativechasm.cropcultivation.api.world.ClimateUtil;
+import com.creativechasm.cropcultivation.environment.ClimateUtil;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;

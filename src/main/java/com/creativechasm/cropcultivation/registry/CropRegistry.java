@@ -1,13 +1,13 @@
 package com.creativechasm.cropcultivation.registry;
 
 import com.creativechasm.cropcultivation.CropCultivationMod;
-import com.creativechasm.cropcultivation.api.plant.ICropEntry;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.MultimapBuilder;
 import net.minecraft.util.ResourceLocation;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.BufferedReader;
@@ -65,6 +65,14 @@ public final class CropRegistry {
             }
         }
         return Optional.empty();
+    }
+
+    @Nonnull
+    public List<ResourceLocation> getModsFor(@Nullable String commonId) {
+        if (commonId != null && !commonId.isEmpty()) {
+            return commonIdToModIdMapping.get(commonId);
+        }
+        return new ArrayList<>();
     }
 
     public Optional<String> getCommonId(@Nullable ICropEntry cropEntry) {

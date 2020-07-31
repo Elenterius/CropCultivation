@@ -1,11 +1,11 @@
 package com.creativechasm.cropcultivation.init;
 
 import com.creativechasm.cropcultivation.CropCultivationMod;
-import com.creativechasm.cropcultivation.api.block.ModBlocks;
-import com.creativechasm.cropcultivation.api.block.SoilBlock;
-import com.creativechasm.cropcultivation.api.item.ModItems;
-import com.creativechasm.cropcultivation.api.soil.SoilMoisture;
-import com.creativechasm.cropcultivation.api.soil.SoilTexture;
+import com.creativechasm.cropcultivation.block.ModBlocks;
+import com.creativechasm.cropcultivation.block.SoilBlock;
+import com.creativechasm.cropcultivation.environment.soil.SoilMoisture;
+import com.creativechasm.cropcultivation.environment.soil.SoilTexture;
+import com.creativechasm.cropcultivation.item.ModItems;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;

@@ -1,7 +1,7 @@
 package com.creativechasm.cropcultivation.mixin;
 
 import com.creativechasm.cropcultivation.CropCultivationMod;
-import com.creativechasm.cropcultivation.api.item.ModItems;
+import com.creativechasm.cropcultivation.item.ModItems;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;

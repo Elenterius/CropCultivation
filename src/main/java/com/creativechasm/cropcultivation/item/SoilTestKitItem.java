@@ -1,9 +1,9 @@
 package com.creativechasm.cropcultivation.item;
 
-import com.creativechasm.cropcultivation.api.block.SoilBlock;
-import com.creativechasm.cropcultivation.api.block.SoilStateTileEntity;
-import com.creativechasm.cropcultivation.api.plant.PlantMacronutrient;
-import com.creativechasm.cropcultivation.api.soil.SoilPH;
+import com.creativechasm.cropcultivation.block.SoilBlock;
+import com.creativechasm.cropcultivation.block.SoilStateTileEntity;
+import com.creativechasm.cropcultivation.environment.plant.PlantMacronutrient;
+import com.creativechasm.cropcultivation.environment.soil.SoilPH;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;

@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "cropcultivation:item/soil_meter"
+    "layer0": "cropcultivation:item/crop_reader"
   }
 }

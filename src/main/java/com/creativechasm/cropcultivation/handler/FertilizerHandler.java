@@ -1,8 +1,8 @@
 package com.creativechasm.cropcultivation.handler;
 
 import com.creativechasm.cropcultivation.CropCultivationMod;
-import com.creativechasm.cropcultivation.api.plant.ICropEntry;
 import com.creativechasm.cropcultivation.init.CommonRegistry;
+import com.creativechasm.cropcultivation.registry.ICropEntry;
 import net.minecraft.block.Blocks;
 import net.minecraftforge.event.entity.player.BonemealEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -17,14 +17,15 @@ public abstract class FertilizerHandler
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onBonemealUse(BonemealEvent event) {
 
+        if (event.getBlock().getBlock() == Blocks.NETHER_WART) { //fix to prevent bone meal particle spawning
+            event.setCanceled(true);
+        }
+
+        if (event.getPlayer().isCreative()) return; //allow creative players to bone meal plants directly
+
         //disable bone meal for supported crops/plants
         Optional<ICropEntry> optionalICrop = CommonRegistry.getCropRegistry().get(event.getBlock().getBlock().getRegistryName());
         if (optionalICrop.isPresent()) {
-            event.setCanceled(true);
-            return;
-        }
-
-        if (event.getBlock().getBlock() == Blocks.NETHER_WART) { //temporary fix to prevent bone meal particle spawning
             event.setCanceled(true);
         }
     }

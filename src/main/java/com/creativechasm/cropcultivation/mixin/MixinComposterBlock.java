@@ -1,6 +1,6 @@
 package com.creativechasm.cropcultivation.mixin;
 
-import com.creativechasm.cropcultivation.api.item.ModItems;
+import com.creativechasm.cropcultivation.item.ModItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ComposterBlock;

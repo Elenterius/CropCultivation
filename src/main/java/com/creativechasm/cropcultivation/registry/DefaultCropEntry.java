@@ -1,7 +1,6 @@
 package com.creativechasm.cropcultivation.registry;
 
-import com.creativechasm.cropcultivation.api.plant.ICropEntry;
-import com.creativechasm.cropcultivation.api.world.ClimateUtil;
+import com.creativechasm.cropcultivation.environment.ClimateUtil;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -30,6 +29,19 @@ public class DefaultCropEntry implements ICropEntry
         this.maxMoisture = maxMoisture;
         this.minTemperature = ClimateUtil.convertTemperatureCelsiusToMC(minTemperature);
         this.maxTemperature = ClimateUtil.convertTemperatureCelsiusToMC(maxTemperature);
+    }
+
+    public DefaultCropEntry(String commonId, float nitrogen, float phosphorus, float potassium, float minPH, float maxPH, float minMoisture, float maxMoisture, float minTemperature, float maxTemperature, boolean isMCTemperature) {
+        this.commonId = commonId;
+        this.nitrogen = nitrogen;
+        this.phosphorus = phosphorus;
+        this.potassium = potassium;
+        this.minPH = minPH;
+        this.maxPH = maxPH;
+        this.minMoisture = minMoisture;
+        this.maxMoisture = maxMoisture;
+        this.minTemperature = isMCTemperature ? minTemperature : ClimateUtil.convertTemperatureCelsiusToMC(minTemperature);
+        this.maxTemperature = isMCTemperature ? maxTemperature : ClimateUtil.convertTemperatureCelsiusToMC(maxTemperature);
     }
 
     @Override

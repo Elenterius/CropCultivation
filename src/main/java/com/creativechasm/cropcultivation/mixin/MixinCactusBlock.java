@@ -1,6 +1,6 @@
 package com.creativechasm.cropcultivation.mixin;
 
-import com.creativechasm.cropcultivation.api.block.BlockPropertyUtil;
+import com.creativechasm.cropcultivation.util.BlockPropertyUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CactusBlock;

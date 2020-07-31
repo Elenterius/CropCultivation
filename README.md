@@ -92,17 +92,11 @@ Implemented the IGrowable Interface for these Plant Blocks
 ### Compost
 Applied to the soil to increase the organic matter content of soil.
 
-_Item Tag:_ `compost`
-- optional tag entry for cannycomposter
-
 ### Fertilizer
 ```diff
 ! The Mod removes the ability to use bone meal on compatible crops
 ```
 Fertilizers are to be applied to the soil instead of the crop.
-
-_Item Tags:_ `n_fertilizer` `p_fertilizer` `k_fertilizer`
-
 - `Bone Meal`
 - `Industrial Fertilizer`
 - `Feather Meal`
@@ -111,9 +105,6 @@ _Item Tags:_ `n_fertilizer` `p_fertilizer` `k_fertilizer`
 - `Soybean Meal` `optional (requires simplefarming/harvestcraft)`
 ### Liming Material
 Increases the Soil pH.
-
-_Item Tag:_ `liming_material`
-
 - `Lime Dust`
   - uncommon side product from cutting Rocks with the Stonecutter
 - `Wood Ash`
@@ -121,9 +112,23 @@ _Item Tag:_ `liming_material`
  <br>(make wood ash a waste product of burning/smelting wood logs in a furnace?)
 ### Acidifying Material
 Decreases the Soil pH.
-
-_Item Tag:_ `acidifying_material`
-
 - `Blaze Powder`
 - `Gunpowder`
-- `Sulphur` `optional tag entry for simplysalty`
+- `Sulphur` `from simplysalty mod`
+
+## Datapack
+`data/cropcultivation/...`
+### Item Tags
+- `n_fertilizer`
+  - contains already optional entry for `farmingforblockheads:red_fertilizer`
+- `p_fertilizer`
+  - contains already optional entry for `farmingforblockheads:green_fertilizer`
+- `k_fertilizer`
+  - contains already optional entry for `farmingforblockheads:green_fertilizer`
+- `acidifying_material`
+  - contains already optional entry for `simplysalty:sulphur` 
+- `liming_material`
+- `compost`
+  - contains already optional entry for `cannycomposter:compost`
+### Block Tags
+- `default_growth`: crops/plants added to this tag will be excluded from the modified growth behavior, this does not prevent the consumption of nutrients!

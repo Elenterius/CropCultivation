@@ -1,7 +1,7 @@
 package com.creativechasm.cropcultivation.handler;
 
 import com.creativechasm.cropcultivation.CropCultivationMod;
-import com.creativechasm.cropcultivation.api.util.ModTags;
+import com.creativechasm.cropcultivation.util.ModTags;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.StringTextComponent;

@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "cropcultivation:silt",
+    "cropcultivation:loam",
+    "cropcultivation:sandy_dirt",
+    "cropcultivation:clayey_dirt"
+  ]
+}

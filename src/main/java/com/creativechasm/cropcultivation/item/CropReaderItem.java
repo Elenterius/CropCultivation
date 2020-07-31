@@ -1,9 +1,13 @@
 package com.creativechasm.cropcultivation.item;
 
-import com.creativechasm.cropcultivation.api.block.BlockPropertyUtil;
-import com.creativechasm.cropcultivation.api.plant.ICropEntry;
-import com.creativechasm.cropcultivation.api.plant.IPlantGrowthCA;
+import com.creativechasm.cropcultivation.environment.ClimateUtil;
+import com.creativechasm.cropcultivation.environment.CropUtil;
+import com.creativechasm.cropcultivation.environment.plant.IPlantGrowthCA;
+import com.creativechasm.cropcultivation.environment.soil.SoilStateContext;
 import com.creativechasm.cropcultivation.init.CommonRegistry;
+import com.creativechasm.cropcultivation.registry.ICropEntry;
+import com.creativechasm.cropcultivation.util.BlockPropertyUtil;
+import com.creativechasm.cropcultivation.util.ModTags;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.IGrowable;
 import net.minecraft.client.util.ITooltipFlag;
@@ -13,6 +17,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.IntegerProperty;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -46,20 +51,28 @@ public class CropReaderItem extends Item implements IMeasuringDevice
             Optional<ICropEntry> optionalCrop = CommonRegistry.getCropRegistry().get(commonId);
 
             tooltip.add(new StringTextComponent(""));
-            tooltip.add(new StringTextComponent(String.format("Common ID: %s", optionalCrop.isPresent() ? commonId : "?")));
-            tooltip.add(new StringTextComponent(String.format("Age: %s/%s", nbtTag.getInt("age"), nbtTag.getInt("maxAge"))));
+            tooltip.add(new StringTextComponent("Crop: ").appendSibling(new StringTextComponent(nbtTag.getString("blockRN")).applyTextStyle(TextFormatting.GRAY)));
+            tooltip.add(new StringTextComponent("Age: ").appendSibling(new StringTextComponent(nbtTag.getInt("age") + "/" + nbtTag.getInt("maxAge")).applyTextStyle(TextFormatting.GRAY)));
+
+            tooltip.add(new StringTextComponent(""));
+            tooltip.add(new StringTextComponent("Common ID: ").appendSibling(new StringTextComponent(optionalCrop.isPresent() ? commonId : "?").applyTextStyle(TextFormatting.GRAY)));
+            optionalCrop.ifPresent(iCropEntry -> {
+                tooltip.add(new StringTextComponent("Registered: ")
+                        .appendSibling(new StringTextComponent(nbtTag.getString("registered")).applyTextStyle(TextFormatting.GRAY)));
+            });
 
             if (optionalCrop.isPresent()) {
                 ICropEntry cropEntry = optionalCrop.get();
                 tooltip.add(new StringTextComponent(""));
                 tooltip.add(new StringTextComponent("Needs"));
-                tooltip.add(new StringTextComponent(String.format("Nitrogen: %s%%", (int)(cropEntry.getNitrogenNeed() * 100))));
-                tooltip.add(new StringTextComponent(String.format("Phosphorus: %s%%", (int)(cropEntry.getPhosphorusNeed() * 100))));
-                tooltip.add(new StringTextComponent(String.format("Potassium: %s%%", (int)(cropEntry.getPotassiumNeed() * 100))));
+                tooltip.add(new StringTextComponent(String.format("Nitrogen: %s%%", (int) (cropEntry.getNitrogenNeed() * 100))).applyTextStyle(TextFormatting.GRAY));
+                tooltip.add(new StringTextComponent(String.format("Phosphorus: %s%%", (int) (cropEntry.getPhosphorusNeed() * 100))).applyTextStyle(TextFormatting.GRAY));
+                tooltip.add(new StringTextComponent(String.format("Potassium: %s%%", (int) (cropEntry.getPotassiumNeed() * 100))).applyTextStyle(TextFormatting.GRAY));
                 tooltip.add(new StringTextComponent(""));
-                tooltip.add(new StringTextComponent(String.format("Moisture: %s - %s", cropEntry.getMinSoilMoisture(), cropEntry.getMaxSoilMoisture())));
-                tooltip.add(new StringTextComponent(String.format("pH: %s - %s", cropEntry.getMinSoilPH(), cropEntry.getMaxSoilPH())));
-                tooltip.add(new StringTextComponent(String.format("Temperature: %s - %s", cropEntry.getMinTemperature(), cropEntry.getMaxTemperature())));
+                tooltip.add(new StringTextComponent("Tolerance"));
+                tooltip.add(new StringTextComponent(String.format("Moisture: %s - %s", cropEntry.getMinSoilMoisture(), cropEntry.getMaxSoilMoisture())).applyTextStyle(TextFormatting.GRAY));
+                tooltip.add(new StringTextComponent(String.format("pH: %s - %s", cropEntry.getMinSoilPH(), cropEntry.getMaxSoilPH())).applyTextStyle(TextFormatting.GRAY));
+                tooltip.add(new StringTextComponent(String.format("Temperature: %.2f°C - %.2f°C (%.2f - %.2f)", ClimateUtil.convertTemperatureMCToCelsius(cropEntry.getMinTemperature()), ClimateUtil.convertTemperatureMCToCelsius(cropEntry.getMaxTemperature()), cropEntry.getMinTemperature(), cropEntry.getMaxTemperature())).applyTextStyle(TextFormatting.GRAY));
 
                 if (cropEntry instanceof IPlantGrowthCA) {
                     tooltip.add(new StringTextComponent(""));
@@ -92,31 +105,46 @@ public class CropReaderItem extends Item implements IMeasuringDevice
                 age = "" + ageInt;
                 maxAge = "" + maxAgeInt;
             }
+            else {
+                nbtTag.remove("age");
+                nbtTag.remove("maxAge");
+            }
 
-            Optional<ICropEntry> optionalCrop = CommonRegistry.getCropRegistry().get(state.getBlock().getRegistryName());
-            if (optionalCrop.isPresent()) {
-                ICropEntry cropEntry = optionalCrop.get();
-                Optional<String> optionalId = CommonRegistry.getCropRegistry().getCommonId(cropEntry);
-                optionalId.ifPresent(id -> nbtTag.putString("commonId", id));
+            nbtTag.putString("blockRN", Optional.ofNullable(state.getBlock().getRegistryName()).map(ResourceLocation::toString).orElse("?"));
 
-                boolean canGrow = false; // CropUtil.RegisteredCrop.canCropGrow()
+            boolean useDefaultGrowth = ModTags.Blocks.USE_DEFAULT_GROWTH.contains(state.getBlock());
+            if (!useDefaultGrowth) {
+                Optional<ICropEntry> optionalCrop = CommonRegistry.getCropRegistry().get(state.getBlock().getRegistryName());
+                if (optionalCrop.isPresent()) {
+                    ICropEntry cropEntry = optionalCrop.get();
+                    Optional<String> optionalId = CommonRegistry.getCropRegistry().getCommonId(cropEntry);
+                    optionalId.ifPresent(id -> {
+                        nbtTag.putString("commonId", id);
+                        nbtTag.putString("registered", "" + CommonRegistry.getCropRegistry().getModsFor(id));
+                    });
 
-                if (player instanceof ServerPlayerEntity) {
-                    player.sendStatusMessage(
-                            new StringTextComponent(String.format("Common ID: %s", optionalId.orElse("?")))
-                                    .appendSibling(new StringTextComponent(" - ").applyTextStyle(TextFormatting.GRAY))
-                                    .appendSibling(new StringTextComponent(String.format("Age: %s/%s", age, maxAge)))
-                                    .appendSibling(new StringTextComponent(" - ").applyTextStyle(TextFormatting.GRAY))
-                                    .appendSibling(new StringTextComponent(String.format("Can Grow: %s", canGrow)).applyTextStyle(canGrow ? TextFormatting.GREEN : TextFormatting.RED))
-                            , true
-                    );
+                    SoilStateContext soilContext = new SoilStateContext(world, pos.down());
+                    boolean canGrow = soilContext.isValid && CropUtil.RegisteredCrop.canCropGrow(world, pos, state, CropUtil.GENERIC_CROP, soilContext);
+
+                    if (player instanceof ServerPlayerEntity) {
+                        player.sendStatusMessage(
+                                new StringTextComponent(String.format("Common ID: %s", optionalId.orElse("?")))
+                                        .appendSibling(new StringTextComponent(" - ").applyTextStyle(TextFormatting.GRAY))
+                                        .appendSibling(new StringTextComponent(String.format("Age: %s/%s", age, maxAge)))
+                                        .appendSibling(new StringTextComponent(" - ").applyTextStyle(TextFormatting.GRAY))
+                                        .appendSibling(new StringTextComponent(String.format("Can Grow: %s", canGrow)).applyTextStyle(canGrow ? TextFormatting.GREEN : TextFormatting.RED))
+                                , true
+                        );
+                    }
+
+                    return;
                 }
             }
-            else {
-                nbtTag.remove("commonId");
-                if (player instanceof ServerPlayerEntity) {
-                    player.sendStatusMessage(new StringTextComponent(String.format("Age: %s/%s", age, maxAge)), true);
-                }
+
+            //fallback
+            nbtTag.remove("commonId");
+            if (player instanceof ServerPlayerEntity) {
+                player.sendStatusMessage(new StringTextComponent(String.format("Age: %s/%s", age, maxAge)), true);
             }
         }
     }
