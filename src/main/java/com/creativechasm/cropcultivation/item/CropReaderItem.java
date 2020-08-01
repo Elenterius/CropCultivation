@@ -59,10 +59,7 @@ public class CropReaderItem extends Item implements IMeasuringDevice
 
             tooltip.add(new StringTextComponent(""));
             tooltip.add(new StringTextComponent("Common ID: ").appendSibling(new StringTextComponent(optionalCrop.isPresent() ? commonId : "?").applyTextStyle(TextFormatting.GRAY)));
-            optionalCrop.ifPresent(iCropEntry -> {
-                tooltip.add(new StringTextComponent("Registered: ")
-                        .appendSibling(new StringTextComponent(nbtTag.getString("registered")).applyTextStyle(TextFormatting.GRAY)));
-            });
+            optionalCrop.ifPresent(iCropEntry -> tooltip.add(new StringTextComponent("Registered: ").appendSibling(new StringTextComponent(nbtTag.getString("registered")).applyTextStyle(TextFormatting.GRAY))));
 
             if (optionalCrop.isPresent()) {
                 ICropEntry cropEntry = optionalCrop.get();
@@ -119,40 +116,39 @@ public class CropReaderItem extends Item implements IMeasuringDevice
             boolean useDefaultGrowth = ModTags.Blocks.USE_DEFAULT_GROWTH.contains(state.getBlock());
             if (!useDefaultGrowth) {
                 Optional<ICropEntry> optionalCrop = CommonRegistry.getCropRegistry().get(state.getBlock().getRegistryName());
-                if (optionalCrop.isPresent()) {
-                    ICropEntry cropEntry = optionalCrop.get();
-                    Optional<String> optionalId = CommonRegistry.getCropRegistry().getCommonId(cropEntry);
-                    optionalId.ifPresent(id -> {
-                        nbtTag.putString("commonId", id);
-                        nbtTag.putString("registered", "" + CommonRegistry.getCropRegistry().getModsFor(id));
-                    });
+                ICropEntry cropEntry = optionalCrop.orElse(CropUtil.GENERIC_CROP);
 
-                    SoilStateContext soilContext = new SoilStateContext(world, pos.down());
-                    boolean canGrow = soilContext.isValid && CropUtil.RegisteredCrop.canCropGrow(world, pos, state, cropEntry, soilContext);
-                    float growthChange = soilContext.isValid ? CropUtil.RegisteredCrop.getGrowthChance(cropEntry, soilContext) : 0f;
+                Optional<String> optionalId = CommonRegistry.getCropRegistry().getCommonId(cropEntry);
+                optionalId.ifPresent(id -> {
+                    nbtTag.putString("commonId", id);
+                    nbtTag.putString("registered", "" + CommonRegistry.getCropRegistry().getModsFor(id));
+                });
 
-                    if (soilContext.isValid) {
-                        nbtTag.putFloat("yieldSum", soilContext.getTileState().getCropYieldSum());
-                        if (ageProperty.isPresent()) {
-                            nbtTag.putFloat("yieldMultiplier", soilContext.getTileState().getCropYieldAveraged(ageInt));
-                        }
+                SoilStateContext soilContext = new SoilStateContext(world, pos.down());
+                boolean canGrow = soilContext.isValid && CropUtil.RegisteredCrop.canCropGrow(world, pos, state, cropEntry, soilContext);
+                float growthChange = soilContext.isValid ? CropUtil.RegisteredCrop.getGrowthChance(cropEntry, soilContext) : 0f;
+
+                if (soilContext.isValid) {
+                    nbtTag.putFloat("yieldSum", soilContext.getTileState().getCropYieldSum());
+                    if (ageProperty.isPresent()) {
+                        nbtTag.putFloat("yieldMultiplier", soilContext.getTileState().getCropYieldAveraged(ageInt));
                     }
-
-                    if (player instanceof ServerPlayerEntity) {
-                        player.sendStatusMessage(
-                                new StringTextComponent(String.format("Common ID: %s", optionalId.orElse("?")))
-                                        .appendSibling(new StringTextComponent(" - ").applyTextStyle(TextFormatting.GRAY))
-                                        .appendSibling(new StringTextComponent(String.format("Age: %s/%s", age, maxAge)))
-                                        .appendSibling(new StringTextComponent(" - ").applyTextStyle(TextFormatting.GRAY))
-                                        .appendSibling(new StringTextComponent(String.format("Can Grow: %s", canGrow)).applyTextStyle(canGrow ? TextFormatting.GREEN : TextFormatting.RED))
-                                        .appendSibling(new StringTextComponent(" - ").applyTextStyle(TextFormatting.GRAY))
-                                        .appendSibling(new StringTextComponent(String.format("Grow Chance: %.3f", growthChange)).applyTextStyle(TextFormatting.WHITE))
-                                , true
-                        );
-                    }
-
-                    return;
                 }
+
+                if (player instanceof ServerPlayerEntity) {
+                    player.sendStatusMessage(
+                            new StringTextComponent(String.format("Common ID: %s", optionalId.orElse("?")))
+                                    .appendSibling(new StringTextComponent(" - ").applyTextStyle(TextFormatting.GRAY))
+                                    .appendSibling(new StringTextComponent(String.format("Age: %s/%s", age, maxAge)))
+                                    .appendSibling(new StringTextComponent(" - ").applyTextStyle(TextFormatting.GRAY))
+                                    .appendSibling(new StringTextComponent(String.format("Can Grow: %s", canGrow)).applyTextStyle(canGrow ? TextFormatting.GREEN : TextFormatting.RED))
+                                    .appendSibling(new StringTextComponent(" - ").applyTextStyle(TextFormatting.GRAY))
+                                    .appendSibling(new StringTextComponent(String.format("Grow Chance: %.3f", growthChange)).applyTextStyle(TextFormatting.WHITE))
+                            , true
+                    );
+                }
+
+                return;
             }
 
             //fallback
