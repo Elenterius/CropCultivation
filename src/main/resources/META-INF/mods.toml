@@ -1,13 +1,21 @@
 modLoader="javafml"
-loaderVersion="[31.2,)"
+loaderVersion="[31,)"
 
 [[mods]]
 modId="cropcultivation"
-version="1.0.0"
+version="${file.jarVersion}"
 displayName="Crop Cultivation"
+logoFile="banner_logo.png"
 authors="Elenterius"
 description='''
-Mod that changes the cultivation of Crops.'''
+A Mod that changes the growth mechanics of Crops.'''
+
+[[dependencies.cropcultivation]]
+modId="forge"
+mandatory=true
+versionRange="[31.2,)"
+ordering="NONE"
+side="BOTH"
 
 [[dependencies.cropcultivation]]
 modId="farmingforblockheads"

@@ -11,6 +11,7 @@ buildscript {
     }
 }
 apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'idea'
 
 version = '0.0.9-aplha.1'
@@ -72,6 +73,10 @@ minecraft {
     }
 }
 
+mixin {
+    add sourceSets.main, "mixins.cropcultivation.refmap.json"
+}
+
 repositories {
     maven { url 'https://jitpack.io' }
     maven { url "https://minecraft.curseforge.com/api/maven/" }
@@ -111,11 +116,6 @@ jar {
                 "MixinConnector"          : "com.creativechasm.cropcultivation.mixin.Connector"
         ])
     }
-}
-
-apply plugin: 'org.spongepowered.mixin'
-mixin {
-    add sourceSets.main, "mixins.cropcultivation.refmap.json"
 }
 
 jar.finalizedBy('reobfJar')
