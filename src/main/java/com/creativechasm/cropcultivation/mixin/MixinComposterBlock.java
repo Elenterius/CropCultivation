@@ -47,12 +47,12 @@ public abstract class MixinComposterBlock
 
         @Redirect(method = "onBlockActivated", at = @At(value = "NEW", target = "net/minecraft/item/ItemStack"))
         protected ItemStack redirectSpawnedItem(IItemProvider item) {
-            return new ItemStack(ModItems.COMPOST, 3); //replaces bone meal output
+            return new ItemStack(ModItems.COMPOST, 6); //replaces bone meal output
         }
 
         @Redirect(method = "createInventory", at = @At(value = "NEW", target = "net/minecraft/item/ItemStack"))
         protected ItemStack redirectInventoryItem(IItemProvider item) {
-            return new ItemStack(ModItems.COMPOST, 3); //replaces bone meal output
+            return new ItemStack(ModItems.COMPOST, 6); //replaces bone meal output
         }
 
         @ModifyArg(
@@ -98,13 +98,13 @@ public abstract class MixinComposterBlock
 
         @Inject(method = "getInventoryStackLimit()I", at = @At("HEAD"), cancellable = true)
         protected void onGetInventoryStackLimit(CallbackInfoReturnable<Integer> cir) {
-            cir.setReturnValue(3);
+            cir.setReturnValue(6);
         }
 
         @Override
         @Nonnull
         public ItemStack decrStackSize(int index, int count) {
-            return super.decrStackSize(index, 3);
+            return super.decrStackSize(index, 6);
         }
     }
 }
