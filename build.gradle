@@ -14,7 +14,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'idea'
 
-version = '0.0.9-aplha.1'
+version = '0.0.9-alpha.1'
 group = 'com.creativechasm.mods'
 archivesBaseName = 'cropcultivation'
 
@@ -97,6 +97,7 @@ import groovy.json.JsonOutput
 processResources {
     exclude '**/*.psd'
     doLast {
+        println("minimizing JSONs...")
         for (File file in fileTree(dir: outputs.files.asPath, include: "**/*.json")) {
             file.text = JsonOutput.toJson(new JsonSlurper().parse(file))
         }
@@ -119,3 +120,14 @@ jar {
 }
 
 jar.finalizedBy('reobfJar')
+
+build {
+    doLast {
+        println("replacing version in README.md...")
+        def versionEscaped = version.toString().replace("-", "--")
+        def color = versionEscaped.contains("alpha") ? "red" : versionEscaped.contains("beta") ? "yellow" : "green"
+        ant.replaceregexp(match:'CropCultivation-([0-9\\.\\-]+[a-z\\.0-9\\-]+)', replace:"CropCultivation-$versionEscaped-$color", flags:'g', byline:true) {
+            fileset(dir: '.', includes: 'README.md')
+        }
+    }
+}

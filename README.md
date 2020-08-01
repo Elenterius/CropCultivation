@@ -1,6 +1,6 @@
 # Crop Cultivation
-[![Forge Version](https://img.shields.io/badge/Minecraft%20Forge-1.15.2%20--%2031.2.31-orange)](https://files.minecraftforge.net/maven/net/minecraftforge/forge/index_1.15.2.html)
-[![CropCultivation Version](https://img.shields.io/badge/CropCultivation-Alpha-red)](https://github.com/Elenterius/CropCultivation)
+[![Forge Version](https://img.shields.io/badge/Minecraft%20Forge-1.15.2%20--%2031.2.33-orange)](https://files.minecraftforge.net/maven/net/minecraftforge/forge/index_1.15.2.html)
+[![CropCultivation Version](https://img.shields.io/badge/CropCultivation-0.0.9--alpha.1-red)](https://github.com/Elenterius/CropCultivation)
 
 A Minecraft Forge Mod that takes out the simple out of crop farming.<br>
 Currently focuses on soil management, and the plant growth restrictions derived from its environment.
