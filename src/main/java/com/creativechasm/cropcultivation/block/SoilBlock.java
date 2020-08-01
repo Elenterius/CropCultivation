@@ -218,7 +218,7 @@ public abstract class SoilBlock extends FarmlandBlock {
             Block cropBlock = cropState.getBlock();
             Optional<ICropEntry> optionalICrop = CommonRegistry.getCropRegistry().get(cropBlock.getRegistryName());
             if (optionalICrop.isPresent()) {
-                CropCultivationMod.LOGGER.debug(MarkerManager.getMarker("SoilBlock"), "force growing of crop: " + cropState.getBlock());
+//                CropCultivationMod.LOGGER.debug(MarkerManager.getMarker("SoilBlock"), "force growing of crop: " + cropState.getBlock());
                 worldIn.getPendingBlockTicks().scheduleTick(cropPos, cropBlock, 2); //we are lazy and tick the crop instead
             }
             else if (cropBlock instanceof IGrowable) { //fallback for not registered crops
@@ -226,7 +226,7 @@ public abstract class SoilBlock extends FarmlandBlock {
                     IGrowable iGrowable = (IGrowable) cropBlock;
                     if (iGrowable.canGrow(worldIn, cropPos, cropState, false)) {
 
-                        CropCultivationMod.LOGGER.debug(MarkerManager.getMarker("SoilBlock"), "force growing of crop: " + cropState.getBlock());
+//                        CropCultivationMod.LOGGER.debug(MarkerManager.getMarker("SoilBlock"), "force growing of crop: " + cropState.getBlock());
                         iGrowable.grow(worldIn, worldIn.rand, cropPos, cropState);
                         worldIn.playEvent(Constants.WorldEvents.BONEMEAL_PARTICLES, cropPos, 5);
                         BlockState newCropState = worldIn.getBlockState(cropPos); //get updated block state

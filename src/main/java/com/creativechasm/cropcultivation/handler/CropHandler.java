@@ -38,11 +38,11 @@ public abstract class CropHandler
         World world = event.getWorld().getWorld();
         BlockPos pos = event.getPos();
         SoilStateContext soilContext = new SoilStateContext(world, pos.down());
-        if (soilContext.isValid && !soilContext.isClient) {
+        if (!soilContext.isClient) {
             Optional<ICropEntry> optionalICrop = CommonRegistry.getCropRegistry().get(event.getState().getBlock().getRegistryName());
             ICropEntry iCrop = optionalICrop.orElse(CropUtil.GENERIC_CROP); // if the crop is unknown use a generic fallback
 
-            if (CropUtil.RegisteredCrop.canCropGrow(world, pos, event.getState(), iCrop, soilContext)) { //pre-conditions
+            if (soilContext.isValid && CropUtil.RegisteredCrop.canCropGrow(world, pos, event.getState(), iCrop, soilContext)) { //pre-conditions
                 float growthChance = CropUtil.RegisteredCrop.getGrowthChance((ServerWorld) world, pos, event.getState(), iCrop, soilContext);
                 if (world.rand.nextFloat() < growthChance) {
                     event.setResult(Event.Result.ALLOW);
