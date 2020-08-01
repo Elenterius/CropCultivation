@@ -27,8 +27,8 @@ public abstract class MixinStonecutterContainer
     @Mixin(targets = "net.minecraft.inventory.container.StonecutterContainer$2")
     public static abstract class OutputSlot extends Slot
     {
-        //        @Shadow(aliases = {"field_216955_a", "this$0"}) @Final private StonecutterContainer field_216955_a;
-        @Shadow(aliases = {"field_216956_b", "val$worldPosCallableIn"}) @Final private IWorldPosCallable field_216956_b;
+        //        @Shadow(aliases = {"field_216956_b", "this$0"}) @Final private StonecutterContainer field_216956_b;
+        @Shadow(aliases = {"field_216955_a", "val$worldPosCallableIn"}) @Final private IWorldPosCallable field_216955_a;
 
         public OutputSlot(IInventory inventoryIn, int index, int xPosition, int yPosition) {
             super(inventoryIn, index, xPosition, yPosition);
@@ -48,18 +48,19 @@ public abstract class MixinStonecutterContainer
 
         protected void onItemCrafted(@Nonnull ItemStack stack) {
             if (!stack.isEmpty()) {
+
                 //guard against mods adding non-rock recipes
                 if (stack.getItem() instanceof BlockItem && ((BlockItem) stack.getItem()).getBlock().getDefaultState().getMaterial() != Material.ROCK) return;
 
                 //we only want rock that contains trace elements, filters out Stone/Cobblestone
                 String registryName = Optional.ofNullable(stack.getItem().getRegistryName()).map(ResourceLocation::getPath).orElse("");
-                if (!registryName.contains("granite") || !registryName.contains("diorite") || !registryName.contains("andesite")) return;
+                if (!registryName.contains("granite") && !registryName.contains("diorite") && !registryName.contains("andesite")) return;
 
                 //forge is missing a crafting event for the stonecutter :(
                 //could fire custom event, but we don't need it
                 //CraftingHandler.firePlayerStoneCutEvent(player, stack.copy(), ((CraftingHandler.IWorldPosCallableProvider) outerClassRef).getWorldPosCallable());
 
-                field_216956_b.consume((world, pos) -> {
+                field_216955_a.consume((world, pos) -> {
                     if (!world.isRemote && world.rand.nextFloat() < 0.15f) {
                         double d0 = world.rand.nextFloat() * 0.5F + 0.15F;
                         double d1 = world.rand.nextFloat() * 0.5F + 0.5D;
