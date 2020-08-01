@@ -25,6 +25,9 @@ public class ModItems
     @ObjectHolder("lime_dust")
     public static Item LIME_DUST;
 
+    @ObjectHolder("granite_dust")
+    public static Item GRANITE_DUST;
+
     @ObjectHolder("fertilizer")
     public static Item NPK_FERTILIZER;
 

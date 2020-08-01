@@ -9,7 +9,6 @@ import com.creativechasm.cropcultivation.registry.ICropEntry;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.PlantType;
 
@@ -91,7 +90,7 @@ public abstract class CropUtil
             return true;
         }
 
-        public static float getGrowthChance(ServerWorld world, BlockPos cropPos, BlockState cropState, ICropEntry iCrop, SoilStateContext soilContext) {
+        public static float getGrowthChance(ICropEntry iCrop, SoilStateContext soilContext) {
             //minimum nutrient requirement for plant to consider growing
             float reqN = iCrop.getNitrogenNeed() * soilContext.getMaxNutrientAmount();
             float reqP = iCrop.getPhosphorusNeed() * soilContext.getMaxNutrientAmount();

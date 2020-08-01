@@ -65,6 +65,17 @@
     },
     {
       "output": {
+        "item": "cropcultivation:granite_dust",
+        "count": 3
+      },
+      "payment": {
+        "item": "minecraft:emerald",
+        "count": 1
+      },
+      "category": "fertilizers"
+    },
+    {
+      "output": {
         "item": "cropcultivation:wood_ash",
         "count": 3
       },
@@ -77,6 +88,17 @@
     {
       "output": {
         "item": "cropcultivation:compost",
+        "count": 3
+      },
+      "payment": {
+        "item": "minecraft:emerald",
+        "count": 1
+      },
+      "category": "fertilizers"
+    },
+    {
+      "output": {
+        "item": "minecraft:bone_meal",
         "count": 3
       },
       "payment": {

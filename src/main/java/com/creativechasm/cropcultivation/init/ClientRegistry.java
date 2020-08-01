@@ -80,5 +80,6 @@ public class ClientRegistry {
         event.getItemColors().register((stack, index) -> 0x73868c, ModItems.FISH_MEAL);
         event.getItemColors().register((stack, index) -> 0x7e7b76, ModItems.WOOD_ASH);
         event.getItemColors().register((stack, index) -> 0xdfd8bf, ModItems.LIME_DUST);
+        event.getItemColors().register((stack, index) -> 0xce805a, ModItems.GRANITE_DUST);
     }
 }

@@ -1,6 +1,7 @@
 {
   "values": [
     "cropcultivation:fertilizer",
+    "cropcultivation:granite_dust",
     "minecraft:bone_meal"
   ],
   "optional": [

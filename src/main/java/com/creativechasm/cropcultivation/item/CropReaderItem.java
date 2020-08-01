@@ -54,6 +54,9 @@ public class CropReaderItem extends Item implements IMeasuringDevice
             tooltip.add(new StringTextComponent("Crop: ").appendSibling(new StringTextComponent(nbtTag.getString("blockRN")).applyTextStyle(TextFormatting.GRAY)));
             tooltip.add(new StringTextComponent("Age: ").appendSibling(new StringTextComponent(nbtTag.getInt("age") + "/" + nbtTag.getInt("maxAge")).applyTextStyle(TextFormatting.GRAY)));
 
+            tooltip.add(new StringTextComponent("Yield Sum: ").appendSibling(new StringTextComponent(String.format("%s", nbtTag.contains("yieldSum") ? nbtTag.getFloat("yieldSum") + "" : "?")).applyTextStyle(TextFormatting.GRAY)));
+            tooltip.add(new StringTextComponent("Yield Multiplier: ").appendSibling(new StringTextComponent(String.format("%.2f", nbtTag.contains("yieldMultiplier") ? nbtTag.getFloat("yieldMultiplier") : 1.0f)).applyTextStyle(TextFormatting.GRAY)));
+
             tooltip.add(new StringTextComponent(""));
             tooltip.add(new StringTextComponent("Common ID: ").appendSibling(new StringTextComponent(optionalCrop.isPresent() ? commonId : "?").applyTextStyle(TextFormatting.GRAY)));
             optionalCrop.ifPresent(iCropEntry -> {
@@ -96,9 +99,10 @@ public class CropReaderItem extends Item implements IMeasuringDevice
             CompoundNBT nbtTag = stack.getOrCreateTag();
 
             String age = "?", maxAge = "?";
+            int ageInt = 0;
             Optional<IntegerProperty> ageProperty = BlockPropertyUtil.getAgeProperty(state);
             if (ageProperty.isPresent()) {
-                int ageInt = state.get(ageProperty.get());
+                ageInt = state.get(ageProperty.get());
                 int maxAgeInt = BlockPropertyUtil.getMaxAge(ageProperty.get());
                 nbtTag.putInt("age", ageInt);
                 nbtTag.putInt("maxAge", maxAgeInt);
@@ -124,7 +128,15 @@ public class CropReaderItem extends Item implements IMeasuringDevice
                     });
 
                     SoilStateContext soilContext = new SoilStateContext(world, pos.down());
-                    boolean canGrow = soilContext.isValid && CropUtil.RegisteredCrop.canCropGrow(world, pos, state, CropUtil.GENERIC_CROP, soilContext);
+                    boolean canGrow = soilContext.isValid && CropUtil.RegisteredCrop.canCropGrow(world, pos, state, cropEntry, soilContext);
+                    float growthChange = soilContext.isValid ? CropUtil.RegisteredCrop.getGrowthChance(cropEntry, soilContext) : 0f;
+
+                    if (soilContext.isValid) {
+                        nbtTag.putFloat("yieldSum", soilContext.getTileState().getCropYieldSum());
+                        if (ageProperty.isPresent()) {
+                            nbtTag.putFloat("yieldMultiplier", soilContext.getTileState().getCropYieldAveraged(ageInt));
+                        }
+                    }
 
                     if (player instanceof ServerPlayerEntity) {
                         player.sendStatusMessage(
@@ -133,6 +145,8 @@ public class CropReaderItem extends Item implements IMeasuringDevice
                                         .appendSibling(new StringTextComponent(String.format("Age: %s/%s", age, maxAge)))
                                         .appendSibling(new StringTextComponent(" - ").applyTextStyle(TextFormatting.GRAY))
                                         .appendSibling(new StringTextComponent(String.format("Can Grow: %s", canGrow)).applyTextStyle(canGrow ? TextFormatting.GREEN : TextFormatting.RED))
+                                        .appendSibling(new StringTextComponent(" - ").applyTextStyle(TextFormatting.GRAY))
+                                        .appendSibling(new StringTextComponent(String.format("Grow Chance: %.3f", growthChange)).applyTextStyle(TextFormatting.WHITE))
                                 , true
                         );
                     }
@@ -143,6 +157,8 @@ public class CropReaderItem extends Item implements IMeasuringDevice
 
             //fallback
             nbtTag.remove("commonId");
+            nbtTag.remove("yieldSum");
+            nbtTag.remove("yieldMultiplier");
             if (player instanceof ServerPlayerEntity) {
                 player.sendStatusMessage(new StringTextComponent(String.format("Age: %s/%s", age, maxAge)), true);
             }

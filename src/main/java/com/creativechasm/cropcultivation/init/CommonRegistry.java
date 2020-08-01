@@ -130,6 +130,7 @@ public abstract class CommonRegistry
                 new Item(new Item.Properties().group(ITEM_GROUP)).setRegistryName("seaweed_meal"), //K fertilizer
                 new Item(new Item.Properties().group(ITEM_GROUP)).setRegistryName("wood_ash"), //K fertilizer, liming material
                 new Item(new Item.Properties().group(ITEM_GROUP)).setRegistryName("fish_meal"), //NP fertilizer
+                new Item(new Item.Properties().group(ITEM_GROUP)).setRegistryName("granite_dust"), //P fertilizer
 
                 new SoilTestKitItem(new Item.Properties().maxStackSize(1).rarity(Rarity.RARE).group(ITEM_GROUP)).setRegistryName("soil_test_kit"),
                 new ThermoHygrometerItem(new Item.Properties().maxStackSize(1).rarity(Rarity.RARE).group(ITEM_GROUP)).setRegistryName("thermo_hygrometer"),

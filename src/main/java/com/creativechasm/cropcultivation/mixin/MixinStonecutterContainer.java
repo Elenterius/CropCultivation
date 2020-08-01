@@ -54,7 +54,8 @@ public abstract class MixinStonecutterContainer
 
                 //we only want rock that contains trace elements, filters out Stone/Cobblestone
                 String registryName = Optional.ofNullable(stack.getItem().getRegistryName()).map(ResourceLocation::getPath).orElse("");
-                if (!registryName.contains("granite") && !registryName.contains("diorite") && !registryName.contains("andesite")) return;
+                boolean isGranite = registryName.contains("granite");
+                if (!isGranite && !registryName.contains("diorite") && !registryName.contains("andesite")) return;
 
                 //forge is missing a crafting event for the stonecutter :(
                 //could fire custom event, but we don't need it
@@ -66,7 +67,7 @@ public abstract class MixinStonecutterContainer
                         double d1 = world.rand.nextFloat() * 0.5F + 0.5D;
                         double d2 = world.rand.nextFloat() * 0.5F + 0.15F;
 
-                        ItemStack byproductStack = new ItemStack(ModItems.LIME_DUST, world.rand.nextInt(stack.getCount()) + 1);
+                        ItemStack byproductStack = new ItemStack(isGranite ? ModItems.GRANITE_DUST : ModItems.LIME_DUST, world.rand.nextInt(stack.getCount()) + 1);
                         CropCultivationMod.LOGGER.debug(MarkerManager.getMarker("StoneCutter"), "dropping: " + byproductStack);
                         ItemEntity itementity = new ItemEntity(world, pos.getX() + d0, pos.getY() + d1, pos.getZ() + d2, byproductStack);
                         itementity.setDefaultPickupDelay();

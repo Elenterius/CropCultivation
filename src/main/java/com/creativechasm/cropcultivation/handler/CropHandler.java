@@ -43,7 +43,7 @@ public abstract class CropHandler
             ICropEntry iCrop = optionalICrop.orElse(CropUtil.GENERIC_CROP); // if the crop is unknown use a generic fallback
 
             if (soilContext.isValid && CropUtil.RegisteredCrop.canCropGrow(world, pos, event.getState(), iCrop, soilContext)) { //pre-conditions
-                float growthChance = CropUtil.RegisteredCrop.getGrowthChance((ServerWorld) world, pos, event.getState(), iCrop, soilContext);
+                float growthChance = CropUtil.RegisteredCrop.getGrowthChance(iCrop, soilContext);
                 if (world.rand.nextFloat() < growthChance) {
                     event.setResult(Event.Result.ALLOW);
                     return;
