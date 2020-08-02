@@ -3,9 +3,10 @@
 [![CropCultivation Version](https://img.shields.io/badge/CropCultivation-0.0.9--alpha.1-red)](https://github.com/Elenterius/CropCultivation)
 
 A Minecraft Forge Mod that takes out the simple out of crop farming.<br>
-Currently focuses on soil management, and the plant growth restrictions derived from its environment.
+Currently focuses on soil management, and the plant growth restrictions derived from it.
 
-This mod will not add new crops to farm but instead modifies the behavior of all vanilla and compatible mod crops.
+This mod will not add new crops to farm but instead modifies the growth chance/requirements of all compatible crops.
+
 
 ## Changed Crop Behavior
 - growth requirements
@@ -27,27 +28,31 @@ This mod will not add new crops to farm but instead modifies the behavior of all
 - HarvestCraft Crops (only the crops overlapping with SimpleFarming)
 - XLFoodMod (only the crops overlapping with SimpleFarming)
 
-**Note:** HarvestCraft Crops contains over 70 crops and requires a hefty time investment to research/guesstimate the crop characteristics.
+**Note:** HarvestCraft Crops contains over 70 crops and requires time to research/guesstimate the crop characteristics.
 If you want full support consider helping out. 
 
 ### Compatible Crops
-**Note:** Non supported mod crops will fallback to a generic behavior
+**Note:** not supported crops will fallback to a generic behavior
 - blocks extending CropsBlock
 - blocks implementing IGrowable
     - should contain a Block Property for age (IntegerProperty with the identifier "age") if not crop yield will not be properly modified
 
 ### Farming For Blockheads
-**Note:** you will not be able to create their different farmland variants because vanilla farmland is no longer attainable in survival
+**Note:** you will not be able to create their fertilized farmland variants because vanilla farmland is no longer attainable in survival.
 - made Red Fertilizer a `Nitrogen Fertilizer`
 - made Green Fertilizer a `Phosphorus & Potassium Fertilizer`
 - added `Soil Amendments` to the market
 - added `Measuring Devices` to the market
 
+### Serene Seasons
+Theoretically compatible, but not tested.
+
 ## Soils (Farmland)
 ```diff
-! The Mod removes the ability to create farmland from vanilla dirt with the hoe
+! The Mod removes the ability to create vanilla farmland from vanilla dirt with the hoe
 ```
-
+You can craft the different "non tilled" soil variants with dirt, sand and clay. Place them in the world and use your hoe on it.
+You can use a shovel to convert tilled soil back to their respective dirt variant.
 ### Soil Properties
 - Soil Texture
 - Moisture
@@ -70,39 +75,23 @@ If you want full support consider helping out.
 - Rain can decrease soil pH (preventable with a roof)
 - Rain can wash away nutrients (preventable with a roof)
 
-## Vanilla Changes (requires Mixin)
-### Composter Block
-- produces now three `compost` items instead of one `bone meal` item
-- increased the composting delay to 120 ticks
-- spawns "heat" particles
-### Sugarcane, Cactus & Nether Wart
-Implemented the IGrowable Interface for these Plant Blocks
-- this makes them possible to be force grown through code without scheduling a tick update
-<br>**Note:** the (Forge) CropGrowthEvent will not be fired as with all other IGrowable implementations
-
-
-- it's now possible to apply `bone meal` on them
-<br>**Note:** this will not work when the plant has been registered in the `CropRegistry`
-
-
-- retained the vanilla feature that `bone meal` cannot be used on Nether Wart
-
-
 ## Soil Amendments
 ### Compost
 Applied to the soil to increase the organic matter content of soil.
 
 ### Fertilizer
+Fertilizers increase the Nutrients in the soil.<br>
 ```diff
 ! The Mod removes the ability to use bone meal on compatible crops
 ```
-Fertilizers are to be applied to the soil instead of the crop.
+**Note:** Apply Fertilizers to the soil instead of the crop.
 - `Bone Meal`
 - `Industrial Fertilizer`
+- `Granite Dust`
 - `Feather Meal`
 - `Seaweed Meal`
 - `Fish Meal`
-- `Soybean Meal` `optional (requires simplefarming/harvestcraft)`
+- `Soybean Meal` `optional (requires simplefarming or harvestcraft)`
 ### Liming Material
 Increases the Soil pH.
 - `Lime Dust`
