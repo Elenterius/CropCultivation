@@ -28,6 +28,7 @@ public abstract class CropHandler
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onPreCropGrowth(final BlockEvent.CropGrowEvent.Pre event) {
+        if (event.getResult() == Event.Result.DENY) return;
 
         boolean useDefaultGrowth = ModTags.Blocks.USE_DEFAULT_GROWTH.contains(event.getState().getBlock());
         if (useDefaultGrowth) {
@@ -55,7 +56,6 @@ public abstract class CropHandler
 
     @SubscribeEvent
     public static void onPostCropGrowth(final BlockEvent.CropGrowEvent.Post event) {
-
         boolean useDefaultGrowth = ModTags.Blocks.USE_DEFAULT_GROWTH.contains(event.getState().getBlock());
 
         World world = event.getWorld().getWorld();

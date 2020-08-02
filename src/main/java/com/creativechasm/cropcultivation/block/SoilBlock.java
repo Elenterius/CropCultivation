@@ -44,6 +44,7 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.FarmlandWaterManager;
 import net.minecraftforge.common.IPlantable;
+import net.minecraftforge.common.PlantType;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
@@ -123,9 +124,8 @@ public abstract class SoilBlock extends FarmlandBlock {
 
     @Override
     public boolean canSustainPlant(@Nonnull BlockState state, @Nonnull IBlockReader world, @Nonnull BlockPos pos, @Nonnull Direction facing, @Nonnull IPlantable plantable) {
-//        PlantType plantType = plantable.getPlantType(world, pos);
-//        if(plantType == plantType.Nether)
-        return true;
+        PlantType plantType = plantable.getPlantType(world, pos);
+        return plantType != PlantType.Nether;
     }
 
     @Override
@@ -218,8 +218,10 @@ public abstract class SoilBlock extends FarmlandBlock {
             Block cropBlock = cropState.getBlock();
             Optional<ICropEntry> optionalICrop = CommonRegistry.getCropRegistry().get(cropBlock.getRegistryName());
             if (optionalICrop.isPresent()) {
+                if (!worldIn.getPendingBlockTicks().isTickPending(cropPos, cropBlock)) {
 //                CropCultivationMod.LOGGER.debug(MarkerManager.getMarker("SoilBlock"), "force growing of crop: " + cropState.getBlock());
-                worldIn.getPendingBlockTicks().scheduleTick(cropPos, cropBlock, 2); //we are lazy and tick the crop instead
+                    worldIn.getPendingBlockTicks().scheduleTick(cropPos, cropBlock, 2); //we are lazy and tick the crop instead
+                }
             }
             else if (cropBlock instanceof IGrowable) { //fallback for not registered crops
                 if (worldIn.rand.nextFloat() < CropUtil.BASE_GROWTH_CHANCE) {
@@ -271,9 +273,8 @@ public abstract class SoilBlock extends FarmlandBlock {
                 }
             }
             else if (cropBlock instanceof IPlantable) { //fallback, incompatible plants
-                if (cropBlock.ticksRandomly(cropState)) {
+                if (cropBlock.ticksRandomly(cropState) && !worldIn.getPendingBlockTicks().isTickPending(cropPos, cropBlock)) {
                     worldIn.getPendingBlockTicks().scheduleTick(cropPos, cropBlock, 2);
-                    worldIn.playEvent(Constants.WorldEvents.BONEMEAL_PARTICLES, cropPos, 5);
                 }
             }
         }
