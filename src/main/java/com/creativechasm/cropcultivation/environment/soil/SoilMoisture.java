@@ -8,7 +8,7 @@ public enum SoilMoisture {
     WET(2f, 2.9f, 8),
     ABNORMALLY_MOIST(1f, 1.9f, 7),
     MOIST(0.1f, 0.9f, 6),
-    AVERAGE_1(0f, 0f, 5), //TODO: remove this and add waterlogged state instead?
+    AVERAGE_1(0f, 0f, 5), //TODO: remove this and add true waterlogged state instead?
     AVERAGE_0(0f, 0f, 4),
     DRY(-0.1f, -0.9f, 3),
     ABNORMALLY_DRY(-1f, -1.9f, 2),

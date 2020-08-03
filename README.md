@@ -24,6 +24,8 @@ This mod will not add new crops to farm but instead modifies the growth chance/r
 - Minecraft
 - SimpleFarming
 
+
+
 ### Partial Support
 - HarvestCraft Crops (only the crops overlapping with SimpleFarming)
 - XLFoodMod (only the crops overlapping with SimpleFarming)
@@ -53,6 +55,10 @@ Theoretically compatible, but not tested.
 ```
 You can craft the different "non tilled" soil variants with dirt, sand and clay. Place them in the world and use your hoe on it.
 You can use a shovel to convert tilled soil back to their respective dirt variant.
+
+![Soil Variants](screenshots/soil_variants.png)
+_From left to right: Vanilla Dirt, Sandy Soil, Loamy Soil, Silty Soil and Clayey Soil_
+
 ### Soil Properties
 - Soil Texture
 - Moisture
@@ -65,8 +71,23 @@ You can use a shovel to convert tilled soil back to their respective dirt varian
     - increases moisture capacity/retention of soil
     - increases nutrient retention of soil
 
+#### Soil Moisture Level
+Instead of vanilla crops requiring only moist farmland to grow well, 
+each crop requires now the moisture level to be within a specific range to be able to grow.<br>
+There are 10 soil moisture levels, ranging from 0 to 10:<br>
+SEVERELY_DRY -> EXCESSIVELY_DRY -> ABNORMALLY_DRY -> DRY -> AVERAGE_0 -> AVERAGE_1 -> MOIST ->
+ABNORMALLY_MOIST -> WET -> EXCESSIVELY_WET -> STANDING_WATER
+<br><br> 
+![Soil Moisture Levels](screenshots/soil_moisture_levels.png)
+_From left to right: Dry, Moist, Wet, Standing Water_
+<br><br>
+![Simple Farming Rice Field](screenshots/wet_rice_field.png)
+_SimpleFarming Rice growing on a "flooded" field (Wet, Excessively Wet, Standing Water)_
+
 ### Player Interaction
-- Moisture capacity can be modified by placing sand/gravel/clay/stone below soil
+- Moisture capacity can be modified
+  - by placing sand/gravel/clay/stone below soil
+  - adding compost to soil which adds organic matter to the soil
 - Organic Matter has a chance to decay into nutrients for the soil
 - Overall pH doesn't change much by itself, the player is the only big influence through the application of liming or acidifying material
 - Basically macronutrients and compost are the least things that should be checked before replanting
