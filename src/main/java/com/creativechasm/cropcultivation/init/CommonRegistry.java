@@ -2,6 +2,7 @@ package com.creativechasm.cropcultivation.init;
 
 import com.creativechasm.cropcultivation.CropCultivationMod;
 import com.creativechasm.cropcultivation.block.ModBlocks;
+import com.creativechasm.cropcultivation.block.RaisedBedBlock;
 import com.creativechasm.cropcultivation.block.SoilBlock;
 import com.creativechasm.cropcultivation.block.SoilStateTileEntity;
 import com.creativechasm.cropcultivation.environment.soil.SoilTexture;
@@ -33,6 +34,7 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 import org.apache.logging.log4j.MarkerManager;
 
@@ -72,28 +74,46 @@ public abstract class CommonRegistry
 
     @SubscribeEvent
     public static void onBlocksRegistry(final RegistryEvent.Register<Block> registryEvent) {
-        registryEvent.getRegistry().registerAll(
+        IForgeRegistry<Block> registry = registryEvent.getRegistry();
+
+        registry.registerAll(
                 new Block(Block.Properties.create(Material.EARTH).hardnessAndResistance(0.65F).harvestTool(ToolType.SHOVEL).sound(SoundType.GROUND)).setRegistryName("silt"),
-                createSoilBlock(Block.Properties.create(Material.EARTH).hardnessAndResistance(0.65F).harvestTool(ToolType.SHOVEL).sound(SoundType.GROUND), SoilTexture.SILT, "silt_soil"),
                 new Block(Block.Properties.create(Material.EARTH).hardnessAndResistance(0.6F).harvestTool(ToolType.SHOVEL).sound(SoundType.GROUND)).setRegistryName("loam"),
-                createSoilBlock(Block.Properties.create(Material.EARTH).hardnessAndResistance(0.6F).harvestTool(ToolType.SHOVEL).sound(SoundType.GROUND), SoilTexture.LOAM, "loam_soil"),
                 new Block(Block.Properties.create(Material.SAND).hardnessAndResistance(0.5F).harvestTool(ToolType.SHOVEL).sound(SoundType.GROUND)).setRegistryName("sandy_dirt"),
-                createSoilBlock(Block.Properties.create(Material.SAND).hardnessAndResistance(0.5F).harvestTool(ToolType.SHOVEL).sound(SoundType.GROUND), SoilTexture.SAND, "sand_soil"),
-                new Block(Block.Properties.create(Material.CLAY).hardnessAndResistance(0.8F).harvestTool(ToolType.SHOVEL).harvestLevel(ItemTier.IRON.getHarvestLevel()).sound(SoundType.GROUND)).setRegistryName("clayey_dirt"),
-                createSoilBlock(Block.Properties.create(Material.CLAY).hardnessAndResistance(0.8F).harvestTool(ToolType.SHOVEL).harvestLevel(ItemTier.IRON.getHarvestLevel()).sound(SoundType.GROUND), SoilTexture.CLAY, "clay_soil")
+                new Block(Block.Properties.create(Material.CLAY).hardnessAndResistance(0.8F).harvestTool(ToolType.SHOVEL).harvestLevel(ItemTier.IRON.getHarvestLevel()).sound(SoundType.GROUND)).setRegistryName("clayey_dirt")
         );
+
+        createSoilBlock(registry, Block.Properties.create(Material.EARTH).hardnessAndResistance(0.65F).harvestTool(ToolType.SHOVEL).sound(SoundType.GROUND), SoilTexture.SILT, "silt_soil");
+        createSoilBlock(registry, Block.Properties.create(Material.EARTH).hardnessAndResistance(0.6F).harvestTool(ToolType.SHOVEL).sound(SoundType.GROUND), SoilTexture.LOAM, "loam_soil");
+        createSoilBlock(registry, Block.Properties.create(Material.SAND).hardnessAndResistance(0.5F).harvestTool(ToolType.SHOVEL).sound(SoundType.GROUND), SoilTexture.SAND, "sand_soil");
+        createSoilBlock(registry, Block.Properties.create(Material.CLAY).hardnessAndResistance(0.8F).harvestTool(ToolType.SHOVEL).harvestLevel(ItemTier.IRON.getHarvestLevel()).sound(SoundType.GROUND), SoilTexture.CLAY, "clay_soil");
     }
 
-    private static SoilBlock createSoilBlock(Block.Properties properties, SoilTexture texture, String registryName) {
-        SoilBlock block = new SoilBlock(properties, texture)
+    private static void createSoilBlock(IForgeRegistry<Block> registry, Block.Properties properties, SoilTexture texture, String registryName) {
+        SoilBlock soilBlock = new SoilBlock(properties, texture)
         {
             @Override
             public TileEntity createTileEntity(BlockState state, IBlockReader world) {
                 return FARM_SOIL.create();
             }
         };
-        block.setRegistryName(registryName);
-        return block;
+        soilBlock.setRegistryName(registryName);
+        registry.register(soilBlock);
+
+        RaisedBedBlock raisedBed = new RaisedBedBlock(properties, texture)
+        {
+            @Override
+            public float getTemperatureModifier() {
+                return 10f;
+            }
+
+            @Override
+            public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+                return FARM_SOIL.create();
+            }
+        };
+        raisedBed.setRegistryName(registryName + "_raised_bed");
+        registry.register(raisedBed);
     }
 
     @SubscribeEvent
@@ -121,6 +141,10 @@ public abstract class CommonRegistry
                 createItemForBlock(ModBlocks.SANDY_SOIL, properties),
                 createItemForBlock(ModBlocks.CLAYEY_DIRT, properties),
                 createItemForBlock(ModBlocks.CLAYEY_SOIL, properties),
+                createItemForBlock(ModBlocks.SILTY_SOIL_RAISED_BED, properties),
+                createItemForBlock(ModBlocks.LOAMY_SOIL_RAISED_BED, properties),
+                createItemForBlock(ModBlocks.SANDY_SOIL_RAISED_BED, properties),
+                createItemForBlock(ModBlocks.CLAYEY_SOIL_RAISED_BED, properties),
 
                 new Item(new Item.Properties().group(ITEM_GROUP)).setRegistryName("compost"),
                 new MortarItem(new Item.Properties().maxStackSize(1).rarity(Rarity.RARE).group(ITEM_GROUP)).setRegistryName("mortar_pestle"), //mortar and pestle
@@ -180,6 +204,7 @@ public abstract class CommonRegistry
     }
 
     private static Map<Block, BlockState> HOE_LOOKUP;
+
     public static boolean isBlockTillable(Block block) {
         return HOE_LOOKUP.containsKey(block);
     }

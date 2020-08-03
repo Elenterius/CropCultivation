@@ -98,8 +98,8 @@ public abstract class CropHandler
                     int prevCropAge = event.getOriginalState().get(age);
                     int newCropAge = newCropState.get(age);
                     int maxCropAge = BlockPropertyUtil.getMaxAge(age);
-                    CropUtil.GenericCrop.updateYield(prevCropAge, newCropAge, soilContext);
-                    CropUtil.GenericCrop.consumeSoilNutrients(world.rand, newCropAge, maxCropAge, soilContext);
+                    CropUtil.FallbackCrop.updateYield(prevCropAge, newCropAge, soilContext);
+                    CropUtil.FallbackCrop.consumeSoilNutrients(world.rand, newCropAge, maxCropAge, soilContext);
                 }
                 else { //fallback, what crop has no age property??
                     CropCultivationMod.LOGGER.warn(MarkerManager.getMarker("CropHandler"), newCropState.getBlock() + " has no age property!");
@@ -110,7 +110,7 @@ public abstract class CropHandler
                     if (world.rand.nextFloat() < 0.35f) soilContext.phosphorus -= 2;
                     if (world.rand.nextFloat() < 0.35f) soilContext.potassium -= 1;
                 }
-                CropUtil.GenericCrop.consumeSoilMoisture(event.getPos(), newCropState, soilContext);
+                CropUtil.FallbackCrop.consumeSoilMoisture(event.getPos(), newCropState, soilContext);
             }
             soilContext.update((ServerWorld) world); // update changes to world
         }

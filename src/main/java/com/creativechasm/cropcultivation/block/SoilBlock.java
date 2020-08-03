@@ -243,7 +243,7 @@ public abstract class SoilBlock extends FarmlandBlock {
 
                             //consume nutrients
                             if (useDefaultGrowth) {
-                                CropUtil.GenericCrop.consumeSoilNutrients(worldIn.rand, cropAge, maxCropAge, soilContext);
+                                CropUtil.FallbackCrop.consumeSoilNutrients(worldIn.rand, cropAge, maxCropAge, soilContext);
                             }
                             else {
                                 CropUtil.RegisteredCrop.consumeSoilNutrients(worldIn.rand, cropAge, maxCropAge, CropUtil.GENERIC_CROP, soilContext);
@@ -251,7 +251,7 @@ public abstract class SoilBlock extends FarmlandBlock {
 
                             //update crop yield
                             int newCropAge = BlockPropertyUtil.getAge(newCropState);
-                            CropUtil.GenericCrop.updateYield(cropAge, newCropAge, soilContext);
+                            CropUtil.FallbackCrop.updateYield(cropAge, newCropAge, soilContext);
                         }
                         else {//fallback, what IGrowable has no age property? (tall flowers! lol)
                             soilContext.getTileState().resetCropYield();
@@ -268,7 +268,7 @@ public abstract class SoilBlock extends FarmlandBlock {
                                 if (CropUtil.RegisteredCrop.canConsumeNutrient(worldIn.rand, CropUtil.GENERIC_CROP.getPotassiumNeed())) soilContext.potassium -= 1;
                             }
                         }
-                        CropUtil.GenericCrop.consumeSoilMoisture(cropPos, newCropState, soilContext);
+                        CropUtil.FallbackCrop.consumeSoilMoisture(cropPos, newCropState, soilContext);
                     }
                 }
             }

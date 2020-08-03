@@ -10,6 +10,11 @@
   "block.cropcultivation.sand_soil": "Sandy Soil",
   "block.cropcultivation.clay_soil": "Clayey Soil",
 
+  "block.cropcultivation.loam_soil_raised_bed": "Raised Loam Soil Bed",
+  "block.cropcultivation.silt_soil_raised_bed": "Raised Silt Soil Bed",
+  "block.cropcultivation.sand_soil_raised_bed": "Raised Sand Soil Bed",
+  "block.cropcultivation.clay_soil_raised_bed": "Raised Clay Soil Bed",
+
   "item.cropcultivation.organic_matter": "Organic Matter",
   "item.cropcultivation.humus": "Humus",
   "item.cropcultivation.compost": "Compost",
@@ -21,6 +26,7 @@
   "item.cropcultivation.soybean_meal": "Soybean Meal",
   "item.cropcultivation.wood_ash": "Wood Ash",
   "item.cropcultivation.lime_dust": "Lime Dust",
+  "item.cropcultivation.granite_dust": "Granite Dust",
   "item.cropcultivation.soil_test_kit": "Soil Test Kit",
   "item.cropcultivation.thermo_hygrometer": "Thermo-Hygrometer",
   "item.cropcultivation.soil_sampler": "Soil Auger",

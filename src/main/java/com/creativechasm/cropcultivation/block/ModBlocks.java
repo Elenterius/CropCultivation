@@ -30,4 +30,16 @@ public class ModBlocks
 
     @ObjectHolder("clay_soil")
     public static SoilBlock CLAYEY_SOIL;
+
+    @ObjectHolder("loam_soil_raised_bed")
+    public static SoilBlock LOAMY_SOIL_RAISED_BED;
+
+    @ObjectHolder("silt_soil_raised_bed")
+    public static SoilBlock SILTY_SOIL_RAISED_BED;
+
+    @ObjectHolder("sand_soil_raised_bed")
+    public static SoilBlock SANDY_SOIL_RAISED_BED;
+
+    @ObjectHolder("clay_soil_raised_bed")
+    public static SoilBlock CLAYEY_SOIL_RAISED_BED;
 }

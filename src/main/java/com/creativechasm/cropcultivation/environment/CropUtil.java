@@ -2,6 +2,7 @@ package com.creativechasm.cropcultivation.environment;
 
 import com.creativechasm.cropcultivation.environment.plant.IPlantGrowthCA;
 import com.creativechasm.cropcultivation.environment.plant.PlantMacronutrient;
+import com.creativechasm.cropcultivation.environment.soil.IRaisedBed;
 import com.creativechasm.cropcultivation.environment.soil.SoilMoisture;
 import com.creativechasm.cropcultivation.environment.soil.SoilStateContext;
 import com.creativechasm.cropcultivation.registry.DefaultCropEntry;
@@ -71,8 +72,10 @@ public abstract class CropUtil
                 return false; //don't grow outside the moisture tolerance range
             }
 
-            //check air temperature
-            float localTemperature = world.getBiome(cropPos).getTemperature(cropPos);
+            //check temperature
+            float localTemperature = ClimateUtil.convertTemperatureMCToCelsius(world.getBiome(cropPos).getTemperature(cropPos));
+            localTemperature += soilContext.getBlockState().getBlock() instanceof IRaisedBed ? ((IRaisedBed) soilContext.getBlockState().getBlock()).getTemperatureModifier() : 0f;
+            localTemperature = ClimateUtil.convertTemperatureCelsiusToMC(localTemperature);
             if (localTemperature < iCrop.getMinTemperature() || localTemperature > iCrop.getMaxTemperature()) {
                 return false; //don't grow outside the temperature tolerance range
             }
@@ -132,7 +135,7 @@ public abstract class CropUtil
         }
     }
 
-    public static abstract class GenericCrop
+    public static abstract class FallbackCrop
     {
         public static void updateYield(int prevCropAge, int newCropAge, SoilStateContext soilContext) {
             CropUtil.updateYield(prevCropAge, newCropAge, soilContext);
