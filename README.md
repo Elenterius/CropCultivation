@@ -1,4 +1,5 @@
 # Crop Cultivation
+![Crop Cultivation](src/main/resources/banner.png)<br>
 [![Forge Version](https://img.shields.io/badge/Minecraft%20Forge-1.15.2%20--%2031.2.33-orange)](https://files.minecraftforge.net/maven/net/minecraftforge/forge/index_1.15.2.html)
 [![CropCultivation Version](https://img.shields.io/badge/CropCultivation-0.0.9--alpha.1-red)](https://github.com/Elenterius/CropCultivation)
 
