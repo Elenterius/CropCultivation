@@ -3,7 +3,7 @@
 [![CropCultivation Version](https://img.shields.io/badge/CropCultivation-0.0.9--alpha.1-red)](https://github.com/Elenterius/CropCultivation)
 
 <p align="center">
-    <a href="#crop-cultivation"><img src="src/main/resources/banner.png" alt="Crop Cultivation"></a>
+    <a href="#crop-cultivation"><img src="src/main/resources/banner_large.png" alt="Crop Cultivation" width="100%"></a>
 </p>
 
 A Minecraft Forge Mod that takes out the simple out of Crop Farming.<br>
