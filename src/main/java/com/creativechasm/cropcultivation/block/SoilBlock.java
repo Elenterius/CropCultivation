@@ -211,7 +211,7 @@ public abstract class SoilBlock extends FarmlandBlock {
         soilContext.moisture -= moistureLoss;
 
         //"boost" crop growth if high N concentration available in soil
-        float boostChance = soilContext.nitrogen * PlantMacronutrient.NITROGEN.getAvailabilityPctInSoilForPlant(soilContext.pH) / soilContext.getMaxNutrientAmount();
+        float boostChance = soilContext.nitrogen * PlantMacronutrient.NITROGEN.getAvailabilityPctInSoil(soilContext.pH) / soilContext.getMaxNutrientAmount();
         if (rand.nextFloat() < boostChance) {
             BlockPos cropPos = pos.up();
             BlockState cropState = worldIn.getBlockState(cropPos);
@@ -357,7 +357,7 @@ public abstract class SoilBlock extends FarmlandBlock {
 
         // check if block was placed above
         if (facing == Direction.UP && !stateIn.isValidPosition(worldIn, currentPos)) {
-            worldIn.getPendingBlockTicks().scheduleTick(currentPos, this, 1); //"turn to dirt"
+            worldIn.getPendingBlockTicks().scheduleTick(currentPos, this, 1); //"turn to dirt?"
         }
 
         return stateIn;

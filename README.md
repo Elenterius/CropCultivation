@@ -1,41 +1,32 @@
 # Crop Cultivation
-![Crop Cultivation](src/main/resources/banner.png)<br>
 [![Forge Version](https://img.shields.io/badge/Minecraft%20Forge-1.15.2%20--%2031.2.33-orange)](https://files.minecraftforge.net/maven/net/minecraftforge/forge/index_1.15.2.html)
 [![CropCultivation Version](https://img.shields.io/badge/CropCultivation-0.0.9--alpha.1-red)](https://github.com/Elenterius/CropCultivation)
 
-A Minecraft Forge Mod that takes out the simple out of crop farming.<br>
-Currently focuses on soil management, and the plant growth restrictions derived from it.
+<p align="center">
+    <a href="#crop-cultivation"><img src="src/main/resources/banner.png" alt="Crop Cultivation"></a>
+</p>
 
-This mod will not add new crops to farm but instead modifies the growth chance/requirements of all compatible crops.
+A Minecraft Forge Mod that takes out the simple out of Crop Farming.<br>
+Currently focuses on soil management, and plant growth restrictions.
 
+This mod modifies the growth **requirements**, growth **chance** and **yield** of all compatible Crops.
 
-## Changed Crop Behavior
-- growth requirements
-    - soil moisture need
-    - macronutrients need
-    - soil pH tolerance
-    - temperature tolerance
-- growth chance
-    - based on nutrient availability in soil which depends on soil pH
-- crop yield
-    - based on nutrient concentration in soil throughout its growth stages
+This mod will not add new crops. Use supported mods like Simple Farming.
 
-## Mod Compatibility
+## Mod Support
 ### Supported Crops
 - Minecraft
-- SimpleFarming
-
-
+- Simple Farming
+- XL Food Mod (excluding vanilla plant)
 
 ### Partial Support
-- HarvestCraft Crops (only the crops overlapping with SimpleFarming)
-- XLFoodMod (only the crops overlapping with SimpleFarming)
+- HarvestCraft Crops (only the crops overlapping with SimpleFarming, the remainder falls back to generic crop stats)
 
 **Note:** HarvestCraft Crops contains over 70 crops and requires time to research/guesstimate the crop characteristics.
 If you want full support consider helping out. 
 
 ### Compatible Crops
-**Note:** not supported crops will fallback to a generic behavior
+**Note:** not supported crops will fallback to generic behavior
 - blocks extending CropsBlock
 - blocks implementing IGrowable
     - should contain a Block Property for age (IntegerProperty with the identifier "age") if not crop yield will not be properly modified
@@ -49,6 +40,19 @@ If you want full support consider helping out.
 
 ### Serene Seasons
 Theoretically compatible, but not tested.
+
+#Wiki
+## Crop Growth & Yield
+- growth requirements
+    - soil moisture
+    - soil macronutrients: `Nitrogen (N)`, `Phosphorus (P)`, `Potassium (K)`
+    - soil pH inside tolerance
+    - temperature inside tolerance
+- growth chance
+    - based on nutrient availability in soil which depends on soil pH
+- crop yield
+    - based on nutrient concentration in soil throughout its growth stages
+
 
 ## Soils (Farmland)
 ```diff
@@ -64,7 +68,7 @@ _From left to right: Vanilla Dirt, Sandy Soil, Loamy Soil, Silty Soil and Clayey
 - Soil Texture
 - Moisture
 - pH
-- Plant Macronutrients:
+- Nutrients:
 `Nitrogen (N)`,
 `Phosphorus (P)`,
 `Potassium (K)`
@@ -94,8 +98,17 @@ _SimpleFarming Rice growing on a "flooded" field (Wet, Excessively Wet, Standing
 - Basically macronutrients and compost are the least things that should be checked before replanting
 
 ### Environmental Influences
-- Rain can decrease soil pH (preventable with a roof)
-- Rain can wash away nutrients (preventable with a roof)
+- Rain
+  - can decrease soil pH
+  - can wash away nutrients if the organic matter content of soil is low
+
+## Plant Macronutrients
+- Nitrogen (N)
+    - high concentration in soil leads to faster crop growth
+- Phosphorus (P)
+    - high concentration in soil leads to better crop yield
+- Potassium (K)
+    - high concentration in soil leads to better crop yield
 
 ## Soil Amendments
 ### Compost

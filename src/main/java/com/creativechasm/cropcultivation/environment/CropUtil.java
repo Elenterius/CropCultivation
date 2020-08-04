@@ -47,8 +47,8 @@ public abstract class CropUtil
 
         if (newCropAge > 0) {
             //get yield based on PK concentration in soil
-            float currP = soilContext.phosphorus * PlantMacronutrient.PHOSPHORUS.getAvailabilityPctInSoilForPlant(soilContext.pH);
-            float currK = soilContext.potassium * PlantMacronutrient.POTASSIUM.getAvailabilityPctInSoilForPlant(soilContext.pH);
+            float currP = soilContext.phosphorus * PlantMacronutrient.PHOSPHORUS.getAvailabilityPctInSoil(soilContext.pH);
+            float currK = soilContext.potassium * PlantMacronutrient.POTASSIUM.getAvailabilityPctInSoil(soilContext.pH);
             float yieldModifier = (currP / soilContext.getMaxNutrientAmount() + currK / soilContext.getMaxNutrientAmount()) * 0.5f * BASE_YIELD_MULTIPLIER;
 
             //the crop might have advanced several ages at once
@@ -99,9 +99,9 @@ public abstract class CropUtil
             float reqP = iCrop.getPhosphorusNeed() * soilContext.getMaxNutrientAmount();
             float reqK = iCrop.getPotassiumNeed() * soilContext.getMaxNutrientAmount();
 
-            float nPct = PlantMacronutrient.NITROGEN.getAvailabilityPctInSoilForPlant(soilContext.pH);
-            float pPct = PlantMacronutrient.PHOSPHORUS.getAvailabilityPctInSoilForPlant(soilContext.pH);
-            float kPct = PlantMacronutrient.POTASSIUM.getAvailabilityPctInSoilForPlant(soilContext.pH);
+            float nPct = PlantMacronutrient.NITROGEN.getAvailabilityPctInSoil(soilContext.pH);
+            float pPct = PlantMacronutrient.PHOSPHORUS.getAvailabilityPctInSoil(soilContext.pH);
+            float kPct = PlantMacronutrient.POTASSIUM.getAvailabilityPctInSoil(soilContext.pH);
             //nutrients available in the soil depending on soil pH
             float currN = soilContext.nitrogen * nPct, currP = soilContext.phosphorus * pPct, currK = soilContext.potassium * kPct;
 
