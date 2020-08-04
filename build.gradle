@@ -96,6 +96,9 @@ import groovy.json.JsonOutput
 
 processResources {
     exclude '**/*.psd'
+    exclude '**/banner_large.png'
+    exclude '**/banner_old.png'
+    exclude '**/logo.png'
     doLast {
         println("minimizing JSONs...")
         for (File file in fileTree(dir: outputs.files.asPath, include: "**/*.json")) {
