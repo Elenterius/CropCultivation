@@ -10,6 +10,7 @@ import com.creativechasm.cropcultivation.item.*;
 import com.creativechasm.cropcultivation.registry.CropRegistry;
 import com.creativechasm.cropcultivation.util.BlockPropertyUtil;
 import com.creativechasm.cropcultivation.util.MiscUtil;
+import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonObject;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
@@ -20,6 +21,10 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.shapes.IBooleanFunction;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootContext;
@@ -89,6 +94,8 @@ public abstract class CommonRegistry
         createSoilBlock(registry, Block.Properties.create(Material.CLAY).hardnessAndResistance(0.8F).harvestTool(ToolType.SHOVEL).harvestLevel(ItemTier.IRON.getHarvestLevel()).sound(SoundType.GROUND), SoilTexture.CLAY, "clay_soil");
     }
 
+    public static VoxelShape SHAPE_RAISED_BED = VoxelShapes.combineAndSimplify(VoxelShapes.fullCube(), Block.makeCuboidShape(2.0D, 14.0D, 2.0D, 14.0D, 16.0D, 14.0D), IBooleanFunction.ONLY_FIRST);
+
     private static void createSoilBlock(IForgeRegistry<Block> registry, Block.Properties properties, SoilTexture texture, String registryName) {
         SoilBlock soilBlock = new SoilBlock(properties, texture)
         {
@@ -100,8 +107,15 @@ public abstract class CommonRegistry
         soilBlock.setRegistryName(registryName);
         registry.register(soilBlock);
 
-        RaisedBedBlock raisedBed = new RaisedBedBlock(properties, texture)
+        RaisedBedBlock raisedBed = new RaisedBedBlock(Block.Properties.create(Material.WOOD).hardnessAndResistance(0.6F).harvestTool(ToolType.AXE).sound(SoundType.WOOD), texture)
         {
+            @Override
+            @ParametersAreNonnullByDefault
+            @Nonnull
+            public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+                return SHAPE_RAISED_BED;
+            }
+
             @Override
             public TileEntity createTileEntity(BlockState state, IBlockReader world) {
                 return FARM_SOIL.create();
@@ -113,6 +127,7 @@ public abstract class CommonRegistry
 
     @SubscribeEvent
     public static void onTileEntityTypeRegistry(final RegistryEvent.Register<TileEntityType<?>> registryEvent) {
+        //noinspection ConstantConditions
         registryEvent.getRegistry().register(TileEntityType.Builder.create(() -> new SoilStateTileEntity(FARM_SOIL), ModBlocks.LOAMY_SOIL, ModBlocks.SILTY_SOIL, ModBlocks.SANDY_SOIL, ModBlocks.CLAYEY_SOIL).build(null).setRegistryName("farm_soil"));
     }
 
@@ -124,8 +139,17 @@ public abstract class CommonRegistry
         }
     };
 
+    public static Map<Block, RaisedBedBlock> RAISED_BED_LOOKUP;
+
     @SubscribeEvent
     public static void onItemsRegistry(final RegistryEvent.Register<Item> registryEvent) {
+        RAISED_BED_LOOKUP = ImmutableMap.of(
+                ModBlocks.SILT, ModBlocks.SILTY_SOIL_RAISED_BED,
+                ModBlocks.LOAM, ModBlocks.LOAMY_SOIL_RAISED_BED,
+                ModBlocks.SANDY_DIRT, ModBlocks.SANDY_SOIL_RAISED_BED,
+                ModBlocks.CLAYEY_DIRT, ModBlocks.CLAYEY_SOIL_RAISED_BED
+        );
+
         Item.Properties properties = new Item.Properties().group(ITEM_GROUP);
         registryEvent.getRegistry().registerAll(
                 createItemForBlock(ModBlocks.SILT, properties),

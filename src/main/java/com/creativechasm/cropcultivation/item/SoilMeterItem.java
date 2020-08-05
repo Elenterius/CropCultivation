@@ -48,7 +48,7 @@ public class SoilMeterItem extends Item implements IMeasuringDevice
             tooltip.add(new StringTextComponent(""));
             tooltip.add(new TranslationTextComponent("measurement.desc"));
             tooltip.add(new TranslationTextComponent("measurement.soil_moisture", moisture + "%").applyTextStyle(TextFormatting.GRAY));
-            tooltip.add(new TranslationTextComponent("measurement.temperature", String.format("%.2f\u00B0C (%f)", ClimateUtil.convertTemperatureMCToCelsius(localTemperature), localTemperature)).applyTextStyle(TextFormatting.GRAY));
+            tooltip.add(new TranslationTextComponent("measurement.temperature", String.format("%.2f\u00B0C (%.3f)", ClimateUtil.convertTemperatureMCToCelsius(localTemperature), localTemperature)).applyTextStyle(TextFormatting.GRAY));
             tooltip.add(new TranslationTextComponent("measurement.light_level", lightLevel).applyTextStyle(TextFormatting.GRAY));
 
             tooltip.add(new StringTextComponent(""));

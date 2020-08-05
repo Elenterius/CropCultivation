@@ -1,0 +1,27 @@
+{
+  "parent": "block/block",
+  "loader": "forge:multi-layer",
+  "layers": {
+    "solid": {
+      "loader": "forge:composite",
+      "parts" : {
+        "composter" : {
+          "parent": "block/composter"
+        },
+        "soil" : {
+          "parent": "cropcultivation:block/small_plane_up_tinted",
+          "textures": {
+            "top": "block/farmland_moist"
+          }
+        }
+      }
+    },
+    "translucent": {
+      "parent": "cropcultivation:block/raised_bed_layer_water",
+      "textures": {"water": "cropcultivation:block/overlay_wet_spots"}
+    }
+  },
+  "textures": {
+    "particle": "block/dirt"
+  }
+}

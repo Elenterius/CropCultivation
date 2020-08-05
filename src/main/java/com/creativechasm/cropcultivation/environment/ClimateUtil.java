@@ -2,7 +2,6 @@ package com.creativechasm.cropcultivation.environment;
 
 import com.creativechasm.cropcultivation.CropCultivationMod;
 import com.creativechasm.cropcultivation.environment.soil.IBlockTemperatureHandler;
-import com.creativechasm.cropcultivation.util.MathHelperX;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.LightType;
@@ -62,8 +61,9 @@ public class ClimateUtil {
     }
 
     public static float convertTemperatureCelsiusToMC(float celsiusTemp) {
-        float mcTemp = 0.036f * celsiusTemp + 0.15f;
-        return MathHelperX.roundTo2Decimals(mcTemp);
+        return 0.036f * celsiusTemp + 0.15f;
+//        float mcTemp = 0.036f * celsiusTemp + 0.15f;
+//        return MathHelperX.roundTo2Decimals(mcTemp);
     }
 
     public static float getLocalTemperature(Biome biome, BlockPos pos, BlockState state) {

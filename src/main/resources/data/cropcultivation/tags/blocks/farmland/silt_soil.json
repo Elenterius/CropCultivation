@@ -1,5 +1,6 @@
 {
   "values": [
-    "cropcultivation:silt_soil"
+    "cropcultivation:silt_soil",
+    "cropcultivation:silt_soil_raised_bed"
   ]
 }

@@ -11,7 +11,7 @@
     },
     "translucent": {
       "parent": "cropcultivation:block/soil_template_water_layer",
-      "textures": {"water": "cropcultivation:block/wet_spots"}
+      "textures": {"water": "cropcultivation:block/overlay_wet_spots"}
     }
   },
   "textures": {

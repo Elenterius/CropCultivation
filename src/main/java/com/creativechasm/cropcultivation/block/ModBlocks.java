@@ -32,14 +32,14 @@ public class ModBlocks
     public static SoilBlock CLAYEY_SOIL;
 
     @ObjectHolder("loam_soil_raised_bed")
-    public static SoilBlock LOAMY_SOIL_RAISED_BED;
+    public static RaisedBedBlock LOAMY_SOIL_RAISED_BED;
 
     @ObjectHolder("silt_soil_raised_bed")
-    public static SoilBlock SILTY_SOIL_RAISED_BED;
+    public static RaisedBedBlock SILTY_SOIL_RAISED_BED;
 
     @ObjectHolder("sand_soil_raised_bed")
-    public static SoilBlock SANDY_SOIL_RAISED_BED;
+    public static RaisedBedBlock SANDY_SOIL_RAISED_BED;
 
     @ObjectHolder("clay_soil_raised_bed")
-    public static SoilBlock CLAYEY_SOIL_RAISED_BED;
+    public static RaisedBedBlock CLAYEY_SOIL_RAISED_BED;
 }

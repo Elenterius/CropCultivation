@@ -48,12 +48,12 @@ public class ThermoHygrometerItem extends Item {
 
             tooltip.add(new StringTextComponent(""));
             tooltip.add(new TranslationTextComponent("measurement.desc"));
-            tooltip.add(new TranslationTextComponent("measurement.temperature", String.format("%.2f\u00B0C (%.2f)", ClimateUtil.convertTemperatureMCToCelsius(localTemperature), localTemperature)).applyTextStyle(TextFormatting.GRAY));
+            tooltip.add(new TranslationTextComponent("measurement.temperature", String.format("%.2f\u00B0C (%.3f)", ClimateUtil.convertTemperatureMCToCelsius(localTemperature), localTemperature)).applyTextStyle(TextFormatting.GRAY));
             tooltip.add(new TranslationTextComponent("measurement.humidity", String.format("%.2f RH", localHumidity)).applyTextStyle(TextFormatting.GRAY));
-            tooltip.add(new TranslationTextComponent("measurement.dew_point", String.format("%.2f\u00B0C (%.2f)", ClimateUtil.convertTemperatureMCToCelsius(dewPointTemperature), dewPointTemperature)).applyTextStyle(TextFormatting.GRAY));
+            tooltip.add(new TranslationTextComponent("measurement.dew_point", String.format("%.2f\u00B0C (%.3f)", ClimateUtil.convertTemperatureMCToCelsius(dewPointTemperature), dewPointTemperature)).applyTextStyle(TextFormatting.GRAY));
             tooltip.add(new StringTextComponent(""));
             tooltip.add(new StringTextComponent("Biome: ").appendSibling(new TranslationTextComponent(biomeName)).applyTextStyle(TextFormatting.GRAY));
-            tooltip.add(new TranslationTextComponent("measurement.default_temperature", String.format("%.2f\u00B0C (%.2f)", ClimateUtil.convertTemperatureMCToCelsius(biomeTemperature), biomeTemperature)).applyTextStyle(TextFormatting.GRAY));
+            tooltip.add(new TranslationTextComponent("measurement.default_temperature", String.format("%.2f\u00B0C (%.3f)", ClimateUtil.convertTemperatureMCToCelsius(biomeTemperature), biomeTemperature)).applyTextStyle(TextFormatting.GRAY));
             tooltip.add(new TranslationTextComponent("measurement.default_humidity", String.format("%.2f RH", biomeHumidity)).applyTextStyle(TextFormatting.GRAY));
         }
         else {
@@ -84,7 +84,7 @@ public class ThermoHygrometerItem extends Item {
                 localTemperature = ClimateUtil.getLocalTemperature(biome, pos, state);
             }
 
-            float localHumidity = Math.max(0f, ClimateUtil.calcRelativeHumidity(localTemperature, dewPointTemperature));
+            float localHumidity = Math.max(0f, ClimateUtil.calcRelativeHumidity(biome.getTemperature(pos), dewPointTemperature));
 
             CompoundNBT nbtTag = stack.getOrCreateTag();
             nbtTag.putString("biomeName", biome.getTranslationKey());
@@ -99,7 +99,7 @@ public class ThermoHygrometerItem extends Item {
                 player.sendStatusMessage(
                         new TranslationTextComponent(biome.getTranslationKey())
                                 .appendSibling(new StringTextComponent(" - ").applyTextStyle(TextFormatting.GRAY))
-                                .appendSibling(new StringTextComponent(String.format("%.2f\u00B0C (%.2f)", ClimateUtil.convertTemperatureMCToCelsius(localTemperature), localTemperature)))
+                                .appendSibling(new StringTextComponent(String.format("%.2f\u00B0C (%.3f)", ClimateUtil.convertTemperatureMCToCelsius(localTemperature), localTemperature)))
                                 .appendSibling(new StringTextComponent(" - ").applyTextStyle(TextFormatting.GRAY))
                                 .appendSibling(new StringTextComponent(String.format("%.2f RH", localHumidity)))
                         , true

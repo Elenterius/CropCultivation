@@ -38,6 +38,10 @@ If you want full support consider helping out.
 - added `Soil Amendments` to the market
 - added `Measuring Devices` to the market
 
+### Growth Speed
+Although Crop growth can be accelerated by other mods, the growth requirements still need to be fulfilled in most cases.
+(Mods that use the IGrowable interface to grow a crop circumvent the growth restrictions since the CropGrowthEvent is not fired).
+
 ### Serene Seasons
 Theoretically compatible, but not tested.
 
@@ -97,6 +101,11 @@ _SimpleFarming Rice growing on a "flooded" field (Wet, Excessively Wet, Standing
 - Organic Matter has a chance to decay into nutrients for the soil
 - Overall pH doesn't change much by itself, the player is the only big influence through the application of liming or acidifying material
 - Basically macronutrients and compost are the least things that should be checked before replanting
+
+### Raised Soil Bed
+Crafted by putting soil into a partially filled composter.
+- the heat of the decomposing compost raises the soil temperature allowing plants to grow in colder regions
+- keep the soil moist and occasionally reapply compost to keep the decomposition process going
 
 ### Environmental Influences
 - Rain

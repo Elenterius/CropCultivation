@@ -1,0 +1,9 @@
+{
+  "elements": [
+  {
+    "name": "water",
+    "from": [2, 15, 2], "to": [14, 15.1, 14], "rotation": {"angle": 0, "axis": "y", "origin": [8, 24, 8]},
+    "faces": {"up": {"texture": "#water", "tintindex": 1}}
+  }
+]
+}
