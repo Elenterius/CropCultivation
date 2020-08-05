@@ -1,7 +1,9 @@
 package com.creativechasm.cropcultivation.environment;
 
 import com.creativechasm.cropcultivation.CropCultivationMod;
+import com.creativechasm.cropcultivation.environment.soil.IBlockTemperatureHandler;
 import com.creativechasm.cropcultivation.util.MathHelperX;
+import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
@@ -33,6 +35,7 @@ public class ClimateUtil {
         CropCultivationMod.LOGGER.debug(LOG_MARKER, "Global Temperature Range: {" + TEMP_MIN + ", ... , " + TEMP_MAX + "}");
     }
 
+    @SuppressWarnings("unused")
     public static void dumpBiomeTemperatureAndHumidity() {
         CropCultivationMod.LOGGER.info(LOG_MARKER, "dumping biome default temperatures to biome_temperatures.csv...");
         try {
@@ -61,6 +64,11 @@ public class ClimateUtil {
     public static float convertTemperatureCelsiusToMC(float celsiusTemp) {
         float mcTemp = 0.036f * celsiusTemp + 0.15f;
         return MathHelperX.roundTo2Decimals(mcTemp);
+    }
+
+    public static float getLocalTemperature(Biome biome, BlockPos pos, BlockState state) {
+        float temperature = biome.getTemperature(pos);
+        return state.getBlock() instanceof IBlockTemperatureHandler ? ((IBlockTemperatureHandler) state.getBlock()).getBlockTemperature(biome, temperature, pos, state) : temperature;
     }
 
     public static boolean isFreezingTemp(float temperature) {

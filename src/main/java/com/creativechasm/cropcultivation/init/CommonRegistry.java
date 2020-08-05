@@ -103,11 +103,6 @@ public abstract class CommonRegistry
         RaisedBedBlock raisedBed = new RaisedBedBlock(properties, texture)
         {
             @Override
-            public float getTemperatureModifier() {
-                return 10f;
-            }
-
-            @Override
             public TileEntity createTileEntity(BlockState state, IBlockReader world) {
                 return FARM_SOIL.create();
             }

@@ -1,6 +1,8 @@
 package com.creativechasm.cropcultivation.item;
 
 import com.creativechasm.cropcultivation.environment.ClimateUtil;
+import com.creativechasm.cropcultivation.util.MathHelperX;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -18,6 +20,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.IPlantable;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -69,7 +72,18 @@ public class ThermoHygrometerItem extends Item {
             float biomeTemperature = biome.getDefaultTemperature();
             float biomeHumidity = biome.getDownfall();
             float dewPointTemperature = ClimateUtil.calcDewPointTemperature(biomeTemperature, biomeHumidity);
-            float localTemperature = biome.getTemperature(pos);
+
+            float localTemperature;
+            BlockState state = world.getBlockState(pos);
+            if (state.getBlock() instanceof IPlantable) {
+                BlockPos posBelow = pos.down();
+                BlockState below = world.getBlockState(posBelow);
+                localTemperature = MathHelperX.lerp(0.7f, ClimateUtil.getLocalTemperature(biome, pos, state), ClimateUtil.getLocalTemperature(world.getBiome(posBelow), posBelow, below));
+            }
+            else {
+                localTemperature = ClimateUtil.getLocalTemperature(biome, pos, state);
+            }
+
             float localHumidity = Math.max(0f, ClimateUtil.calcRelativeHumidity(localTemperature, dewPointTemperature));
 
             CompoundNBT nbtTag = stack.getOrCreateTag();

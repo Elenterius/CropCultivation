@@ -19,7 +19,6 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -49,7 +48,7 @@ public class SoilMeterItem extends Item implements IMeasuringDevice
             tooltip.add(new StringTextComponent(""));
             tooltip.add(new TranslationTextComponent("measurement.desc"));
             tooltip.add(new TranslationTextComponent("measurement.soil_moisture", moisture + "%").applyTextStyle(TextFormatting.GRAY));
-            tooltip.add(new TranslationTextComponent("measurement.temperature", String.format("%.2f\u00B0C (%.2f)", ClimateUtil.convertTemperatureMCToCelsius(localTemperature), localTemperature)).applyTextStyle(TextFormatting.GRAY));
+            tooltip.add(new TranslationTextComponent("measurement.temperature", String.format("%.2f\u00B0C (%f)", ClimateUtil.convertTemperatureMCToCelsius(localTemperature), localTemperature)).applyTextStyle(TextFormatting.GRAY));
             tooltip.add(new TranslationTextComponent("measurement.light_level", lightLevel).applyTextStyle(TextFormatting.GRAY));
 
             tooltip.add(new StringTextComponent(""));
@@ -66,70 +65,6 @@ public class SoilMeterItem extends Item implements IMeasuringDevice
             tooltip.add(new StringTextComponent(" ").appendSibling(new TranslationTextComponent("soil_meter.desc").applyTextStyle(TextFormatting.GRAY)));
         }
     }
-
-//    @Override
-//    public ActionResultType onItemUseFirst(ItemStack stack, ItemUseContext context) {
-//        World world = context.getWorld();
-//        BlockPos pos = context.getPos();
-//        BlockState state = world.getBlockState(pos);
-//        boolean isSoilBlock = state.getBlock() instanceof SoilBlock;
-//
-//        if (!isSoilBlock) {
-//            BlockPos tempPos = context.getPos().down();
-//            BlockState tempState = world.getBlockState(tempPos);
-//            if (tempState.getBlock() instanceof SoilBlock) {
-//                pos = tempPos;
-//                state = tempState;
-//                isSoilBlock = true;
-//            }
-//        }
-//
-//        if (isSoilBlock) {
-//            if (!world.isRemote) {
-//                TileEntity tileEntity = world.getTileEntity(pos);
-//                if (tileEntity instanceof SoilStateTileEntity) {
-//                    SoilStateTileEntity tileState = (SoilStateTileEntity) tileEntity;
-//                    Biome biome = world.getBiome(pos);
-//
-//                    CompoundNBT nbtTag = stack.getOrCreateTag();
-//                    int moisture = state.get(SoilBlock.MOISTURE);
-//                    float localTemperature = biome.getTemperature(pos);
-//                    int lightLevel = world.getLightSubtracted(pos.up(), 0);
-//
-//                    nbtTag.putInt("moisture", moisture);
-//                    nbtTag.putFloat("localTemperature", localTemperature);
-//                    nbtTag.putInt("light_level", lightLevel);
-//                    nbtTag.putFloat("pH", tileState.getPH());
-//                    nbtTag.putInt("N", tileState.getNitrogen());
-//                    nbtTag.putInt("P", tileState.getPhosphorus());
-//                    nbtTag.putInt("K", tileState.getPotassium());
-//
-//                    PlayerEntity player = context.getPlayer();
-//                    if (player instanceof ServerPlayerEntity) {
-//                        player.sendStatusMessage(new TranslationTextComponent("measurement.soil_moisture", Math.round(moisture / 9f * 100) + "%").applyTextStyle(moisture >= 5 ? TextFormatting.AQUA : TextFormatting.WHITE)
-//                                        .appendSibling(new StringTextComponent(" - ").applyTextStyle(TextFormatting.GRAY))
-//                                        .appendSibling(new StringTextComponent(String.format("%.2f\u00B0C (%.2f)", ClimateUtil.convertTemperatureMCToCelsius(localTemperature), localTemperature)))
-//                                        .appendSibling(new StringTextComponent(" - ").applyTextStyle(TextFormatting.GRAY))
-//                                        .appendSibling(new TranslationTextComponent("measurement.light_level", lightLevel))
-//                                        .appendSibling(new StringTextComponent(" - ").applyTextStyle(TextFormatting.GRAY))
-//                                        .appendSibling(SoilPH.getTextComponentForPH(tileState.getPH(), String.format("pH: %.1f", tileState.getPH()))
-//                                                .appendSibling(new StringTextComponent(" - ").applyTextStyle(TextFormatting.GRAY))
-//                                                .appendSibling(PlantMacronutrient.getTextComponentForNutrient(PlantMacronutrient.NITROGEN, tileState.getNitrogen()))
-//                                                .appendSibling(new StringTextComponent(" - ").applyTextStyle(TextFormatting.GRAY))
-//                                                .appendSibling(PlantMacronutrient.getTextComponentForNutrient(PlantMacronutrient.PHOSPHORUS, tileState.getPhosphorus()))
-//                                                .appendSibling(new StringTextComponent(" - ").applyTextStyle(TextFormatting.GRAY))
-//                                                .appendSibling(PlantMacronutrient.getTextComponentForNutrient(PlantMacronutrient.POTASSIUM, tileState.getPotassium())))
-//                                , true
-//                        );
-//                    }
-//
-//                    return ActionResultType.SUCCESS;
-//                }
-//            }
-//            return ActionResultType.FAIL;
-//        }
-//        return ActionResultType.PASS;
-//    }
 
     @Override
     public void gatherData(ServerWorld world, PlayerEntity player, BlockPos pos, ItemStack stack) {
@@ -151,11 +86,10 @@ public class SoilMeterItem extends Item implements IMeasuringDevice
                 TileEntity tileEntity = world.getTileEntity(pos);
                 if (tileEntity instanceof SoilStateTileEntity) {
                     SoilStateTileEntity tileState = (SoilStateTileEntity) tileEntity;
-                    Biome biome = world.getBiome(pos);
 
                     CompoundNBT nbtTag = stack.getOrCreateTag();
                     int moisture = state.get(SoilBlock.MOISTURE);
-                    float localTemperature = biome.getTemperature(pos);
+                    float localTemperature = ClimateUtil.getLocalTemperature(world.getBiome(pos), pos, state);
                     int lightLevel = world.getLightSubtracted(pos.up(), 0);
 
                     nbtTag.putInt("moisture", moisture);
@@ -170,7 +104,7 @@ public class SoilMeterItem extends Item implements IMeasuringDevice
                         player.sendStatusMessage(
                                 new TranslationTextComponent("measurement.soil_moisture", Math.round(moisture / 9f * 100) + "%").applyTextStyle(moisture >= 5 ? TextFormatting.AQUA : TextFormatting.WHITE)
                                         .appendSibling(new StringTextComponent(" - ").applyTextStyle(TextFormatting.GRAY))
-                                        .appendSibling(new StringTextComponent(String.format("%.2f\u00B0C (%.2f)", ClimateUtil.convertTemperatureMCToCelsius(localTemperature), localTemperature)).applyTextStyle(TextFormatting.WHITE))
+                                        .appendSibling(new StringTextComponent(String.format("%.2f\u00B0C (%.3f)", ClimateUtil.convertTemperatureMCToCelsius(localTemperature), localTemperature)).applyTextStyle(TextFormatting.WHITE))
                                         .appendSibling(new StringTextComponent(" - ").applyTextStyle(TextFormatting.GRAY))
                                         .appendSibling(new TranslationTextComponent("measurement.light_level", lightLevel).applyTextStyle(TextFormatting.YELLOW))
                                         .appendSibling(new StringTextComponent(" - ").applyTextStyle(TextFormatting.GRAY))

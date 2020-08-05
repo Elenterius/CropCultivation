@@ -2,11 +2,11 @@ package com.creativechasm.cropcultivation.environment;
 
 import com.creativechasm.cropcultivation.environment.plant.IPlantGrowthCA;
 import com.creativechasm.cropcultivation.environment.plant.PlantMacronutrient;
-import com.creativechasm.cropcultivation.environment.soil.IRaisedBed;
 import com.creativechasm.cropcultivation.environment.soil.SoilMoisture;
 import com.creativechasm.cropcultivation.environment.soil.SoilStateContext;
 import com.creativechasm.cropcultivation.registry.DefaultCropEntry;
 import com.creativechasm.cropcultivation.registry.ICropEntry;
+import com.creativechasm.cropcultivation.util.MathHelperX;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -73,10 +73,10 @@ public abstract class CropUtil
             }
 
             //check temperature
-            float localTemperature = ClimateUtil.convertTemperatureMCToCelsius(world.getBiome(cropPos).getTemperature(cropPos));
-            localTemperature += soilContext.getBlockState().getBlock() instanceof IRaisedBed ? ((IRaisedBed) soilContext.getBlockState().getBlock()).getTemperatureModifier() : 0f;
-            localTemperature = ClimateUtil.convertTemperatureCelsiusToMC(localTemperature);
-            if (localTemperature < iCrop.getMinTemperature() || localTemperature > iCrop.getMaxTemperature()) {
+            float localTemperature = ClimateUtil.getLocalTemperature(world.getBiome(cropPos), cropPos, cropState);
+            float soilTemperature = ClimateUtil.getLocalTemperature(world.getBiome(soilContext.getBlockPos()), soilContext.getBlockPos(), soilContext.getBlockState());
+            float temperature = MathHelperX.lerp(0.7f, localTemperature, soilTemperature);
+            if (temperature < iCrop.getMinTemperature() || temperature > iCrop.getMaxTemperature()) {
                 return false; //don't grow outside the temperature tolerance range
             }
 

@@ -316,7 +316,7 @@ public abstract class SoilBlock extends FarmlandBlock {
     @Override
     public void fillWithRain(@Nonnull World worldIn, @Nonnull BlockPos pos) {
         if (worldIn instanceof ServerWorld && worldIn.rand.nextFloat() < 0.36f) {
-            if (worldIn.getBiome(pos).getTemperature(pos) >= 0.15F) {
+            if (ClimateUtil.getLocalTemperature(worldIn.getBiome(pos), pos, worldIn.getBlockState(pos)) >= 0.15F) {
                 TileEntity tileEntity = worldIn.getTileEntity(pos);
                 if (!(tileEntity instanceof SoilStateTileEntity)) return;
                 CropCultivationMod.LOGGER.debug(MarkerManager.getMarker("SoilBlock"), "filling with rain...");
