@@ -53,13 +53,24 @@ public class SoilMeterItem extends Item implements IMeasuringDevice
 
             tooltip.add(new StringTextComponent(""));
             tooltip.add(SoilPH.getTextComponentForPH(pH, String.format("pH: %.1f (%s)", pH, SoilPH.fromPH(pH).name())));
-            tooltip.add(
-                    new StringTextComponent("N: " + nbtTag.getInt("N")).applyTextStyle(TextFormatting.GRAY)
-                            .appendSibling(new StringTextComponent(" - ").applyTextStyle(TextFormatting.DARK_GRAY))
-                            .appendSibling(new StringTextComponent("P: " + nbtTag.getInt("P")).applyTextStyle(TextFormatting.GRAY))
-                            .appendSibling(new StringTextComponent(" - ").applyTextStyle(TextFormatting.DARK_GRAY))
-                            .appendSibling(new StringTextComponent("K: " + nbtTag.getInt("K")).applyTextStyle(TextFormatting.GRAY))
-            );
+
+            int nitrogen = nbtTag.getInt("N");
+            float nPct = PlantMacronutrient.NITROGEN.getAvailabilityPctInSoil(pH);
+            int phosphorus = nbtTag.getInt("P");
+            float pPct = PlantMacronutrient.PHOSPHORUS.getAvailabilityPctInSoil(pH);
+            int potassium = nbtTag.getInt("K");
+            float kPct = PlantMacronutrient.POTASSIUM.getAvailabilityPctInSoil(pH);
+
+            tooltip.add(new StringTextComponent(""));
+            tooltip.add(new TranslationTextComponent("nutrient.nitrogen")
+                    .appendSibling(new StringTextComponent(String.format(": %d%% x %.1f = ", nitrogen * 10, nPct)).applyTextStyle(TextFormatting.DARK_GRAY)
+                    .appendSibling(new StringTextComponent(String.format("%.2f%%", nitrogen * nPct * 10f)).applyTextStyle(TextFormatting.GRAY))));
+            tooltip.add(new TranslationTextComponent("nutrient.phosphorus")
+                    .appendSibling(new StringTextComponent(String.format(": %d%% x %.1f = ", phosphorus * 10, pPct)).applyTextStyle(TextFormatting.DARK_GRAY)
+                    .appendSibling(new StringTextComponent(String.format("%.2f%%", phosphorus * pPct * 10f)).applyTextStyle(TextFormatting.GRAY))));
+            tooltip.add(new TranslationTextComponent("nutrient.potassium")
+                    .appendSibling(new StringTextComponent(String.format(": %d%% x %.1f = ", potassium * 10, kPct)).applyTextStyle(TextFormatting.DARK_GRAY)
+                    .appendSibling(new StringTextComponent(String.format("%.2f%%", potassium * kPct * 10f)).applyTextStyle(TextFormatting.GRAY))));
         }
         else {
             tooltip.add(new StringTextComponent(" ").appendSibling(new TranslationTextComponent("soil_meter.desc").applyTextStyle(TextFormatting.GRAY)));
@@ -91,11 +102,12 @@ public class SoilMeterItem extends Item implements IMeasuringDevice
                     int moisture = state.get(SoilBlock.MOISTURE);
                     float localTemperature = ClimateUtil.getLocalTemperature(world.getBiome(pos), pos, state);
                     int lightLevel = world.getLightSubtracted(pos.up(), 0);
+                    float pH = tileState.getPH();
 
                     nbtTag.putInt("moisture", moisture);
                     nbtTag.putFloat("localTemperature", localTemperature);
                     nbtTag.putInt("light_level", lightLevel);
-                    nbtTag.putFloat("pH", tileState.getPH());
+                    nbtTag.putFloat("pH", pH);
                     nbtTag.putInt("N", tileState.getNitrogen());
                     nbtTag.putInt("P", tileState.getPhosphorus());
                     nbtTag.putInt("K", tileState.getPotassium());

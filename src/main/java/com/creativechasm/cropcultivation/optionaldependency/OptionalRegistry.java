@@ -3,9 +3,11 @@ package com.creativechasm.cropcultivation.optionaldependency;
 import com.creativechasm.cropcultivation.CropCultivationMod;
 import com.creativechasm.cropcultivation.init.CommonRegistry;
 import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ColorHandlerEvent;
+import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.OptionalMod;
@@ -60,6 +62,13 @@ public class OptionalRegistry
                     }
                 });
             });
+        }
+
+        @SubscribeEvent
+        public static void registerModifierSerializers(final RegistryEvent.Register<GlobalLootModifierSerializer<?>> event) {
+            if (Mods.SIMPLE_FARMING.isPresent()) {
+                event.getRegistry().register(new SimpleFarmingHandler.DoubleCropYieldModifier.Serializer().setRegistryName(new ResourceLocation(CropCultivationMod.MOD_ID, "double_crop_yield")));
+            }
         }
     }
 

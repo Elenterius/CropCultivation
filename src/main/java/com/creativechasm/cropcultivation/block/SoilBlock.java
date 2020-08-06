@@ -105,7 +105,7 @@ public abstract class SoilBlock extends FarmlandBlock {
     @ParametersAreNonnullByDefault
     public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
         //this catches all block state changes caused by the hoe through "tilling"
-        if (oldState.getBlock() != this && oldState.getBlock() != Blocks.AIR && CommonRegistry.isBlockTillable(oldState.getBlock())) {
+        if (oldState.getBlock() != this && oldState.getBlock() != Blocks.AIR && CropUtil.canBlockTurnIntoFarmland(oldState.getBlock())) {
             TileEntity tile = worldIn.getTileEntity(pos);
             if (tile instanceof SoilStateTileEntity) {
                 ((SoilStateTileEntity) tile).setPH(soilTexture.pHType.randomPHAffectedByTemperature(worldIn.rand, worldIn.getBiome(pos).getTemperature(pos)));

@@ -4,15 +4,20 @@ import com.creativechasm.cropcultivation.environment.plant.IPlantGrowthCA;
 import com.creativechasm.cropcultivation.environment.plant.PlantMacronutrient;
 import com.creativechasm.cropcultivation.environment.soil.SoilMoisture;
 import com.creativechasm.cropcultivation.environment.soil.SoilStateContext;
+import com.creativechasm.cropcultivation.init.CommonRegistry;
 import com.creativechasm.cropcultivation.registry.DefaultCropEntry;
 import com.creativechasm.cropcultivation.registry.ICropEntry;
 import com.creativechasm.cropcultivation.util.MathHelperX;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.PlantType;
 
+import java.util.List;
 import java.util.Random;
 
 public abstract class CropUtil
@@ -57,6 +62,31 @@ public abstract class CropUtil
 
             soilContext.getTileState().addCropYield(yieldModifier); //increase/decrease yield
         }
+    }
+
+    public static void modifyGeneratedLoot(List<ItemStack> generatedLoot, Item targetItem, int lootAmount, int yieldAmount, Random rand) {
+        if (lootAmount != yieldAmount) {
+            int n = 0;
+            generatedLoot.removeIf(stack -> stack.getItem() == targetItem);
+
+            //get the loot as multiple ItemStacks
+            while (n < yieldAmount) {
+                if (yieldAmount - n > 3) {
+                    int amount = rand.nextInt(3) + 1; // 1-3
+                    generatedLoot.add(new ItemStack(targetItem, amount));
+                    n += amount;
+                }
+                else { //remainder
+                    int amount = yieldAmount - n;
+                    generatedLoot.add(new ItemStack(targetItem, amount));
+                    break;
+                }
+            }
+        }
+    }
+
+    public static boolean canBlockTurnIntoFarmland(Block block) {
+        return CommonRegistry.HOE_LOOKUP.containsKey(block);
     }
 
     public static abstract class RegisteredCrop

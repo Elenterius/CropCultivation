@@ -15,9 +15,9 @@ This mod will not add new crops. Use supported mods like Simple Farming.
 
 ## Mod Support
 ### Supported Crops
-- Minecraft
-- Simple Farming
-- XL Food Mod (excluding vanilla plant)
+- Minecraft (exceptions: coca beans, saplings, sweet berry bush, mushroom)
+- Simple Farming (exceptions: saplings/trees & bushes & grapes)
+- XL Food Mod (exceptions: vanilla spice plant)
 
 ### Partial Support
 - HarvestCraft Crops (only the crops overlapping with SimpleFarming, the remainder falls back to generic crop stats)

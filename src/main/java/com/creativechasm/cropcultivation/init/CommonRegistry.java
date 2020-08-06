@@ -5,36 +5,27 @@ import com.creativechasm.cropcultivation.block.ModBlocks;
 import com.creativechasm.cropcultivation.block.RaisedBedBlock;
 import com.creativechasm.cropcultivation.block.SoilBlock;
 import com.creativechasm.cropcultivation.block.SoilStateTileEntity;
+import com.creativechasm.cropcultivation.environment.CropYieldModifier;
 import com.creativechasm.cropcultivation.environment.soil.SoilTexture;
 import com.creativechasm.cropcultivation.item.*;
 import com.creativechasm.cropcultivation.registry.CropRegistry;
-import com.creativechasm.cropcultivation.util.BlockPropertyUtil;
-import com.creativechasm.cropcultivation.util.MiscUtil;
 import com.google.common.collect.ImmutableMap;
-import com.google.gson.JsonObject;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.Entity;
 import net.minecraft.item.*;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.shapes.IBooleanFunction;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
-import net.minecraft.world.storage.loot.LootContext;
-import net.minecraft.world.storage.loot.LootParameters;
-import net.minecraft.world.storage.loot.conditions.ILootCondition;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
-import net.minecraftforge.common.loot.LootModifier;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -45,10 +36,7 @@ import org.apache.logging.log4j.MarkerManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 
 @Mod.EventBusSubscriber(modid = CropCultivationMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -57,7 +45,10 @@ public abstract class CommonRegistry
     @ObjectHolder(CropCultivationMod.MOD_ID + ":farm_soil")
     public static TileEntityType<?> FARM_SOIL;
 
-    protected static CropRegistry CROP_REGISTRY = null;
+    private static CropRegistry CROP_REGISTRY = null;
+    public static Map<Block, BlockState> HOE_LOOKUP;
+
+    public static VoxelShape SHAPE_RAISED_BED = VoxelShapes.combineAndSimplify(VoxelShapes.fullCube(), Block.makeCuboidShape(2.0D, 14.0D, 2.0D, 14.0D, 16.0D, 14.0D), IBooleanFunction.ONLY_FIRST);
 
     public static CropRegistry getCropRegistry() {
         return CROP_REGISTRY;
@@ -93,8 +84,6 @@ public abstract class CommonRegistry
         createSoilBlock(registry, Block.Properties.create(Material.SAND).hardnessAndResistance(0.5F).harvestTool(ToolType.SHOVEL).sound(SoundType.GROUND), SoilTexture.SAND, "sand_soil");
         createSoilBlock(registry, Block.Properties.create(Material.CLAY).hardnessAndResistance(0.8F).harvestTool(ToolType.SHOVEL).harvestLevel(ItemTier.IRON.getHarvestLevel()).sound(SoundType.GROUND), SoilTexture.CLAY, "clay_soil");
     }
-
-    public static VoxelShape SHAPE_RAISED_BED = VoxelShapes.combineAndSimplify(VoxelShapes.fullCube(), Block.makeCuboidShape(2.0D, 14.0D, 2.0D, 14.0D, 16.0D, 14.0D), IBooleanFunction.ONLY_FIRST);
 
     private static void createSoilBlock(IForgeRegistry<Block> registry, Block.Properties properties, SoilTexture texture, String registryName) {
         SoilBlock soilBlock = new SoilBlock(properties, texture)
@@ -222,12 +211,6 @@ public abstract class CommonRegistry
         }
     }
 
-    private static Map<Block, BlockState> HOE_LOOKUP;
-
-    public static boolean isBlockTillable(Block block) {
-        return HOE_LOOKUP.containsKey(block);
-    }
-
     protected static void modifyHoeLookup() {
         CropCultivationMod.LOGGER.info(MarkerManager.getMarker("CommonRegistry"), "modifying Hoe Lookup Table...");
         Map<Block, BlockState> HOE_LOOKUP = ObfuscationReflectionHelper.getPrivateValue(HoeItem.class, (HoeItem) Items.DIAMOND_HOE, "field_195973_b");
@@ -264,97 +247,5 @@ public abstract class CommonRegistry
     @SubscribeEvent
     public static void registerModifierSerializers(final RegistryEvent.Register<GlobalLootModifierSerializer<?>> event) {
         event.getRegistry().register(new CropYieldModifier.Serializer().setRegistryName(new ResourceLocation(CropCultivationMod.MOD_ID, "crop_yield")));
-    }
-
-    public static class CropYieldModifier extends LootModifier
-    {
-        public CropYieldModifier(ILootCondition[] conditionsIn) {
-            super(conditionsIn);
-        }
-
-        @Nonnull
-        @Override
-        protected List<ItemStack> doApply(List<ItemStack> generatedLoot, LootContext context) {
-
-            CropCultivationMod.LOGGER.debug(MarkerManager.getMarker("CropYieldModifier"), "loot: " + generatedLoot.toString());
-            BlockState state = context.get(LootParameters.BLOCK_STATE);
-            BlockPos pos = context.get(LootParameters.POSITION);
-
-            ItemStack toolStack = context.get(LootParameters.TOOL);
-            Entity entity = context.get(LootParameters.THIS_ENTITY);
-//            float luck = context.getLuck(); //applies only to loot from chests and fishing loot, hmm...
-            CropCultivationMod.LOGGER.debug(MarkerManager.getMarker("CropYieldModifier"), String.format("tool: %s, fortuneModifier: %s", toolStack, MiscUtil.getFortuneLevel(entity)));
-
-            if (state != null && pos != null) {
-                World world = context.getWorld();
-                Map<Item, Integer> lootCountMap = new HashMap<>();
-
-                generatedLoot.forEach(stack -> {
-                    int count = lootCountMap.computeIfAbsent(stack.getItem(), item -> 0);
-                    lootCountMap.put(stack.getItem(), count + stack.getCount());
-                });
-
-                TileEntity tileEntity = world.getTileEntity(pos.down());
-                if (lootCountMap.size() > 0 && tileEntity instanceof SoilStateTileEntity) {
-                    SoilStateTileEntity soil = (SoilStateTileEntity) tileEntity;
-                    float yieldMultiplier = soil.getCropYieldAveraged(BlockPropertyUtil.getAge(state)); //get crop yield averaged by crop age
-
-                    lootCountMap.forEach((item, count) -> {
-                        int yieldAmount = MathHelper.ceil(count * yieldMultiplier);
-                        CropCultivationMod.LOGGER.debug(MarkerManager.getMarker("CropYieldModifier"), String.format("item: %s, count: %s, multiplier: %s, yield: %s", item, count, yieldMultiplier, yieldAmount));
-                        modifyGeneratedLoot(generatedLoot, item, count, yieldAmount, context.getRandom());
-                    });
-                }
-            }
-
-            CropCultivationMod.LOGGER.debug(MarkerManager.getMarker("CropYieldModifier"), "out: " + generatedLoot.toString());
-            return generatedLoot;
-        }
-
-        @ParametersAreNonnullByDefault
-        private void modifyGeneratedLoot(List<ItemStack> generatedLoot, Item targetItem, int lootAmount, int yieldAmount, Random rand) {
-            if (lootAmount != yieldAmount) {
-                int n = 0;
-                generatedLoot.removeIf(stack -> stack.getItem() == targetItem);
-
-                //get the loot as multiple ItemStacks
-                while (n < yieldAmount) {
-                    if (yieldAmount - n > 3) {
-                        int amount = rand.nextInt(3) + 1; // 1-3
-                        generatedLoot.add(new ItemStack(targetItem, amount));
-                        n += amount;
-                    }
-                    else { //remainder
-                        int amount = yieldAmount - n;
-                        generatedLoot.add(new ItemStack(targetItem, amount));
-                        break;
-                    }
-                }
-            }
-        }
-
-
-        private static class LootCondition implements ILootCondition
-        {
-            @Override
-            public boolean test(LootContext context) {
-                BlockState state = context.get(LootParameters.BLOCK_STATE);
-                BlockPos pos = context.get(LootParameters.POSITION);
-                if (state != null && pos != null) {
-                    return state.getBlock() instanceof CropsBlock && context.getWorld().getBlockState(pos.down()).getBlock() instanceof SoilBlock;
-                }
-                return false;
-            }
-        }
-
-        private static class Serializer extends GlobalLootModifierSerializer<CropYieldModifier>
-        {
-            @Override
-            public CropYieldModifier read(ResourceLocation name, JsonObject object, ILootCondition[] conditionsIn) {
-                //we build our own conditions array
-                ILootCondition[] conditions = new ILootCondition[]{new LootCondition()}; //TODO: add conditions for other non-standard mod crops
-                return new CropYieldModifier(conditions);
-            }
-        }
     }
 }
