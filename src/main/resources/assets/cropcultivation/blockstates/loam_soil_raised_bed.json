@@ -1,9 +1,10 @@
 {
   "multipart": [
-    { "when": { "OR": [{"moisture": "0"}, {"moisture": "1"}, {"moisture": "2"}, {"moisture": "3"}] }, "apply": { "model": "cropcultivation:block/raised_bed_dry"}},
-    { "when": { "OR": [{"moisture": "4"}, {"moisture": "5"}] }, "apply": { "model": "cropcultivation:block/raised_bed_average"}},
-    { "when": { "OR": [{"moisture": "6"}, {"moisture": "7"}] }, "apply": {"model": "cropcultivation:block/raised_bed_moist"}},
-    { "when": { "OR": [{"moisture": "8"}, {"moisture": "9"}] }, "apply": {"model": "cropcultivation:block/raised_bed_wet"}},
+    { "when": { "OR": [{"moisture": "0"}, {"moisture": "1"}]}, "apply": { "model": "cropcultivation:block/raised_bed_dry_cracked"}},
+    { "when": { "OR": [{"moisture": "2"}, {"moisture": "3"}]}, "apply": { "model": "cropcultivation:block/raised_bed_dry"}},
+    { "when": { "OR": [{"moisture": "4"}, {"moisture": "5"}]}, "apply": { "model": "cropcultivation:block/raised_bed_average"}},
+    { "when": { "OR": [{"moisture": "6"}, {"moisture": "7"}]}, "apply": {"model": "cropcultivation:block/raised_bed_moist"}},
+    { "when": { "OR": [{"moisture": "8"}, {"moisture": "9"}]}, "apply": {"model": "cropcultivation:block/raised_bed_wet"}},
     { "when": {"moisture": "10"}, "apply": {"model": "cropcultivation:block/raised_bed_waterlogged"}}
   ]
 }

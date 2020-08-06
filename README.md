@@ -89,7 +89,7 @@ SEVERELY_DRY -> EXCESSIVELY_DRY -> ABNORMALLY_DRY -> DRY -> AVERAGE_0 -> AVERAGE
 ABNORMALLY_MOIST -> WET -> EXCESSIVELY_WET -> STANDING_WATER
 <br><br> 
 ![Soil Moisture Levels](screenshots/soil_moisture_levels.png)
-_From left to right: Dry, Average, Moist, Wet, Standing Water_
+_From left to right: Very Dry, Average, Moist, Wet, Standing Water_
 <br><br>
 ![Simple Farming Rice Field](screenshots/wet_rice_field.png)
 _SimpleFarming Rice growing on a "flooded" field (Wet, Excessively Wet, Standing Water)_

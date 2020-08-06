@@ -1,6 +1,7 @@
 {
   "multipart": [
-    {"when": {"OR": [{"moisture": "0"}, {"moisture": "1"}, {"moisture": "2"}, {"moisture": "3"}]}, "apply": {"model": "cropcultivation:block/soil_dry"}},
+    {"when": {"OR": [{"moisture": "0"}, {"moisture": "1"}]}, "apply": {"model": "cropcultivation:block/soil_dry_cracked"}},
+    {"when": {"OR": [{"moisture": "2"}, {"moisture": "3"}]}, "apply": {"model": "cropcultivation:block/soil_dry"}},
     {"when": {"OR": [{"moisture": "4"}, {"moisture": "5"}]}, "apply": {"model": "cropcultivation:block/soil_average"}},
     {"when": {"OR": [{"moisture": "6"}, {"moisture": "7"}]}, "apply": {"model": "cropcultivation:block/soil_moist"}},
     {"when": {"OR": [{"moisture": "8"}, {"moisture": "9"}]}, "apply": {"model": "cropcultivation:block/soil_wet"}},
