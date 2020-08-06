@@ -1,0 +1,18 @@
+{
+  "display": {
+    "icon": {"item": "minecraft:diamond_hoe"},
+    "title": {"translate": "itemGroup.cropcultivation"},
+    "description": {"translate": "advancements.cropcultivation.root.desc"},
+    "frame": "task",
+    "show_toast": false,
+    "announce_to_chat": false,
+    "hidden": false,
+    "background": "minecraft:textures/block/farmland.png"
+  },
+  "criteria": {
+    "pickup_hoe": {
+      "trigger": "minecraft:inventory_changed", "conditions": {"items": [{"item": "minecraft:diamond_hoe"}]}
+    }
+  },
+  "requirements": [["pickup_hoe"]]
+}

@@ -58,6 +58,10 @@ Theoretically compatible, but not tested.
 - crop yield
     - based on nutrient concentration in soil throughout its growth stages
 
+Note:
+- Unsatisfied plants will eventually starve
+- Crops can be burned by over-fertilization
+
 
 ## Soils (Farmland)
 ```diff

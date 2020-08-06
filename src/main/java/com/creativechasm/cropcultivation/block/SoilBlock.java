@@ -292,15 +292,18 @@ public abstract class SoilBlock extends FarmlandBlock {
             }
         }
 
-//        if (hasCrops && soilContext.moisture < SoilMoisture.MOIST.getMoistureLevel()) {
-//            float fertilizerBurnProbability = 0;
-//            if (soilContext.nitrogen > 8) fertilizerBurnProbability += 1f / 3f;
-//            if (soilContext.phosphorus > 8) fertilizerBurnProbability += 1f / 3f;
-//            if (soilContext.potassium > 8) fertilizerBurnProbability += 1f / 3f;
-//            if (worldIn.rand.nextFloat() <= fertilizerBurnProbability) {
-//                //TODO: implement fertilizer burn for plants?
-//            }
-//        }
+        if (hasCrops && soilContext.moisture < SoilMoisture.AVERAGE_1.getMoistureLevel()) {
+            BlockPos cropPos = pos.up();
+            BlockState cropState = worldIn.getBlockState(cropPos);
+            if (cropState.getBlock() instanceof CropsBlock) {
+                float fertilizerBurnProbability = 0;
+                if (soilContext.phosphorus > 8) fertilizerBurnProbability += 0.0125f;
+                if (soilContext.potassium > 8) fertilizerBurnProbability += 0.0125f;
+                if (worldIn.rand.nextFloat() < fertilizerBurnProbability) {
+                    worldIn.setBlockState(cropPos, ModBlocks.DEAD_CROP.getDefaultState()); //fertilizer burn (kill crop)
+                }
+            }
+        }
 
 /*
 //      removed, makes no sense with current moisture system. --> Currently: Soil becomes waterlogged through rain or subsoil reducing water seepage

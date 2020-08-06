@@ -92,6 +92,10 @@
   "soil_ph.extremely_alkaline" : "Extremely Alkaline",
   "soil_ph.ultra_alkaline" : "Ultra Alkaline",
 
+  "advancements.cropcultivation.root.desc": "Don't starve... your crops.",
+  "advancements.cropcultivation.dead_crop.title": "Soil Unchecked",
+  "advancements.cropcultivation.dead_crop.desc": "Did you starve or kill your plant?",
+
   "marketCategory.cropcultivation.fertilizers": "Soil Amendments",
   "marketCategory.cropcultivation.measuring_devices": "Measuring Devices"
 }

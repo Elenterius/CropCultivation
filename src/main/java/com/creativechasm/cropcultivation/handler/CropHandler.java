@@ -1,6 +1,7 @@
 package com.creativechasm.cropcultivation.handler;
 
 import com.creativechasm.cropcultivation.CropCultivationMod;
+import com.creativechasm.cropcultivation.block.ModBlocks;
 import com.creativechasm.cropcultivation.environment.CropUtil;
 import com.creativechasm.cropcultivation.environment.soil.SoilStateContext;
 import com.creativechasm.cropcultivation.init.CommonRegistry;
@@ -8,6 +9,7 @@ import com.creativechasm.cropcultivation.registry.ICropEntry;
 import com.creativechasm.cropcultivation.util.BlockPropertyUtil;
 import com.creativechasm.cropcultivation.util.ModTags;
 import net.minecraft.block.BlockState;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -43,11 +45,20 @@ public abstract class CropHandler
             Optional<ICropEntry> optionalICrop = CommonRegistry.getCropRegistry().get(event.getState().getBlock().getRegistryName());
             ICropEntry iCrop = optionalICrop.orElse(CropUtil.GENERIC_CROP); // if the crop is unknown use a generic fallback
 
-            if (soilContext.isValid && CropUtil.RegisteredCrop.canCropGrow(world, pos, event.getState(), iCrop, soilContext)) { //pre-conditions
-                float growthChance = CropUtil.RegisteredCrop.getGrowthChance(iCrop, soilContext);
-                if (world.rand.nextFloat() < growthChance) {
-                    event.setResult(Event.Result.ALLOW);
-                    return;
+            if (soilContext.isValid) {
+                boolean canGrow = CropUtil.RegisteredCrop.canCropGrow(world, pos, event.getState(), iCrop, soilContext); //pre-conditions
+                if (canGrow) {
+                    float growthChance = CropUtil.RegisteredCrop.getGrowthChance(iCrop, soilContext);
+                    if (world.rand.nextFloat() < growthChance) {
+                        event.setResult(Event.Result.ALLOW);
+                        return;
+                    }
+                }
+                else {
+                    ((ServerWorld)world).spawnParticle(ParticleTypes.ANGRY_VILLAGER, pos.getX() + 0.5, pos.getY() - 0.75, pos.getZ() + 0.5, 2, 0.25, 0, 0.25, 0);
+                    if (world.rand.nextFloat() < 0.025f) {
+                        if (CropUtil.RegisteredCrop.getGrowthChance(iCrop, soilContext) < 0.1f) world.setBlockState(pos, ModBlocks.DEAD_CROP.getDefaultState());
+                    }
                 }
             }
             event.setResult(Event.Result.DENY);

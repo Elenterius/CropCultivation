@@ -36,6 +36,8 @@ public class ClientRegistry
         RenderTypeLookup.setRenderLayer(ModBlocks.SANDY_SOIL_RAISED_BED, layer -> layer == solid || layer == translucent);
         RenderTypeLookup.setRenderLayer(ModBlocks.SILTY_SOIL_RAISED_BED, layer -> layer == solid || layer == translucent);
         RenderTypeLookup.setRenderLayer(ModBlocks.CLAYEY_SOIL_RAISED_BED, layer -> layer == solid || layer == translucent);
+
+        RenderTypeLookup.setRenderLayer(ModBlocks.DEAD_CROP, RenderType.getCutoutMipped());
     }
 
     @SubscribeEvent

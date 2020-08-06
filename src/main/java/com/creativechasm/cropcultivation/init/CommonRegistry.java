@@ -1,17 +1,16 @@
 package com.creativechasm.cropcultivation.init;
 
 import com.creativechasm.cropcultivation.CropCultivationMod;
-import com.creativechasm.cropcultivation.block.ModBlocks;
-import com.creativechasm.cropcultivation.block.RaisedBedBlock;
-import com.creativechasm.cropcultivation.block.SoilBlock;
-import com.creativechasm.cropcultivation.block.SoilStateTileEntity;
+import com.creativechasm.cropcultivation.block.*;
 import com.creativechasm.cropcultivation.environment.CropYieldModifier;
 import com.creativechasm.cropcultivation.environment.soil.SoilTexture;
 import com.creativechasm.cropcultivation.item.*;
 import com.creativechasm.cropcultivation.registry.CropRegistry;
+import com.creativechasm.cropcultivation.trigger.ModTriggers;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.material.MaterialColor;
 import net.minecraft.item.*;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
@@ -47,8 +46,17 @@ public abstract class CommonRegistry
 
     private static CropRegistry CROP_REGISTRY = null;
     public static Map<Block, BlockState> HOE_LOOKUP;
+    public static Map<Block, RaisedBedBlock> RAISED_BED_LOOKUP;
 
     public static VoxelShape SHAPE_RAISED_BED = VoxelShapes.combineAndSimplify(VoxelShapes.fullCube(), Block.makeCuboidShape(2.0D, 14.0D, 2.0D, 14.0D, 16.0D, 14.0D), IBooleanFunction.ONLY_FIRST);
+
+    public static final ItemGroup ITEM_GROUP = new ItemGroup(-1, CropCultivationMod.MOD_ID)
+    {
+        @OnlyIn(Dist.CLIENT)
+        public ItemStack createIcon() {
+            return new ItemStack(ModBlocks.LOAMY_SOIL);
+        }
+    };
 
     public static CropRegistry getCropRegistry() {
         return CROP_REGISTRY;
@@ -56,6 +64,7 @@ public abstract class CommonRegistry
 
     public static void init() {
         CROP_REGISTRY = new CropRegistry("/data/cropcultivation/crop_registry/mappings.csv", "/data/cropcultivation/crop_registry/entries.csv");
+        ModTriggers.register();
     }
 
     public static void setupFirst() {
@@ -76,7 +85,8 @@ public abstract class CommonRegistry
                 new Block(Block.Properties.create(Material.EARTH).hardnessAndResistance(0.65F).harvestTool(ToolType.SHOVEL).sound(SoundType.GROUND)).setRegistryName("silt"),
                 new Block(Block.Properties.create(Material.EARTH).hardnessAndResistance(0.6F).harvestTool(ToolType.SHOVEL).sound(SoundType.GROUND)).setRegistryName("loam"),
                 new Block(Block.Properties.create(Material.SAND).hardnessAndResistance(0.5F).harvestTool(ToolType.SHOVEL).sound(SoundType.GROUND)).setRegistryName("sandy_dirt"),
-                new Block(Block.Properties.create(Material.CLAY).hardnessAndResistance(0.8F).harvestTool(ToolType.SHOVEL).harvestLevel(ItemTier.IRON.getHarvestLevel()).sound(SoundType.GROUND)).setRegistryName("clayey_dirt")
+                new Block(Block.Properties.create(Material.CLAY).hardnessAndResistance(0.8F).harvestTool(ToolType.SHOVEL).harvestLevel(ItemTier.IRON.getHarvestLevel()).sound(SoundType.GROUND)).setRegistryName("clayey_dirt"),
+                new DeadCropBlock(Block.Properties.create(Material.TALL_PLANTS, MaterialColor.WOOD).doesNotBlockMovement().hardnessAndResistance(0.0F).sound(SoundType.PLANT)).setRegistryName("dead_crop")
         );
 
         createSoilBlock(registry, Block.Properties.create(Material.EARTH).hardnessAndResistance(0.65F).harvestTool(ToolType.SHOVEL).sound(SoundType.GROUND), SoilTexture.SILT, "silt_soil");
@@ -120,16 +130,6 @@ public abstract class CommonRegistry
         registryEvent.getRegistry().register(TileEntityType.Builder.create(() -> new SoilStateTileEntity(FARM_SOIL), ModBlocks.LOAMY_SOIL, ModBlocks.SILTY_SOIL, ModBlocks.SANDY_SOIL, ModBlocks.CLAYEY_SOIL).build(null).setRegistryName("farm_soil"));
     }
 
-    public static final ItemGroup ITEM_GROUP = new ItemGroup(-1, CropCultivationMod.MOD_ID)
-    {
-        @OnlyIn(Dist.CLIENT)
-        public ItemStack createIcon() {
-            return new ItemStack(ModBlocks.LOAMY_SOIL);
-        }
-    };
-
-    public static Map<Block, RaisedBedBlock> RAISED_BED_LOOKUP;
-
     @SubscribeEvent
     public static void onItemsRegistry(final RegistryEvent.Register<Item> registryEvent) {
         RAISED_BED_LOOKUP = ImmutableMap.of(
@@ -154,6 +154,8 @@ public abstract class CommonRegistry
                 createItemForBlock(ModBlocks.SANDY_SOIL_RAISED_BED, properties),
                 createItemForBlock(ModBlocks.CLAYEY_SOIL_RAISED_BED, properties),
 
+                createItemForBlock(ModBlocks.DEAD_CROP, properties),
+
                 new Item(new Item.Properties().group(ITEM_GROUP)).setRegistryName("compost"),
                 new MortarItem(new Item.Properties().maxStackSize(1).rarity(Rarity.RARE).group(ITEM_GROUP)).setRegistryName("mortar_pestle"), //mortar and pestle
                 new Item(new Item.Properties().group(ITEM_GROUP)).setRegistryName("lime_dust"), //liming material
@@ -177,7 +179,7 @@ public abstract class CommonRegistry
         return new BlockItem(block, properties).setRegistryName(block.getRegistryName());
     }
 
-    protected static void registerCompostableItems() {
+    private static void registerCompostableItems() {
         // add more vanilla items to compost
         ComposterBlock.CHANCES.putIfAbsent(Items.POISONOUS_POTATO.getItem(), 0.7f); //higher chance than potato (0.65) ;)
         ComposterBlock.CHANCES.putIfAbsent(Items.PAPER.getItem(), 0.1f);
@@ -197,7 +199,7 @@ public abstract class CommonRegistry
         ComposterBlock.CHANCES.put(ModItems.WOOD_ASH.getItem(), 0.3f);
     }
 
-    protected static void modifyShovelLookup() {
+    private static void modifyShovelLookup() {
         CropCultivationMod.LOGGER.info(MarkerManager.getMarker("CommonRegistry"), "modifying Shovel Lookup Table...");
         Map<Block, BlockState> SHOVEL_LOOKUP = ObfuscationReflectionHelper.getPrivateValue(ShovelItem.class, (ShovelItem) Items.DIAMOND_SHOVEL, "field_195955_e");
         if (SHOVEL_LOOKUP != null) {
@@ -211,7 +213,7 @@ public abstract class CommonRegistry
         }
     }
 
-    protected static void modifyHoeLookup() {
+    private static void modifyHoeLookup() {
         CropCultivationMod.LOGGER.info(MarkerManager.getMarker("CommonRegistry"), "modifying Hoe Lookup Table...");
         Map<Block, BlockState> HOE_LOOKUP = ObfuscationReflectionHelper.getPrivateValue(HoeItem.class, (HoeItem) Items.DIAMOND_HOE, "field_195973_b");
         if (HOE_LOOKUP != null) {
@@ -234,7 +236,7 @@ public abstract class CommonRegistry
         }
     }
 
-    protected static void registerCrops() {
+    private static void registerCrops() {
         try {
             CROP_REGISTRY.buildRegistry();
         }
