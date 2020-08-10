@@ -1,5 +1,6 @@
 package com.creativechasm.cropcultivation.environment;
 
+import com.creativechasm.cropcultivation.CropCultivationConfig;
 import com.creativechasm.cropcultivation.environment.plant.IPlantGrowthCA;
 import com.creativechasm.cropcultivation.environment.plant.PlantMacronutrient;
 import com.creativechasm.cropcultivation.environment.soil.SoilMoisture;
@@ -22,18 +23,15 @@ import java.util.Random;
 
 public abstract class CropUtil
 {
-    public static float BASE_GROWTH_CHANCE = 0.4f; //0.33f
-    public static float BASE_YIELD_MULTIPLIER = 1.65f;
     public static final ICropEntry GENERIC_CROP = new DefaultCropEntry("generic", 0.2f, 0.1f, 0.1f, 5.5f, 7.5f, 0.5f, 0.7f, 10f, 22f);
 
-//    public static boolean grow(ServerWorld world, Random rand, BlockPos pos, BlockState state) {
-//        if (state.getBlock() instanceof IGrowable) {
-//            IGrowable iGrowable = (IGrowable) state.getBlock();
-//            iGrowable.grow(world, rand, pos, state);
-//            return true;
-//        }
-//        return false;
-//    }
+    public static float getBaseGrowthChance() {
+        return CropCultivationConfig.BASE_GROWTH_CHANCE.get().floatValue(); //0.4f; //vanilla ~0.33f
+    }
+
+    public static float getBaseYieldMultiplier() {
+        return CropCultivationConfig.BASE_YIELD_MULTIPLIER.get().floatValue(); //1.65f
+    }
 
     public static void consumeSoilMoisture(BlockPos cropPos, BlockState cropState, SoilStateContext soilContext) {
         int consumption = 1;
@@ -54,7 +52,7 @@ public abstract class CropUtil
             //get yield based on PK concentration in soil
             float currP = soilContext.phosphorus * PlantMacronutrient.PHOSPHORUS.getAvailabilityPctInSoil(soilContext.pH);
             float currK = soilContext.potassium * PlantMacronutrient.POTASSIUM.getAvailabilityPctInSoil(soilContext.pH);
-            float yieldModifier = (currP / soilContext.getMaxNutrientAmount() + currK / soilContext.getMaxNutrientAmount()) * 0.5f * BASE_YIELD_MULTIPLIER;
+            float yieldModifier = (currP / soilContext.getMaxNutrientAmount() + currK / soilContext.getMaxNutrientAmount()) * 0.5f * getBaseYieldMultiplier();
 
             //the crop might have advanced several ages at once
             int ageDiff = newCropAge - prevCropAge; //age difference can be negative when the crop age was decreased --> newCropAge < prevCropAge
@@ -135,7 +133,7 @@ public abstract class CropUtil
             //nutrients available in the soil depending on soil pH
             float currN = soilContext.nitrogen * nPct, currP = soilContext.phosphorus * pPct, currK = soilContext.potassium * kPct;
 
-            return currN >= reqN && currP >= reqP && currK >= reqK ? BASE_GROWTH_CHANCE * ((nPct + pPct + kPct) / 3f) : 0.0f;
+            return currN >= reqN && currP >= reqP && currK >= reqK ? getBaseGrowthChance() * ((nPct + pPct + kPct) / 3f) : 0.0f;
         }
 
         public static void updateYield(int prevCropAge, int newCropAge, SoilStateContext soilContext) {

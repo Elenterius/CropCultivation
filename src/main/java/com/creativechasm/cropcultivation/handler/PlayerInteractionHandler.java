@@ -24,7 +24,7 @@ import net.minecraftforge.fml.common.Mod;
 public class PlayerInteractionHandler
 {
     @SubscribeEvent
-    public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
+    public static void onRightClickBlock(final PlayerInteractEvent.RightClickBlock event) {
         ItemStack stack = event.getItemStack();
         if (stack.getItem() instanceof IMeasuringDevice) {
             if (event.getWorld() instanceof ServerWorld) {

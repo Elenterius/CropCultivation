@@ -15,7 +15,7 @@ import java.util.Optional;
 public abstract class FertilizerHandler
 {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public static void onBonemealUse(BonemealEvent event) {
+    public static void onBonemealUse(final BonemealEvent event) {
 
         if (event.getBlock().getBlock() == Blocks.NETHER_WART) { //fix to prevent bone meal particle spawning
             event.setCanceled(true);

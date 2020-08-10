@@ -55,7 +55,7 @@ public abstract class CropHandler
                     }
                 }
                 else {
-                    ((ServerWorld)world).spawnParticle(ParticleTypes.ANGRY_VILLAGER, pos.getX() + 0.5, pos.getY() - 0.75, pos.getZ() + 0.5, 2, 0.25, 0, 0.25, 0);
+                    ((ServerWorld)world).spawnParticle(ParticleTypes.ANGRY_VILLAGER, pos.getX() + 0.5, pos.getY() - 0.75, pos.getZ() + 0.5, 1, 0.25, 0, 0.25, 0);
                     if (world.rand.nextFloat() < 0.025f) {
                         if (CropUtil.RegisteredCrop.getGrowthChance(iCrop, soilContext) < 0.1f) world.setBlockState(pos, ModBlocks.DEAD_CROP.getDefaultState());
                     }

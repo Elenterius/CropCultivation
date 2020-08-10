@@ -224,7 +224,7 @@ public abstract class SoilBlock extends FarmlandBlock {
                 }
             }
             else if (cropBlock instanceof IGrowable) { //fallback for not registered crops
-                if (worldIn.rand.nextFloat() < CropUtil.BASE_GROWTH_CHANCE) {
+                if (worldIn.rand.nextFloat() < CropUtil.getBaseGrowthChance()) {
                     IGrowable iGrowable = (IGrowable) cropBlock;
                     if (iGrowable.canGrow(worldIn, cropPos, cropState, false)) {
 

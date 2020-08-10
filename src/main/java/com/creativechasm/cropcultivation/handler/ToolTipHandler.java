@@ -19,7 +19,7 @@ import net.minecraftforge.fml.common.Mod;
 public abstract class ToolTipHandler
 {
     @SubscribeEvent
-    public static void onItemToolTip(ItemTooltipEvent event) {
+    public static void onItemToolTip(final ItemTooltipEvent event) {
         Item item = event.getItemStack().getItem();
         if (ModTags.Items.FERTILIZER_GROUP.contains(item)) {  // add fertilizer info
             event.getToolTip().add(new StringTextComponent(""));
@@ -31,7 +31,7 @@ public abstract class ToolTipHandler
     }
 
     @SubscribeEvent
-    public static void onRenderTooltipColor(RenderTooltipEvent.Color event)
+    public static void onRenderTooltipColor(final RenderTooltipEvent.Color event)
     {
         ItemStack stack = event.getStack();
         if (stack != ItemStack.EMPTY && ModTags.Items.DEVICE.contains(stack.getItem()))
