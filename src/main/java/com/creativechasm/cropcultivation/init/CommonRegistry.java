@@ -86,7 +86,8 @@ public abstract class CommonRegistry
                 new Block(Block.Properties.create(Material.EARTH).hardnessAndResistance(0.6F).harvestTool(ToolType.SHOVEL).sound(SoundType.GROUND)).setRegistryName("loam"),
                 new Block(Block.Properties.create(Material.SAND).hardnessAndResistance(0.5F).harvestTool(ToolType.SHOVEL).sound(SoundType.GROUND)).setRegistryName("sandy_dirt"),
                 new Block(Block.Properties.create(Material.CLAY).hardnessAndResistance(0.8F).harvestTool(ToolType.SHOVEL).harvestLevel(ItemTier.IRON.getHarvestLevel()).sound(SoundType.GROUND)).setRegistryName("clayey_dirt"),
-                new DeadCropBlock(Block.Properties.create(Material.TALL_PLANTS, MaterialColor.WOOD).doesNotBlockMovement().hardnessAndResistance(0.0F).sound(SoundType.PLANT)).setRegistryName("dead_crop")
+                new DeadCropBlock(Block.Properties.create(Material.TALL_PLANTS, MaterialColor.WOOD).doesNotBlockMovement().hardnessAndResistance(0.15F).sound(SoundType.PLANT)).setRegistryName("dead_crop"),
+                new WeedBlock(Block.Properties.create(Material.TALL_PLANTS, MaterialColor.WOOD).doesNotBlockMovement().hardnessAndResistance(0.15F).sound(SoundType.PLANT)).setRegistryName("weed")
         );
 
         createSoilBlock(registry, Block.Properties.create(Material.EARTH).hardnessAndResistance(0.65F).harvestTool(ToolType.SHOVEL).sound(SoundType.GROUND), SoilTexture.SILT, "silt_soil");
@@ -155,6 +156,7 @@ public abstract class CommonRegistry
                 createItemForBlock(ModBlocks.CLAYEY_SOIL_RAISED_BED, properties),
 
                 createItemForBlock(ModBlocks.DEAD_CROP, properties),
+                createItemForBlock(ModBlocks.WEED, properties),
 
                 new Item(new Item.Properties().group(ITEM_GROUP)).setRegistryName("compost"),
                 new MortarItem(new Item.Properties().maxStackSize(1).rarity(Rarity.RARE).group(ITEM_GROUP)).setRegistryName("mortar_pestle"), //mortar and pestle

@@ -38,6 +38,7 @@ public class ClientRegistry
         RenderTypeLookup.setRenderLayer(ModBlocks.CLAYEY_SOIL_RAISED_BED, layer -> layer == solid || layer == translucent);
 
         RenderTypeLookup.setRenderLayer(ModBlocks.DEAD_CROP, RenderType.getCutoutMipped());
+        RenderTypeLookup.setRenderLayer(ModBlocks.WEED, RenderType.getCutoutMipped());
     }
 
     @SubscribeEvent
@@ -67,6 +68,13 @@ public class ClientRegistry
         event.getBlockColors().register((state, lightReader, pos, index) -> SoilTexture.LOAM.color, ModBlocks.LOAM);
         event.getBlockColors().register((state, lightReader, pos, index) -> SoilTexture.SAND.color, ModBlocks.SANDY_DIRT);
         event.getBlockColors().register((state, lightReader, pos, index) -> SoilTexture.CLAY.color, ModBlocks.CLAYEY_DIRT);
+
+        event.getBlockColors().register((state, lightReader, pos, index) -> {
+            if (lightReader != null && pos != null) {
+                return BiomeColors.getGrassColor(lightReader, pos);
+            }
+            return -1;
+        }, ModBlocks.WEED);
     }
 
     @SubscribeEvent
@@ -92,5 +100,7 @@ public class ClientRegistry
         event.getItemColors().register((stack, index) -> 0x7e7b76, ModItems.WOOD_ASH);
         event.getItemColors().register((stack, index) -> 0xdfd8bf, ModItems.LIME_DUST);
         event.getItemColors().register((stack, index) -> 0xce805a, ModItems.GRANITE_DUST);
+
+        event.getItemColors().register((stack, index) -> 0x499b4a, ModBlocks.WEED);
     }
 }

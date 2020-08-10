@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "plant=grass": { "model": "cropcultivation:block/weed" },
+    "plant=tall_grass": { "model": "cropcultivation:block/tall_weed" },
+    "plant=sowthistle": { "model": "block/dandelion" }
+  }
+}

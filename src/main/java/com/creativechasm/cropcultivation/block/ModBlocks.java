@@ -45,4 +45,7 @@ public class ModBlocks
 
     @ObjectHolder("dead_crop")
     public static DeadCropBlock DEAD_CROP;
+
+    @ObjectHolder("weed")
+    public static WeedBlock WEED;
 }

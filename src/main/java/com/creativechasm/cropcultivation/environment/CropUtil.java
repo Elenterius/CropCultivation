@@ -1,6 +1,8 @@
 package com.creativechasm.cropcultivation.environment;
 
 import com.creativechasm.cropcultivation.CropCultivationConfig;
+import com.creativechasm.cropcultivation.block.ModBlocks;
+import com.creativechasm.cropcultivation.block.WeedBlock;
 import com.creativechasm.cropcultivation.environment.plant.IPlantGrowthCA;
 import com.creativechasm.cropcultivation.environment.plant.PlantMacronutrient;
 import com.creativechasm.cropcultivation.environment.soil.SoilMoisture;
@@ -85,6 +87,13 @@ public abstract class CropUtil
 
     public static boolean canBlockTurnIntoFarmland(Block block) {
         return CommonRegistry.HOE_LOOKUP.containsKey(block);
+    }
+
+    public static BlockState getWeedPlant(SoilStateContext soilContext) {
+        if (soilContext.moisture < SoilMoisture.MOIST.getMoistureLevel()) {
+            return soilContext.getWorld().rand.nextFloat() < 0.75f ? ModBlocks.WEED.getDefaultState() : ModBlocks.WEED.getDefaultState().with(WeedBlock.WEED_TYPE, WeedBlock.WeedType.SOWTHISTLE);
+        }
+        return soilContext.getWorld().rand.nextFloat() < 0.35f ? ModBlocks.WEED.getDefaultState() : ModBlocks.WEED.getDefaultState().with(WeedBlock.WEED_TYPE, WeedBlock.WeedType.TALL_GRASS);
     }
 
     public static abstract class RegisteredCrop

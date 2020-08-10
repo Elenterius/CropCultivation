@@ -53,12 +53,19 @@ public abstract class CropHandler
                         event.setResult(Event.Result.ALLOW);
                         return;
                     }
+                    else if (growthChance > CropUtil.getBaseGrowthChance() * 0.5f && world.rand.nextFloat() < 0.02f) {
+                        if (soilContext.pH >= 6.5f && soilContext.pH <= 7f) {
+                            ((ServerWorld)world).spawnParticle(ParticleTypes.SMOKE, pos.getX() + 0.5, pos.getY() - 0.75, pos.getZ() + 0.5, 5, 0.25, 0, 0.25, 0);
+                            world.setBlockState(pos, CropUtil.getWeedPlant(soilContext)); //crop is out-competed by weed
+                        }
+                    }
                 }
                 else {
-                    ((ServerWorld)world).spawnParticle(ParticleTypes.ANGRY_VILLAGER, pos.getX() + 0.5, pos.getY() - 0.75, pos.getZ() + 0.5, 1, 0.25, 0, 0.25, 0);
-                    if (world.rand.nextFloat() < 0.025f) {
-                        if (CropUtil.RegisteredCrop.getGrowthChance(iCrop, soilContext) < 0.1f) world.setBlockState(pos, ModBlocks.DEAD_CROP.getDefaultState());
+                    if (world.rand.nextFloat() < 0.01f) {
+                        ((ServerWorld) world).spawnParticle(ParticleTypes.SMOKE, pos.getX() + 0.5, pos.getY() - 0.75, pos.getZ() + 0.5, 5, 0.25, 0, 0.25, 0);
+                        world.setBlockState(pos, ModBlocks.DEAD_CROP.getDefaultState()); //crop died
                     }
+                    ((ServerWorld)world).spawnParticle(ParticleTypes.ANGRY_VILLAGER, pos.getX() + 0.5, pos.getY() - 0.75, pos.getZ() + 0.5, 1, 0.25, 0, 0.25, 0);
                 }
             }
             event.setResult(Event.Result.DENY);

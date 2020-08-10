@@ -94,7 +94,10 @@
 
   "advancements.cropcultivation.root.desc": "Don't starve... your crops.",
   "advancements.cropcultivation.dead_crop.title": "Soil Unchecked",
-  "advancements.cropcultivation.dead_crop.desc": "Did you starve or kill your plant?",
+  "advancements.cropcultivation.dead_crop.desc": "Did you kill your plant?",
+
+  "advancements.cropcultivation.weed.title": "Exterminating the competition",
+  "advancements.cropcultivation.weed.desc": "Seems like you starved your crop. A more suitable wild plant has grown in its place.",
 
   "marketCategory.cropcultivation.fertilizers": "Soil Amendments",
   "marketCategory.cropcultivation.measuring_devices": "Measuring Devices"
