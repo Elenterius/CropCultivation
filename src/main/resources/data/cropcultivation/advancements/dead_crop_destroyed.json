@@ -1,7 +1,7 @@
 {
   "parent": "cropcultivation:root",
   "display": {
-    "icon": {"item": "cropcultivation:dead_crop"},
+    "icon": {"item": "cropcultivation:loam_soil"},
     "title": {"translate": "advancements.cropcultivation.dead_crop.title"},
     "description": {"translate": "advancements.cropcultivation.dead_crop.desc"},
     "frame": "task",

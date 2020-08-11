@@ -1,0 +1,6 @@
+{
+  "parent": "block/cross",
+  "textures": {
+    "cross": "cropcultivation:block/dead_plant_rotten"
+  }
+}

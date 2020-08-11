@@ -86,7 +86,8 @@ public abstract class CommonRegistry
                 new Block(Block.Properties.create(Material.EARTH).hardnessAndResistance(0.6F).harvestTool(ToolType.SHOVEL).sound(SoundType.GROUND)).setRegistryName("loam"),
                 new Block(Block.Properties.create(Material.SAND).hardnessAndResistance(0.5F).harvestTool(ToolType.SHOVEL).sound(SoundType.GROUND)).setRegistryName("sandy_dirt"),
                 new Block(Block.Properties.create(Material.CLAY).hardnessAndResistance(0.8F).harvestTool(ToolType.SHOVEL).harvestLevel(ItemTier.IRON.getHarvestLevel()).sound(SoundType.GROUND)).setRegistryName("clayey_dirt"),
-                new DeadCropBlock(Block.Properties.create(Material.TALL_PLANTS, MaterialColor.WOOD).doesNotBlockMovement().hardnessAndResistance(0.15F).sound(SoundType.PLANT)).setRegistryName("dead_crop"),
+                new DeadCropBlock(Block.Properties.create(Material.TALL_PLANTS, MaterialColor.WOOD).doesNotBlockMovement().hardnessAndResistance(0.15F).sound(SoundType.PLANT)).setRegistryName("dead_crop_withered"),
+                new DeadCropBlock(Block.Properties.create(Material.TALL_PLANTS, MaterialColor.WOOD).doesNotBlockMovement().hardnessAndResistance(0.15F).sound(SoundType.PLANT)).setRegistryName("dead_crop_rotten"),
                 new WeedBlock(Block.Properties.create(Material.TALL_PLANTS, MaterialColor.WOOD).doesNotBlockMovement().hardnessAndResistance(0.15F).sound(SoundType.PLANT)).setRegistryName("weed")
         );
 
@@ -155,7 +156,8 @@ public abstract class CommonRegistry
                 createItemForBlock(ModBlocks.SANDY_SOIL_RAISED_BED, properties),
                 createItemForBlock(ModBlocks.CLAYEY_SOIL_RAISED_BED, properties),
 
-                createItemForBlock(ModBlocks.DEAD_CROP, properties),
+                createItemForBlock(ModBlocks.DEAD_CROP_WITHERED, properties),
+                createItemForBlock(ModBlocks.DEAD_CROP_ROTTEN, properties),
                 createItemForBlock(ModBlocks.WEED, properties),
 
                 new Item(new Item.Properties().group(ITEM_GROUP)).setRegistryName("compost"),

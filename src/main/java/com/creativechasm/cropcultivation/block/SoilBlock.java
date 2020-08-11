@@ -1,5 +1,6 @@
 package com.creativechasm.cropcultivation.block;
 
+import com.creativechasm.cropcultivation.CropCultivationConfig;
 import com.creativechasm.cropcultivation.CropCultivationMod;
 import com.creativechasm.cropcultivation.environment.ClimateUtil;
 import com.creativechasm.cropcultivation.environment.CropUtil;
@@ -297,10 +298,10 @@ public abstract class SoilBlock extends FarmlandBlock {
             BlockState cropState = worldIn.getBlockState(cropPos);
             if (cropState.getBlock() instanceof CropsBlock) {
                 float fertilizerBurnProbability = 0;
-                if (soilContext.phosphorus > 8) fertilizerBurnProbability += 0.0125f;
-                if (soilContext.potassium > 8) fertilizerBurnProbability += 0.0125f;
+                if (soilContext.phosphorus > 8) fertilizerBurnProbability += CropCultivationConfig.FERTILIZER_BURN_CHANCE.get() * 0.5f;
+                if (soilContext.potassium > 8) fertilizerBurnProbability += CropCultivationConfig.FERTILIZER_BURN_CHANCE.get() * 0.5f;
                 if (worldIn.rand.nextFloat() < fertilizerBurnProbability) {
-                    worldIn.setBlockState(cropPos, ModBlocks.DEAD_CROP.getDefaultState()); //fertilizer burn (kill crop)
+                    worldIn.setBlockState(cropPos, ModBlocks.DEAD_CROP_WITHERED.getDefaultState()); //fertilizer burn (kill crop)
                 }
             }
         }

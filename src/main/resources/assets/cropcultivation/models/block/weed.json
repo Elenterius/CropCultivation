@@ -1,6 +1,6 @@
 {
   "parent": "block/tinted_cross",
   "textures": {
-    "cross": "block/grass"
+    "cross": "cropcultivation:block/weed_small_grass"
   }
 }

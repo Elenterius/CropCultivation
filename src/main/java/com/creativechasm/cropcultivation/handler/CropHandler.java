@@ -1,7 +1,7 @@
 package com.creativechasm.cropcultivation.handler;
 
+import com.creativechasm.cropcultivation.CropCultivationConfig;
 import com.creativechasm.cropcultivation.CropCultivationMod;
-import com.creativechasm.cropcultivation.block.ModBlocks;
 import com.creativechasm.cropcultivation.environment.CropUtil;
 import com.creativechasm.cropcultivation.environment.soil.SoilStateContext;
 import com.creativechasm.cropcultivation.init.CommonRegistry;
@@ -53,7 +53,7 @@ public abstract class CropHandler
                         event.setResult(Event.Result.ALLOW);
                         return;
                     }
-                    else if (growthChance > CropUtil.getBaseGrowthChance() * 0.5f && world.rand.nextFloat() < 0.02f) {
+                    else if (growthChance > CropUtil.getBaseGrowthChance() * 0.5f && world.rand.nextFloat() < CropCultivationConfig.WEED_SPAWN_CHANCE.get()) {
                         if (soilContext.pH >= 6.5f && soilContext.pH <= 7f) {
                             ((ServerWorld)world).spawnParticle(ParticleTypes.SMOKE, pos.getX() + 0.5, pos.getY() - 0.75, pos.getZ() + 0.5, 5, 0.25, 0, 0.25, 0);
                             world.setBlockState(pos, CropUtil.getWeedPlant(soilContext)); //crop is out-competed by weed
@@ -61,9 +61,9 @@ public abstract class CropHandler
                     }
                 }
                 else {
-                    if (world.rand.nextFloat() < 0.01f) {
+                    if (world.rand.nextFloat() < CropCultivationConfig.CROP_DEATH_CHANCE.get()) {
                         ((ServerWorld) world).spawnParticle(ParticleTypes.SMOKE, pos.getX() + 0.5, pos.getY() - 0.75, pos.getZ() + 0.5, 5, 0.25, 0, 0.25, 0);
-                        world.setBlockState(pos, ModBlocks.DEAD_CROP.getDefaultState()); //crop died
+                        world.setBlockState(pos, CropUtil.getDeadPlant(iCrop, soilContext)); //crop died
                     }
                     ((ServerWorld)world).spawnParticle(ParticleTypes.ANGRY_VILLAGER, pos.getX() + 0.5, pos.getY() - 0.75, pos.getZ() + 0.5, 1, 0.25, 0, 0.25, 0);
                 }

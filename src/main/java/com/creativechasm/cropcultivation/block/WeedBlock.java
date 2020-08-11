@@ -1,6 +1,8 @@
 package com.creativechasm.cropcultivation.block;
 
+import com.creativechasm.cropcultivation.environment.plant.WeedType;
 import com.creativechasm.cropcultivation.trigger.ModTriggers;
+import com.creativechasm.cropcultivation.util.BlockPropertyUtil;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -12,7 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.shapes.ISelectionContext;
@@ -23,13 +25,12 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
+
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class WeedBlock extends BushBlock
 {
-    public static final EnumProperty<WeedType> WEED_TYPE = EnumProperty.create("plant", WeedType.class);
-    public static final VoxelShape BUSH_SHAPE = Block.makeCuboidShape(2.0D, 0.0D, 2.0D, 14.0D, 13.0D, 14.0D);
-    public static final VoxelShape FLOWER_SHAPE = Block.makeCuboidShape(5.0D, 0.0D, 5.0D, 11.0D, 10.0D, 11.0D);
+    public static final EnumProperty<WeedType> WEED_TYPE = BlockPropertyUtil.WEED_TYPE;
 
     public WeedBlock(Properties properties) {
         super(properties);
@@ -38,7 +39,7 @@ public class WeedBlock extends BushBlock
 
     @Override
     protected boolean isValidGround(BlockState state, IBlockReader worldIn, BlockPos pos) {
-        return state.getBlock() != Blocks.GLASS; //weeds can grow on anything
+        return state.getBlock() != Blocks.GLASS && state.isSolidSide(worldIn, pos, Direction.UP); //weeds can "grow on any solid block" except glass
     }
 
     @Override
@@ -49,9 +50,8 @@ public class WeedBlock extends BushBlock
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        VoxelShape shape = state.get(WEED_TYPE) == WeedType.GRASS ? BUSH_SHAPE : FLOWER_SHAPE;
         Vec3d vec = state.getOffset(worldIn, pos);
-        return shape.withOffset(vec.x, vec.y, vec.z);
+        return state.get(WEED_TYPE).getShape().withOffset(vec.x, vec.y, vec.z);
     }
 
     @Override
@@ -64,21 +64,4 @@ public class WeedBlock extends BushBlock
         builder.add(WEED_TYPE);
     }
 
-    public enum WeedType implements IStringSerializable
-    {
-        GRASS("grass"),
-        TALL_GRASS("tall_grass"),
-        SOWTHISTLE("sowthistle");
-
-        private final String name;
-
-        WeedType(String name) {
-            this.name = name;
-        }
-
-        @Override
-        public String getName() {
-            return name;
-        }
-    }
 }

@@ -5,12 +5,14 @@ import com.creativechasm.cropcultivation.block.ModBlocks;
 import com.creativechasm.cropcultivation.block.WeedBlock;
 import com.creativechasm.cropcultivation.environment.plant.IPlantGrowthCA;
 import com.creativechasm.cropcultivation.environment.plant.PlantMacronutrient;
+import com.creativechasm.cropcultivation.environment.plant.WeedType;
 import com.creativechasm.cropcultivation.environment.soil.SoilMoisture;
 import com.creativechasm.cropcultivation.environment.soil.SoilStateContext;
 import com.creativechasm.cropcultivation.init.CommonRegistry;
 import com.creativechasm.cropcultivation.registry.DefaultCropEntry;
 import com.creativechasm.cropcultivation.registry.ICropEntry;
 import com.creativechasm.cropcultivation.util.MathHelperX;
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.Item;
@@ -20,9 +22,12 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.PlantType;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Random;
 
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public abstract class CropUtil
 {
     public static final ICropEntry GENERIC_CROP = new DefaultCropEntry("generic", 0.2f, 0.1f, 0.1f, 5.5f, 7.5f, 0.5f, 0.7f, 10f, 22f);
@@ -91,9 +96,13 @@ public abstract class CropUtil
 
     public static BlockState getWeedPlant(SoilStateContext soilContext) {
         if (soilContext.moisture < SoilMoisture.MOIST.getMoistureLevel()) {
-            return soilContext.getWorld().rand.nextFloat() < 0.75f ? ModBlocks.WEED.getDefaultState() : ModBlocks.WEED.getDefaultState().with(WeedBlock.WEED_TYPE, WeedBlock.WeedType.SOWTHISTLE);
+            return soilContext.getWorld().rand.nextFloat() < 0.75f ? ModBlocks.WEED.getDefaultState() : ModBlocks.WEED.getDefaultState().with(WeedBlock.WEED_TYPE, WeedType.SOWTHISTLE);
         }
-        return soilContext.getWorld().rand.nextFloat() < 0.35f ? ModBlocks.WEED.getDefaultState() : ModBlocks.WEED.getDefaultState().with(WeedBlock.WEED_TYPE, WeedBlock.WeedType.TALL_GRASS);
+        return soilContext.getWorld().rand.nextFloat() < 0.35f ? ModBlocks.WEED.getDefaultState() : ModBlocks.WEED.getDefaultState().with(WeedBlock.WEED_TYPE, WeedType.TALL_GRASS);
+    }
+
+    public static BlockState getDeadPlant(ICropEntry iCrop, SoilStateContext soilContext) {
+        return soilContext.moisture > iCrop.getMaxSoilMoisture() * SoilMoisture.MAX_VALUE ? ModBlocks.DEAD_CROP_ROTTEN.getDefaultState() : ModBlocks.DEAD_CROP_WITHERED.getDefaultState();
     }
 
     public static abstract class RegisteredCrop

@@ -43,8 +43,11 @@ public class ModBlocks
     @ObjectHolder("clay_soil_raised_bed")
     public static RaisedBedBlock CLAYEY_SOIL_RAISED_BED;
 
-    @ObjectHolder("dead_crop")
-    public static DeadCropBlock DEAD_CROP;
+    @ObjectHolder("dead_crop_withered")
+    public static DeadCropBlock DEAD_CROP_WITHERED;
+
+    @ObjectHolder("dead_crop_rotten")
+    public static DeadCropBlock DEAD_CROP_ROTTEN;
 
     @ObjectHolder("weed")
     public static WeedBlock WEED;

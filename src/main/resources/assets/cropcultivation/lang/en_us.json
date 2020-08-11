@@ -95,9 +95,13 @@
   "advancements.cropcultivation.root.desc": "Don't starve... your crops.",
   "advancements.cropcultivation.dead_crop.title": "Soil Unchecked",
   "advancements.cropcultivation.dead_crop.desc": "Did you kill your plant?",
+  "advancements.cropcultivation.dead_crop_withered.title": "Abandoned in Hostile Territory",
+  "advancements.cropcultivation.dead_crop_withered.desc": "You managed to neglect the Needs of your Plant.",
+  "advancements.cropcultivation.dead_crop_rotten.title": "Abnormally Moist",
+  "advancements.cropcultivation.dead_crop_rotten.desc": "You drowned your Plant! Are you rotten to the core?",
 
-  "advancements.cropcultivation.weed.title": "Exterminating the competition",
-  "advancements.cropcultivation.weed.desc": "Seems like you starved your crop. A more suitable wild plant has grown in its place.",
+  "advancements.cropcultivation.weed.title": "Exterminating the Competition",
+  "advancements.cropcultivation.weed.desc": "Seems like you starved your crop. A more suitable wild plant has grown in its place and you killed it!",
 
   "marketCategory.cropcultivation.fertilizers": "Soil Amendments",
   "marketCategory.cropcultivation.measuring_devices": "Measuring Devices"

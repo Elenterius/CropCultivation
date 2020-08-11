@@ -1,9 +1,11 @@
 package com.creativechasm.cropcultivation.util;
 
+import com.creativechasm.cropcultivation.environment.plant.WeedType;
 import com.creativechasm.cropcultivation.environment.soil.SoilMoisture;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CropsBlock;
+import net.minecraft.state.EnumProperty;
 import net.minecraft.state.IProperty;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -14,6 +16,7 @@ public abstract class BlockPropertyUtil {
 
     public static final IntegerProperty MOISTURE = IntegerProperty.create("moisture", 0, SoilMoisture.MAX_VALUE);
     public static final IntegerProperty ORGANIC_MATTER = IntegerProperty.create("organic_matter", 0, 4);
+    public static final EnumProperty<WeedType> WEED_TYPE = EnumProperty.create("plant", WeedType.class);
 
     public static final ImmutableMap<IntegerProperty, Integer> maxAgeMappings;
 

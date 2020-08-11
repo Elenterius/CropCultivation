@@ -27,7 +27,14 @@ public class DeadCropBlock extends DeadBushBlock
     @Override
     public void harvestBlock(World worldIn, PlayerEntity player, BlockPos pos, BlockState state, @Nullable TileEntity te, ItemStack stack) {
         super.harvestBlock(worldIn, player, pos, state, te, stack);
-        if (player instanceof ServerPlayerEntity) ModTriggers.DEAD_CROP_DESTROYED.trigger((ServerPlayerEntity) player);
+        if (player instanceof ServerPlayerEntity) {
+            if (this == ModBlocks.DEAD_CROP_WITHERED) {
+                ModTriggers.DEAD_CROP_WITHERED_DESTROYED.trigger((ServerPlayerEntity) player);
+            }
+            else if (this == ModBlocks.DEAD_CROP_ROTTEN) {
+                ModTriggers.DEAD_CROP_ROTTEN_DESTROYED.trigger((ServerPlayerEntity) player);
+            }
+        }
     }
 
     @Override

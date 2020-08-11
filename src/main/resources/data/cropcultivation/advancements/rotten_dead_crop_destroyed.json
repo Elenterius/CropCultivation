@@ -1,0 +1,17 @@
+{
+  "parent": "cropcultivation:dead_crop_destroyed",
+  "display": {
+    "icon": {"item": "cropcultivation:dead_crop_rotten"},
+    "title": {"translate": "advancements.cropcultivation.dead_crop_rotten.title"},
+    "description": {"translate": "advancements.cropcultivation.dead_crop_rotten.desc"},
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "criteria": {
+    "dead_crop_destroyed": {
+      "trigger": "dead_crop_rotten_destroyed"
+    }
+  }
+}
