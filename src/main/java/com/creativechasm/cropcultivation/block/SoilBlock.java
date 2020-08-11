@@ -11,6 +11,7 @@ import com.creativechasm.cropcultivation.environment.soil.SoilStateContext;
 import com.creativechasm.cropcultivation.environment.soil.SoilTexture;
 import com.creativechasm.cropcultivation.init.CommonRegistry;
 import com.creativechasm.cropcultivation.registry.ICropEntry;
+import com.creativechasm.cropcultivation.trigger.ModTriggers;
 import com.creativechasm.cropcultivation.util.BlockPropertyUtil;
 import com.creativechasm.cropcultivation.util.ModTags;
 import net.minecraft.block.*;
@@ -18,6 +19,7 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -37,10 +39,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
+import net.minecraft.world.*;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.FarmlandWaterManager;
@@ -426,9 +425,16 @@ public abstract class SoilBlock extends FarmlandBlock {
                             tileState.addPhosphorus(1);
                             fertilizerUsed = true;
                         }
-                        if (tileState.getPotassium() < max && (isKFertilizer || isSuperFertilizer)) {
-                            tileState.addPotassium(1);
-                            fertilizerUsed = true;
+                        if (isKFertilizer || isSuperFertilizer) {
+                            if (tileState.getPotassium() < max) {
+                                tileState.addPotassium(1);
+                                fertilizerUsed = true;
+                            }
+                            else if (state.get(MOISTURE) > SoilMoisture.EXCESSIVELY_WET.getMoistureLevel() && worldIn.rand.nextFloat() < 0.1f) {
+                                fertilizerUsed = true;
+                                worldIn.createExplosion(null, pos.getX(), pos.getY(), pos.getZ(), 1f, Explosion.Mode.BREAK);
+                                if (player instanceof ServerPlayerEntity) ModTriggers.POTASSIUM_EXPLOSION.trigger((ServerPlayerEntity) player);
+                            }
                         }
 
                         if (fertilizerUsed) {

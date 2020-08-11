@@ -101,6 +101,8 @@
   "advancements.cropcultivation.dead_crop_withered.desc": "You managed to neglect the Needs of your Plant.",
   "advancements.cropcultivation.dead_crop_rotten.title": "Abnormally Moist",
   "advancements.cropcultivation.dead_crop_rotten.desc": "You drowned your Plant! Are you rotten to the core?",
+  "advancements.cropcultivation.potassium_explosion.title": "Violent Reaction",
+  "advancements.cropcultivation.potassium_explosion.desc": "Potassium explodes in Water.",
 
   "advancements.cropcultivation.weed.title": "Exterminating the Competition",
   "advancements.cropcultivation.weed.desc": "Seems like you starved your crop. A more suitable wild plant has grown in its place and you killed it!",

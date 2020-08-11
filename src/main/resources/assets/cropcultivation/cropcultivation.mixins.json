@@ -3,6 +3,7 @@
   "MixinCactusBlock",
   "MixinComposterBlock$Composter",
   "MixinComposterBlock$FullInventory",
+  "MixinCropsBlock",
   "MixinNetherWartBlock",
   "MixinStonecutterContainer$OutputSlot",
   "MixinSugarCaneBlock"
