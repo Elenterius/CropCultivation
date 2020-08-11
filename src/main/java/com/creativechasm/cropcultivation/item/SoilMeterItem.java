@@ -9,7 +9,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
@@ -28,7 +27,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
 @ParametersAreNonnullByDefault
-public class SoilMeterItem extends Item implements IMeasuringDevice
+public class SoilMeterItem extends DeviceItem implements IMeasuringDevice
 {
     public SoilMeterItem(Properties properties) {
         super(properties);
@@ -73,7 +72,7 @@ public class SoilMeterItem extends Item implements IMeasuringDevice
                     .appendSibling(new StringTextComponent(String.format("%.2f%%", potassium * kPct * 10f)).applyTextStyle(TextFormatting.GRAY))));
         }
         else {
-            tooltip.add(new StringTextComponent(" ").appendSibling(new TranslationTextComponent("soil_meter.desc").applyTextStyle(TextFormatting.GRAY)));
+            super.addInformation(stack, worldIn, tooltip, flagIn);
         }
     }
 

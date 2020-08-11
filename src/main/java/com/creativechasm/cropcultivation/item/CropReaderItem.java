@@ -13,7 +13,6 @@ import net.minecraft.block.IGrowable;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.IntegerProperty;
@@ -22,7 +21,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
@@ -35,7 +33,7 @@ import java.util.List;
 import java.util.Optional;
 
 @ParametersAreNonnullByDefault
-public class CropReaderItem extends Item implements IMeasuringDevice
+public class CropReaderItem extends DeviceItem implements IMeasuringDevice
 {
     public CropReaderItem(Properties properties) {
         super(properties);
@@ -83,7 +81,7 @@ public class CropReaderItem extends Item implements IMeasuringDevice
             }
         }
         else {
-            tooltip.add(new StringTextComponent(" ").appendSibling(new TranslationTextComponent("crop_reader.desc").applyTextStyle(TextFormatting.GRAY)));
+            super.addInformation(stack, worldIn, tooltip, flagIn);
         }
     }
 

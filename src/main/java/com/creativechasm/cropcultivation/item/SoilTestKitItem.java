@@ -8,7 +8,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
@@ -28,7 +27,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
 @ParametersAreNonnullByDefault
-public class SoilTestKitItem extends Item
+public class SoilTestKitItem extends DeviceItem
 {
 
     public SoilTestKitItem(Properties properties) {
@@ -56,7 +55,7 @@ public class SoilTestKitItem extends Item
             );
         }
         else {
-            tooltip.add(new StringTextComponent(" ").appendSibling(new TranslationTextComponent("soilkit.desc").applyTextStyle(TextFormatting.GRAY)));
+            super.addInformation(stack, worldIn, tooltip, flagIn);
         }
     }
 

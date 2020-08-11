@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "cropcultivation:block/weed_tall_grass"
+    "layer0": "cropcultivation:block/weed_small_grass"
   }
 }

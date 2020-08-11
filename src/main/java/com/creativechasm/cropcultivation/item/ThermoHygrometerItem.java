@@ -6,7 +6,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
@@ -27,7 +26,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
 @ParametersAreNonnullByDefault
-public class ThermoHygrometerItem extends Item {
+public class ThermoHygrometerItem extends DeviceItem {
 
     public ThermoHygrometerItem(Properties properties) {
         super(properties);
@@ -57,7 +56,7 @@ public class ThermoHygrometerItem extends Item {
             tooltip.add(new TranslationTextComponent("measurement.default_humidity", String.format("%.2f RH", biomeHumidity)).applyTextStyle(TextFormatting.GRAY));
         }
         else {
-            tooltip.add(new StringTextComponent(" ").appendSibling(new TranslationTextComponent("thermo_hygrometer.desc").applyTextStyle(TextFormatting.GRAY)));
+            super.addInformation(stack, worldIn, tooltip, flagIn);
         }
     }
 

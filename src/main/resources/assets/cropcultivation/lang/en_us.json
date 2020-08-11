@@ -8,7 +8,9 @@
   "block.cropcultivation.loam_soil": "Loamy Soil",
   "block.cropcultivation.silt_soil": "Silty Soil",
   "block.cropcultivation.sand_soil": "Sandy Soil",
-  "block.cropcultivation.clay_soil": "Clayey Soil",
+  "block.cropcultivation.weed": "Weed Plant",
+  "block.cropcultivation.dead_crop_withered": "Withered Dead Plant",
+  "block.cropcultivation.dead_crop_rotten": "Rotten Dead Plant",
 
   "block.cropcultivation.loam_soil_raised_bed": "Raised Loam Soil Bed",
   "block.cropcultivation.silt_soil_raised_bed": "Raised Silt Soil Bed",
@@ -33,11 +35,11 @@
   "item.cropcultivation.soil_meter": "Soil Meter",
   "item.cropcultivation.crop_reader": "Magnifying Glass",
 
-  "thermo_hygrometer.desc": "Measures Temperature and Humidity",
-  "soilkit.desc": "Measures Soil pH and Macronutrient Concentration",
-  "soil_sampler.desc": "Samples the soil for moisture and soil texture",
-  "soil_meter.desc": "Its long probe allows it to measure the soil beneath the plants. This multi tool measures skylight levels, soil moisture, temperature, pH & nutrients all at once.",
-  "crop_reader.desc": "Debug item to read Plant Info...",
+  "desc.cropcultivation.thermo_hygrometer": "Measures Temperature and Humidity",
+  "desc.cropcultivation.soil_test_kit": "Measures Soil pH and Macronutrient Concentration",
+  "desc.cropcultivation.soil_sampler": "Samples the soil for moisture and soil texture",
+  "desc.cropcultivation.soil_meter": "Its long probe allows it to measure the soil beneath the plants. This multi tool measures skylight levels, soil moisture, temperature, pH & nutrients all at once.",
+  "desc.cropcultivation.crop_reader": "Debug item to read Plant Info...",
 
   "measurement.desc": " -- Last Measurement -- ",
   "measurement.temperature": "Temperature: %s",

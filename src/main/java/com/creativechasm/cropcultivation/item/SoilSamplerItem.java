@@ -7,7 +7,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
@@ -27,7 +26,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
 @ParametersAreNonnullByDefault
-public class SoilSamplerItem extends Item
+public class SoilSamplerItem extends DeviceItem
 {
 
     public SoilSamplerItem(Properties properties) {
@@ -53,7 +52,7 @@ public class SoilSamplerItem extends Item
             tooltip.add(new TranslationTextComponent("measurement.drainage_type", new TranslationTextComponent(drainageType)).applyTextStyle(TextFormatting.GRAY));
         }
         else {
-            tooltip.add(new StringTextComponent(" ").appendSibling(new TranslationTextComponent("soil_sampler.desc").applyTextStyle(TextFormatting.GRAY)));
+            super.addInformation(stack, worldIn, tooltip, flagIn);
         }
     }
 
