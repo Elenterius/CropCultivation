@@ -25,10 +25,24 @@ public class OptionalRegistry
         return Mods.SIMPLE_FARMING.isPresent() || Mods.HARVEST_CRAFT_2_CROPS.isPresent();
     }
 
+    public static boolean isSimpleFarmingCrop(Object owner) {
+        return Mods.isSimpleFarmingPresent && SimpleFarmingHandler.isCrop(owner);
+    }
+
     public static class Mods {
+        public static boolean isSimpleFarmingPresent;
+        static {
+            try {
+                Class.forName("enemeez.simplefarming.SimpleFarming", false, Mods.class.getClassLoader());
+                isSimpleFarmingPresent = true;
+            }
+            catch (Exception e) {
+                isSimpleFarmingPresent = false;
+            }
+        }
+
         static final Map<OptionalMod<Object>, Class<? extends IOptionalModHandler>> OPTIONAL_HANDLERS = new HashMap<>();
 
-        //Class.forName(className, false, OptionalMod.class.getClassLoader())
         static final OptionalMod<Object> FARMING_FOR_BLOCKHEADS = register("farmingforblockheads", FarmingForBlockHeadsHandler.class);
         static final OptionalMod<Object> HARVEST_CRAFT_2_CROPS = register("pamhc2crops", HarvestCraftHandler.class);
         static final OptionalMod<Object> SIMPLE_FARMING = register("simplefarming", SimpleFarmingHandler.class);

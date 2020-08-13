@@ -11,6 +11,7 @@ import com.creativechasm.cropcultivation.environment.soil.SoilStateContext;
 import com.creativechasm.cropcultivation.init.CommonRegistry;
 import com.creativechasm.cropcultivation.registry.DefaultCropEntry;
 import com.creativechasm.cropcultivation.registry.ICropEntry;
+import com.creativechasm.cropcultivation.util.BlockPropertyUtil;
 import com.creativechasm.cropcultivation.util.MathHelperX;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.Block;
@@ -108,13 +109,17 @@ public abstract class CropUtil
     public static abstract class RegisteredCrop
     {
         public static boolean canCropGrow(World world, BlockPos cropPos, BlockState cropState, ICropEntry iCrop, SoilStateContext soilContext) {
+
             //check soil pH
             if (soilContext.pH + 0.1f < iCrop.getMinSoilPH() || soilContext.pH - 0.1f > iCrop.getMaxSoilPH()) {
                 return false; //don't grow outside the pH tolerance range
             }
 
-            //check soil moisture
-            if (soilContext.moisture < iCrop.getMinSoilMoisture() * SoilMoisture.MAX_VALUE || soilContext.moisture > iCrop.getMaxSoilMoisture() * SoilMoisture.MAX_VALUE) {
+            int moistureTolerance = BlockPropertyUtil.getMoistureTolerance(cropState);
+            float temperatureTolerance = BlockPropertyUtil.getTemperatureTolerance(cropState);
+
+             //check soil moisture
+            if (soilContext.moisture + moistureTolerance < iCrop.getMinSoilMoisture() * SoilMoisture.MAX_VALUE || soilContext.moisture - moistureTolerance > iCrop.getMaxSoilMoisture() * SoilMoisture.MAX_VALUE) {
                 return false; //don't grow outside the moisture tolerance range
             }
 
@@ -122,7 +127,7 @@ public abstract class CropUtil
             float localTemperature = ClimateUtil.getLocalTemperature(world.getBiome(cropPos), cropPos, cropState);
             float soilTemperature = ClimateUtil.getLocalTemperature(world.getBiome(soilContext.getBlockPos()), soilContext.getBlockPos(), soilContext.getBlockState());
             float temperature = MathHelperX.lerp(0.7f, localTemperature, soilTemperature);
-            if (temperature < iCrop.getMinTemperature() || temperature > iCrop.getMaxTemperature()) {
+            if (temperature + temperatureTolerance < iCrop.getMinTemperature() || temperature - temperatureTolerance > iCrop.getMaxTemperature()) {
                 return false; //don't grow outside the temperature tolerance range
             }
 

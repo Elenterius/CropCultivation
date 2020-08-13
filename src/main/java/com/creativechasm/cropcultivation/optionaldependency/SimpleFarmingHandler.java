@@ -8,6 +8,7 @@ import com.creativechasm.cropcultivation.util.BlockPropertyUtil;
 import com.creativechasm.cropcultivation.util.MiscUtil;
 import com.google.gson.JsonObject;
 import enemeez.simplefarming.block.growable.DoubleCropBlock;
+import enemeez.simplefarming.block.growable.PlantBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
@@ -31,6 +32,10 @@ import java.util.Map;
 
 public class SimpleFarmingHandler implements IOptionalModHandler
 {
+    public static boolean isCrop(Object owner) {
+        return owner instanceof DoubleCropBlock || owner instanceof PlantBlock;
+    }
+
     @Override
     public void onSetup() {
         CropCultivationMod.LOGGER.info(MarkerManager.getMarker("ModCompat"), "setting up mod compatibility for <Simple Farming>...");

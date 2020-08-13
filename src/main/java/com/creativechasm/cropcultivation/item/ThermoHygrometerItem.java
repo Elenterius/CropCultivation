@@ -46,14 +46,14 @@ public class ThermoHygrometerItem extends DeviceItem {
             float localHumidity = nbtTag.getFloat("localHumidity");
 
             tooltip.add(new StringTextComponent(""));
-            tooltip.add(new TranslationTextComponent("measurement.desc"));
-            tooltip.add(new TranslationTextComponent("measurement.temperature", String.format("%.2f\u00B0C (%.3f)", ClimateUtil.convertTemperatureMCToCelsius(localTemperature), localTemperature)).applyTextStyle(TextFormatting.GRAY));
-            tooltip.add(new TranslationTextComponent("measurement.humidity", String.format("%.2f RH", localHumidity)).applyTextStyle(TextFormatting.GRAY));
-            tooltip.add(new TranslationTextComponent("measurement.dew_point", String.format("%.2f\u00B0C (%.3f)", ClimateUtil.convertTemperatureMCToCelsius(dewPointTemperature), dewPointTemperature)).applyTextStyle(TextFormatting.GRAY));
+            tooltip.add(new TranslationTextComponent("measurement.cropcultivation.desc"));
+            tooltip.add(new TranslationTextComponent("measurement.cropcultivation.temperature", String.format("%.2f\u00B0C (%.3f)", ClimateUtil.convertTemperatureMCToCelsius(localTemperature), localTemperature)).applyTextStyle(TextFormatting.GRAY));
+            tooltip.add(new TranslationTextComponent("measurement.cropcultivation.humidity", String.format("%.2f RH", localHumidity)).applyTextStyle(TextFormatting.GRAY));
+            tooltip.add(new TranslationTextComponent("measurement.cropcultivation.dew_point", String.format("%.2f\u00B0C (%.3f)", ClimateUtil.convertTemperatureMCToCelsius(dewPointTemperature), dewPointTemperature)).applyTextStyle(TextFormatting.GRAY));
             tooltip.add(new StringTextComponent(""));
             tooltip.add(new StringTextComponent("Biome: ").appendSibling(new TranslationTextComponent(biomeName)).applyTextStyle(TextFormatting.GRAY));
-            tooltip.add(new TranslationTextComponent("measurement.default_temperature", String.format("%.2f\u00B0C (%.3f)", ClimateUtil.convertTemperatureMCToCelsius(biomeTemperature), biomeTemperature)).applyTextStyle(TextFormatting.GRAY));
-            tooltip.add(new TranslationTextComponent("measurement.default_humidity", String.format("%.2f RH", biomeHumidity)).applyTextStyle(TextFormatting.GRAY));
+            tooltip.add(new TranslationTextComponent("measurement.cropcultivation.default_temperature", String.format("%.2f\u00B0C (%.3f)", ClimateUtil.convertTemperatureMCToCelsius(biomeTemperature), biomeTemperature)).applyTextStyle(TextFormatting.GRAY));
+            tooltip.add(new TranslationTextComponent("measurement.cropcultivation.default_humidity", String.format("%.2f RH", biomeHumidity)).applyTextStyle(TextFormatting.GRAY));
         }
         else {
             super.addInformation(stack, worldIn, tooltip, flagIn);

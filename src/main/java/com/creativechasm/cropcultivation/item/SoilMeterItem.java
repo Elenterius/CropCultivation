@@ -45,10 +45,10 @@ public class SoilMeterItem extends DeviceItem implements IMeasuringDevice
             int lightLevel = (nbtTag.getInt("light_level"));
 
             tooltip.add(new StringTextComponent(""));
-            tooltip.add(new TranslationTextComponent("measurement.desc"));
-            tooltip.add(new TranslationTextComponent("measurement.soil_moisture", moisture + "%").applyTextStyle(TextFormatting.GRAY));
-            tooltip.add(new TranslationTextComponent("measurement.temperature", String.format("%.2f\u00B0C (%.3f)", ClimateUtil.convertTemperatureMCToCelsius(localTemperature), localTemperature)).applyTextStyle(TextFormatting.GRAY));
-            tooltip.add(new TranslationTextComponent("measurement.light_level", lightLevel).applyTextStyle(TextFormatting.GRAY));
+            tooltip.add(new TranslationTextComponent("measurement.cropcultivation.desc"));
+            tooltip.add(new TranslationTextComponent("measurement.cropcultivation.soil_moisture", moisture + "%").applyTextStyle(TextFormatting.GRAY));
+            tooltip.add(new TranslationTextComponent("measurement.cropcultivation.temperature", String.format("%.2f\u00B0C (%.3f)", ClimateUtil.convertTemperatureMCToCelsius(localTemperature), localTemperature)).applyTextStyle(TextFormatting.GRAY));
+            tooltip.add(new TranslationTextComponent("measurement.cropcultivation.light_level", lightLevel).applyTextStyle(TextFormatting.GRAY));
 
             tooltip.add(new StringTextComponent(""));
             tooltip.add(SoilPH.getTextComponentForPH(pH, String.format("pH: %.1f (%s)", pH, SoilPH.fromPH(pH).name())));
@@ -61,13 +61,13 @@ public class SoilMeterItem extends DeviceItem implements IMeasuringDevice
             float kPct = PlantMacronutrient.POTASSIUM.getAvailabilityPctInSoil(pH);
 
             tooltip.add(new StringTextComponent(""));
-            tooltip.add(new TranslationTextComponent("nutrient.nitrogen")
+            tooltip.add(new TranslationTextComponent("nutrient.cropcultivation.nitrogen")
                     .appendSibling(new StringTextComponent(String.format(": %d%% x %.1f = ", nitrogen * 10, nPct)).applyTextStyle(TextFormatting.DARK_GRAY)
                     .appendSibling(new StringTextComponent(String.format("%.2f%%", nitrogen * nPct * 10f)).applyTextStyle(TextFormatting.GRAY))));
-            tooltip.add(new TranslationTextComponent("nutrient.phosphorus")
+            tooltip.add(new TranslationTextComponent("nutrient.cropcultivation.phosphorus")
                     .appendSibling(new StringTextComponent(String.format(": %d%% x %.1f = ", phosphorus * 10, pPct)).applyTextStyle(TextFormatting.DARK_GRAY)
                     .appendSibling(new StringTextComponent(String.format("%.2f%%", phosphorus * pPct * 10f)).applyTextStyle(TextFormatting.GRAY))));
-            tooltip.add(new TranslationTextComponent("nutrient.potassium")
+            tooltip.add(new TranslationTextComponent("nutrient.cropcultivation.potassium")
                     .appendSibling(new StringTextComponent(String.format(": %d%% x %.1f = ", potassium * 10, kPct)).applyTextStyle(TextFormatting.DARK_GRAY)
                     .appendSibling(new StringTextComponent(String.format("%.2f%%", potassium * kPct * 10f)).applyTextStyle(TextFormatting.GRAY))));
         }
@@ -113,11 +113,11 @@ public class SoilMeterItem extends DeviceItem implements IMeasuringDevice
 
                     if (player instanceof ServerPlayerEntity) {
                         player.sendStatusMessage(
-                                new TranslationTextComponent("measurement.soil_moisture", Math.round(moisture / 9f * 100) + "%").applyTextStyle(moisture >= 5 ? TextFormatting.AQUA : TextFormatting.WHITE)
+                                new TranslationTextComponent("measurement.cropcultivation.soil_moisture", Math.round(moisture / 9f * 100) + "%").applyTextStyle(moisture >= 5 ? TextFormatting.AQUA : TextFormatting.WHITE)
                                         .appendSibling(new StringTextComponent(" - ").applyTextStyle(TextFormatting.GRAY))
                                         .appendSibling(new StringTextComponent(String.format("%.2f\u00B0C (%.3f)", ClimateUtil.convertTemperatureMCToCelsius(localTemperature), localTemperature)).applyTextStyle(TextFormatting.WHITE))
                                         .appendSibling(new StringTextComponent(" - ").applyTextStyle(TextFormatting.GRAY))
-                                        .appendSibling(new TranslationTextComponent("measurement.light_level", lightLevel).applyTextStyle(TextFormatting.YELLOW))
+                                        .appendSibling(new TranslationTextComponent("measurement.cropcultivation.light_level", lightLevel).applyTextStyle(TextFormatting.YELLOW))
                                         .appendSibling(new StringTextComponent(" - ").applyTextStyle(TextFormatting.GRAY))
                                         .appendSibling(SoilPH.getTextComponentForPH(tileState.getPH(), String.format("pH: %.1f", tileState.getPH()))
                                                 .appendSibling(new StringTextComponent(" - ").applyTextStyle(TextFormatting.GRAY))

@@ -1,5 +1,6 @@
 package com.creativechasm.cropcultivation.util;
 
+import com.creativechasm.cropcultivation.environment.ClimateUtil;
 import com.creativechasm.cropcultivation.environment.plant.WeedType;
 import com.creativechasm.cropcultivation.environment.soil.SoilMoisture;
 import com.google.common.collect.ImmutableMap;
@@ -13,13 +14,35 @@ import net.minecraft.state.properties.BlockStateProperties;
 import java.util.Optional;
 
 public abstract class BlockPropertyUtil {
-
+    //Soil
     public static final IntegerProperty MOISTURE = IntegerProperty.create("moisture", 0, SoilMoisture.MAX_VALUE);
     public static final IntegerProperty ORGANIC_MATTER = IntegerProperty.create("organic_matter", 0, 4);
+
+    //Plant
     public static final EnumProperty<WeedType> WEED_TYPE = EnumProperty.create("plant", WeedType.class);
 
-    public static final ImmutableMap<IntegerProperty, Integer> maxAgeMappings;
+    //CROP
+    public static final IntegerProperty YIELD_MODIFIER = IntegerProperty.create("yield_modifier", 0, 4);
+    public static final IntegerProperty MOISTURE_TOLERANCE = IntegerProperty.create("moisture_tolerance", 0, 2);
+    public static final IntegerProperty TEMPERATURE_TOLERANCE = IntegerProperty.create("temperature_tolerance", 0, 4);
 
+    public static float getYieldModifier(BlockState state) {
+        return state.getBlock() instanceof CropsBlock ? state.get(YIELD_MODIFIER) - 2f : 0f;
+    }
+
+    public static int getMoistureTolerance(BlockState state) {
+        return state.getBlock() instanceof CropsBlock ? state.get(MOISTURE_TOLERANCE) : 0;
+    }
+
+    public static float getTemperatureTolerance(BlockState state) {
+        if (state.getBlock() instanceof CropsBlock) {
+            float pct = state.get(TEMPERATURE_TOLERANCE) / 4f;
+            return pct == 0f ? 0f : ClimateUtil.convertTemperatureCelsiusToMC(pct * 10f);
+        }
+        return 0f;
+    }
+
+    public static final ImmutableMap<IntegerProperty, Integer> maxAgeMappings;
     static {
         //we can't know if someone might have manipulate the properties, so we search for the max value
         maxAgeMappings = ImmutableMap.<IntegerProperty, Integer>builder()

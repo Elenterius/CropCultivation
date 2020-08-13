@@ -41,7 +41,7 @@ public class SoilTestKitItem extends DeviceItem
             CompoundNBT nbtTag = stack.getTag();
 
             tooltip.add((new StringTextComponent("")));
-            tooltip.add((new TranslationTextComponent("measurement.desc")));
+            tooltip.add((new TranslationTextComponent("measurement.cropcultivation.desc")));
 
             float pH = nbtTag.getFloat("pH");
             tooltip.add(SoilPH.getTextComponentForPH(pH, String.format("pH: %.1f (%s)", pH, SoilPH.fromPH(pH).name())));

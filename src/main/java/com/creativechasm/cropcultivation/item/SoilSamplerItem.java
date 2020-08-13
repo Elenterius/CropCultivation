@@ -45,11 +45,11 @@ public class SoilSamplerItem extends DeviceItem
             int organic = (int) (nbtTag.getInt("organic") / 4f * 100);
 
             tooltip.add(new StringTextComponent(""));
-            tooltip.add(new TranslationTextComponent("measurement.desc"));
-            tooltip.add(new TranslationTextComponent("measurement.soil_moisture", moisture + "%").applyTextStyle(TextFormatting.GRAY));
-            tooltip.add(new TranslationTextComponent("measurement.organic_matter", organic + "%").applyTextStyle(TextFormatting.GRAY));
-            tooltip.add(new TranslationTextComponent("measurement.soil_texture", new TranslationTextComponent(soilTexture)).applyTextStyle(TextFormatting.GRAY));
-            tooltip.add(new TranslationTextComponent("measurement.drainage_type", new TranslationTextComponent(drainageType)).applyTextStyle(TextFormatting.GRAY));
+            tooltip.add(new TranslationTextComponent("measurement.cropcultivation.desc"));
+            tooltip.add(new TranslationTextComponent("measurement.cropcultivation.soil_moisture", moisture + "%").applyTextStyle(TextFormatting.GRAY));
+            tooltip.add(new TranslationTextComponent("measurement.cropcultivation.organic_matter", organic + "%").applyTextStyle(TextFormatting.GRAY));
+            tooltip.add(new TranslationTextComponent("measurement.cropcultivation.soil_texture", new TranslationTextComponent(soilTexture)).applyTextStyle(TextFormatting.GRAY));
+            tooltip.add(new TranslationTextComponent("measurement.cropcultivation.drainage_type", new TranslationTextComponent(drainageType)).applyTextStyle(TextFormatting.GRAY));
         }
         else {
             super.addInformation(stack, worldIn, tooltip, flagIn);
@@ -79,11 +79,11 @@ public class SoilSamplerItem extends DeviceItem
 
                     PlayerEntity player = context.getPlayer();
                     if (player instanceof ServerPlayerEntity) {
-                        player.sendStatusMessage(new TranslationTextComponent("measurement.soil_moisture", Math.round(moisture / 9f * 100) + "%").applyTextStyle(moisture >= 5 ? TextFormatting.AQUA : TextFormatting.WHITE)
+                        player.sendStatusMessage(new TranslationTextComponent("measurement.cropcultivation.soil_moisture", Math.round(moisture / 9f * 100) + "%").applyTextStyle(moisture >= 5 ? TextFormatting.AQUA : TextFormatting.WHITE)
                                         .appendSibling(new StringTextComponent(" - ").applyTextStyle(TextFormatting.GRAY))
-                                        .appendSibling(new TranslationTextComponent("measurement.organic_matter", ((int) (organicMatter / 4f * 100)) + "%").applyTextStyle(TextFormatting.GOLD))
+                                        .appendSibling(new TranslationTextComponent("measurement.cropcultivation.organic_matter", ((int) (organicMatter / 4f * 100)) + "%").applyTextStyle(TextFormatting.GOLD))
                                         .appendSibling(new StringTextComponent(" - ").applyTextStyle(TextFormatting.GRAY))
-                                        .appendSibling(new TranslationTextComponent("measurement.soil_texture", new TranslationTextComponent("soil_texture." + texture.name().toLowerCase())).applyTextStyle(TextFormatting.WHITE))
+                                        .appendSibling(new TranslationTextComponent("measurement.cropcultivation.soil_texture", new TranslationTextComponent("soil_texture." + texture.name().toLowerCase())).applyTextStyle(TextFormatting.WHITE))
                                 , true
                         );
                     }

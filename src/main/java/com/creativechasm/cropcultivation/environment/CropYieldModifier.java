@@ -9,8 +9,10 @@ import com.google.gson.JsonObject;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CropsBlock;
 import net.minecraft.entity.Entity;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -37,7 +39,7 @@ public class CropYieldModifier extends LootModifier
     @Override
     protected List<ItemStack> doApply(List<ItemStack> generatedLoot, LootContext context) {
 
-        CropCultivationMod.LOGGER.debug(MarkerManager.getMarker("CropYieldModifier"), "loot: " + generatedLoot.toString());
+        CropCultivationMod.LOGGER.debug(MarkerManager.getMarker("CropYieldModifier"), "in: " + generatedLoot.toString());
         BlockState state = context.get(LootParameters.BLOCK_STATE);
         BlockPos pos = context.get(LootParameters.POSITION);
 
@@ -59,13 +61,24 @@ public class CropYieldModifier extends LootModifier
             if (lootCountMap.size() > 0 && tileEntity instanceof SoilStateTileEntity) {
                 SoilStateTileEntity soil = (SoilStateTileEntity) tileEntity;
                 float yieldMultiplier = soil.getCropYieldAveraged(BlockPropertyUtil.getAge(state)); //get crop yield averaged by crop age
+                float yieldModifier = BlockPropertyUtil.getYieldModifier(state);
 
                 lootCountMap.forEach((item, count) -> {
-                    int yieldAmount = Math.max(1, Math.round(count * yieldMultiplier));
-                    CropCultivationMod.LOGGER.debug(MarkerManager.getMarker("CropYieldModifier"), String.format("item: %s, count: %s, multiplier: %s, yield: %s", item, count, yieldMultiplier, yieldAmount));
+                    int yieldAmount = Math.max(1, Math.round((count + yieldModifier) * yieldMultiplier));
+                    CropCultivationMod.LOGGER.debug(MarkerManager.getMarker("CropYieldModifier"), String.format("item: %s, count: %s, modifier: %s, multiplier: %s, yield: %s", item, count, yieldModifier, yieldMultiplier, yieldAmount));
                     CropUtil.modifyGeneratedLoot(generatedLoot, item, count, yieldAmount, context.getRandom());
                 });
             }
+
+            generatedLoot.forEach(stack -> {
+                Item item = stack.getItem();
+                if (item instanceof BlockItem && ((BlockItem) item).getBlock() instanceof CropsBlock) {
+                    CompoundNBT propertiesTag = stack.getOrCreateChildTag("BlockStateTag");
+                    propertiesTag.putInt(BlockPropertyUtil.YIELD_MODIFIER.getName(), state.get(BlockPropertyUtil.YIELD_MODIFIER));
+                    propertiesTag.putInt(BlockPropertyUtil.MOISTURE_TOLERANCE.getName(), state.get(BlockPropertyUtil.MOISTURE_TOLERANCE));
+                    propertiesTag.putInt(BlockPropertyUtil.TEMPERATURE_TOLERANCE.getName(), state.get(BlockPropertyUtil.TEMPERATURE_TOLERANCE));
+                }
+            });
         }
 
         CropCultivationMod.LOGGER.debug(MarkerManager.getMarker("CropYieldModifier"), "out: " + generatedLoot.toString());
