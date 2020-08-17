@@ -34,6 +34,7 @@ import net.minecraftforge.registries.ObjectHolder;
 import org.apache.logging.log4j.MarkerManager;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Map;
 
@@ -101,6 +102,7 @@ public abstract class CommonRegistry
         SoilBlock soilBlock = new SoilBlock(properties, texture)
         {
             @Override
+            @Nullable
             public TileEntity createTileEntity(BlockState state, IBlockReader world) {
                 return FARM_SOIL.create();
             }
@@ -118,6 +120,7 @@ public abstract class CommonRegistry
             }
 
             @Override
+            @Nullable
             public TileEntity createTileEntity(BlockState state, IBlockReader world) {
                 return FARM_SOIL.create();
             }
@@ -174,7 +177,9 @@ public abstract class CommonRegistry
                 new ThermoHygrometerItem(new Item.Properties().maxStackSize(1).rarity(Rarity.RARE).group(ITEM_GROUP)).setRegistryName("thermo_hygrometer"),
                 new SoilSamplerItem(new Item.Properties().maxStackSize(1).rarity(Rarity.RARE).group(ITEM_GROUP)).setRegistryName("soil_sampler"),
                 new SoilMeterItem(new Item.Properties().maxStackSize(1).rarity(Rarity.RARE).group(ITEM_GROUP)).setRegistryName("soil_meter"),
-                new CropReaderItem(new Item.Properties().maxStackSize(1).rarity(Rarity.EPIC).group(ITEM_GROUP)).setRegistryName("crop_reader")
+                new CropReaderItem(new Item.Properties().maxStackSize(1).rarity(Rarity.EPIC).group(ITEM_GROUP)).setRegistryName("crop_reader"),
+
+                new FoobarItem(new Item.Properties().maxStackSize(1).rarity(Rarity.EPIC).group(ITEM_GROUP)).setRegistryName("foobar")
         );
     }
 

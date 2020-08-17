@@ -10,8 +10,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.util.Constants;
 import org.apache.logging.log4j.MarkerManager;
 
-import javax.annotation.Nonnull;
-
 public class SoilStateTileEntity extends TileEntity {
 //    @Unsigned
     private final byte[] nutrients = new byte[]{4, 5, 3};
@@ -19,7 +17,7 @@ public class SoilStateTileEntity extends TileEntity {
 //    @Unsigned
     private byte pH = (SoilPH.MAX_VALUE * 10) / 2; // init as perfect neutral pH value (fallback)
 
-    private float cropYield = 0f; //TODO: store as unsigned byte
+    private float cropYield = 0f; //TODO: store as unsigned byte?
 
     private SoilPH cachedSoilPH = null;
 
@@ -136,7 +134,7 @@ public class SoilStateTileEntity extends TileEntity {
     }
 
     @Override
-    public void read(@Nonnull CompoundNBT compound) {
+    public void read(CompoundNBT compound) {
         super.read(compound);
         if (compound.contains("nutrients", Constants.NBT.TAG_BYTE_ARRAY)) {
             byte[] bytes = compound.getByteArray("nutrients");
@@ -151,8 +149,7 @@ public class SoilStateTileEntity extends TileEntity {
     }
 
     @Override
-    @Nonnull
-    public CompoundNBT write(@Nonnull CompoundNBT compound) {
+    public CompoundNBT write(CompoundNBT compound) {
         super.write(compound);
         compound.putByteArray("nutrients", nutrients);
         compound.putByte("pH", pH);

@@ -3,7 +3,6 @@ package com.creativechasm.cropcultivation.block;
 import com.creativechasm.cropcultivation.environment.plant.WeedType;
 import com.creativechasm.cropcultivation.trigger.ModTriggers;
 import com.creativechasm.cropcultivation.util.BlockPropertyUtil;
-import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -23,11 +22,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
 
-
-@ParametersAreNonnullByDefault
-@MethodsReturnNonnullByDefault
 public class WeedBlock extends BushBlock
 {
     public static final EnumProperty<WeedType> WEED_TYPE = BlockPropertyUtil.WEED_TYPE;

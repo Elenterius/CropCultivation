@@ -28,11 +28,9 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.IPlantable;
 
 import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Optional;
 
-@ParametersAreNonnullByDefault
 public class CropReaderItem extends DeviceItem implements IMeasuringDevice
 {
     public CropReaderItem(Properties properties) {

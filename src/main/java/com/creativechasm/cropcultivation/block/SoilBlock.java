@@ -50,9 +50,7 @@ import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import org.apache.logging.log4j.MarkerManager;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Optional;
@@ -87,12 +85,12 @@ public abstract class SoilBlock extends FarmlandBlock {
     }
 
     @Override
-    public BlockState getStateForPlacement(@Nonnull BlockItemUseContext context) {
+    public BlockState getStateForPlacement(BlockItemUseContext context) {
         return getDefaultState();
     }
 
     @Override
-    public void onBlockPlacedBy(World worldIn, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nullable LivingEntity placer, @Nonnull ItemStack stack) {
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         if (!stack.hasTag()) { //prevents resetting of the pH value if a block was copied with ctrl + middle mouse
             TileEntity tile = worldIn.getTileEntity(pos);
             if (tile instanceof SoilStateTileEntity) {
@@ -102,7 +100,6 @@ public abstract class SoilBlock extends FarmlandBlock {
     }
 
     @Override
-    @ParametersAreNonnullByDefault
     public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
         //this catches all block state changes caused by the hoe through "tilling"
         if (oldState.getBlock() != this && oldState.getBlock() != Blocks.AIR && CropUtil.canBlockTurnIntoFarmland(oldState.getBlock())) {
@@ -123,7 +120,7 @@ public abstract class SoilBlock extends FarmlandBlock {
     }
 
     @Override
-    public boolean canSustainPlant(@Nonnull BlockState state, @Nonnull IBlockReader world, @Nonnull BlockPos pos, @Nonnull Direction facing, @Nonnull IPlantable plantable) {
+    public boolean canSustainPlant(BlockState state, IBlockReader world, BlockPos pos, Direction facing, IPlantable plantable) {
         PlantType plantType = plantable.getPlantType(world, pos);
         return plantType != PlantType.Nether;
     }
@@ -143,7 +140,7 @@ public abstract class SoilBlock extends FarmlandBlock {
     }
 
     @Override
-    public void tick(@Nonnull BlockState state, @Nonnull ServerWorld worldIn, @Nonnull BlockPos pos, @Nonnull Random rand) {
+    public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand) {
 
         if (!state.isValidPosition(worldIn, pos)) {
             // condition: there is an solid block above this block
@@ -317,7 +314,7 @@ public abstract class SoilBlock extends FarmlandBlock {
     }
 
     @Override
-    public void fillWithRain(@Nonnull World worldIn, @Nonnull BlockPos pos) {
+    public void fillWithRain(World worldIn, BlockPos pos) {
         if (worldIn instanceof ServerWorld && worldIn.rand.nextFloat() < 0.36f) {
             if (ClimateUtil.getLocalTemperature(worldIn.getBiome(pos), pos, worldIn.getBlockState(pos)) >= 0.15F) {
                 TileEntity tileEntity = worldIn.getTileEntity(pos);
@@ -355,8 +352,7 @@ public abstract class SoilBlock extends FarmlandBlock {
     }
 
     @Override
-    @Nonnull
-    public BlockState updatePostPlacement(@Nonnull BlockState stateIn, @Nonnull Direction facing, @Nonnull BlockState facingState, @Nonnull IWorld worldIn, @Nonnull BlockPos currentPos, @Nonnull BlockPos facingPos) {
+    public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
 
         // check if block was placed above
         if (facing == Direction.UP && !stateIn.isValidPosition(worldIn, currentPos)) {
@@ -367,8 +363,7 @@ public abstract class SoilBlock extends FarmlandBlock {
     }
 
     @Override
-    @Nonnull
-    public ActionResultType onBlockActivated(@Nonnull BlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos, PlayerEntity player, @Nonnull Hand handIn, @Nonnull BlockRayTraceResult hit) {
+    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         ItemStack stack = player.getHeldItem(handIn);
         Item item = stack.getItem();
         ActionResultType result = ActionResultType.PASS;
@@ -466,7 +461,7 @@ public abstract class SoilBlock extends FarmlandBlock {
     }
 
     @Override
-    public void onFallenUpon(@Nonnull World worldIn, @Nonnull BlockPos pos, Entity entityIn, float fallDistance) {
+    public void onFallenUpon(World worldIn, BlockPos pos, Entity entityIn, float fallDistance) {
         //removed farmland trampling!
         entityIn.onLivingFall(fallDistance, 1.0F);
     }
@@ -477,10 +472,6 @@ public abstract class SoilBlock extends FarmlandBlock {
     }
 
     @Override
-    public abstract TileEntity createTileEntity(BlockState state, IBlockReader world);
-
-    @Override
-    @ParametersAreNonnullByDefault
     public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
         if(state.getBlock() != newState.getBlock()) {
             super.onReplaced(state, worldIn, pos, newState, isMoving);
@@ -488,7 +479,10 @@ public abstract class SoilBlock extends FarmlandBlock {
     }
 
     @Override
-    @ParametersAreNonnullByDefault
+    @Nullable
+    public abstract TileEntity createTileEntity(BlockState state, IBlockReader world);
+
+    @Override
     public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         tooltip.add(new StringTextComponent(""));
         tooltip.add(new TranslationTextComponent("measurement.soil_texture", new TranslationTextComponent("soil_texture." + soilTexture.name().toLowerCase())).applyTextStyle(TextFormatting.GRAY));

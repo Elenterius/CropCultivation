@@ -15,9 +15,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.Tags;
 
 import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
 
-@ParametersAreNonnullByDefault
 public class DeadCropBlock extends DeadBushBlock
 {
     public DeadCropBlock(Properties builder) {

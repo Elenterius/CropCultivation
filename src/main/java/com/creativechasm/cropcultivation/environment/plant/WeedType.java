@@ -1,11 +1,9 @@
 package com.creativechasm.cropcultivation.environment.plant;
 
 import com.creativechasm.cropcultivation.util.ModVoxelShapes;
-import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.shapes.VoxelShape;
 
-@MethodsReturnNonnullByDefault
 public enum WeedType implements IStringSerializable
 {
     GRASS("grass", ModVoxelShapes.BUSH),
