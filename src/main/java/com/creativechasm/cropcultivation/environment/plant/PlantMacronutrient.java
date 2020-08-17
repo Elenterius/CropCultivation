@@ -1,9 +1,11 @@
 package com.creativechasm.cropcultivation.environment.plant;
 
-import com.creativechasm.cropcultivation.util.IFunctionX;
+import it.unimi.dsi.fastutil.floats.Float2FloatFunction;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
+
+import java.util.function.Function;
 
 public enum PlantMacronutrient
 {
@@ -57,9 +59,9 @@ public enum PlantMacronutrient
     public final char symbol;
     private final TextFormatting lightColor;
     private final TextFormatting darkColor;
-    private final IFunctionX syntheticFunction;
+    private final Function<Float, Float> syntheticFunction;
 
-    PlantMacronutrient(char symbol, TextFormatting lightColor, TextFormatting darkColor, IFunctionX func) {
+    PlantMacronutrient(char symbol, TextFormatting lightColor, TextFormatting darkColor, Float2FloatFunction func) {
         this.symbol = symbol;
         this.lightColor = lightColor;
         this.darkColor = darkColor;
@@ -73,7 +75,7 @@ public enum PlantMacronutrient
      * @return nutrient availability percentage (0.0 - 1.0)
      */
     public float getAvailabilityPctInSoil(float soilPH) {
-        return syntheticFunction.f(soilPH);
+        return syntheticFunction.apply(soilPH);
     }
 
     public static ITextComponent getTextComponentForNutrient(PlantMacronutrient nutrientType, int nutrientAmount) {
