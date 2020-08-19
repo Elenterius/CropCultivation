@@ -18,6 +18,7 @@ public class SoilStateContext {
     public int nitrogen;
     public int phosphorus;
     public int potassium;
+    private final SoilTexture soilTexture;
 
     private final World world;
     private final BlockPos pos;
@@ -35,6 +36,7 @@ public class SoilStateContext {
         this.pos = pos;
         this.blockState = blockState;
         boolean isValid_ = blockState.getBlock() instanceof SoilBlock;
+        soilTexture = isValid_ ? ((SoilBlock) blockState.getBlock()).soilTexture : null;
         SoilStateTileEntity tileState_ = null;
         if (isValid_) {
             moisture = blockState.get(SoilBlock.MOISTURE);
@@ -87,8 +89,20 @@ public class SoilStateContext {
     }
 
     public void update(ServerWorld world) {
-        moisture = MathHelper.clamp(moisture, 0, SoilMoisture.MAX_VALUE);
         organicMatter = MathHelper.clamp(organicMatter, 0, 4);
+        int maxMoisture = soilTexture.getMaxMoistureCapacity(organicMatter);
+        moisture = MathHelper.clamp(moisture, soilTexture.getMinMoistureCapacity(organicMatter, maxMoisture), maxMoisture);
+        tileState.setPH(pH);
+        tileState.setNitrogen(nitrogen);
+        tileState.setPhosphorus(phosphorus);
+        tileState.setPotassium(potassium);
+        world.setBlockState(pos, blockState.with(SoilBlock.MOISTURE, moisture).with(SoilBlock.ORGANIC_MATTER, organicMatter), Constants.BlockFlags.BLOCK_UPDATE);
+    }
+
+    public void update(ServerWorld world, boolean hasWaterSource) {
+        organicMatter = MathHelper.clamp(organicMatter, 0, 4);
+        int maxMoisture = soilTexture.getMaxMoistureCapacity(organicMatter);
+        moisture = MathHelper.clamp(moisture, soilTexture.getMinMoistureCapacity(organicMatter, maxMoisture), hasWaterSource ? maxMoisture + 1 : maxMoisture);
         tileState.setPH(pH);
         tileState.setNitrogen(nitrogen);
         tileState.setPhosphorus(phosphorus);
