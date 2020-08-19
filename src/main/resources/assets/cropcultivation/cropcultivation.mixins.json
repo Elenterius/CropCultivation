@@ -6,7 +6,8 @@
   "MixinNetherWartBlock",
   "MixinStateContainerBuilder",
   "MixinStonecutterContainer$OutputSlot",
-  "MixinSugarCaneBlock"
+  "MixinSugarCaneBlock",
+  "MixinWorkbenchContainer"
 ], "injectors": {
   "defaultRequire": 1
 }, "minVersion": "0.8"

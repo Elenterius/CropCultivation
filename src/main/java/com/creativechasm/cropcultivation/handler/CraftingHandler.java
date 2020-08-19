@@ -1,14 +1,19 @@
 package com.creativechasm.cropcultivation.handler;
 
-/**
- * We forgo the use of stonecutter events because we don't need the flexibility at the moment.
- * @see com.creativechasm.cropcultivation.mixin.MixinStonecutterContainer
- */
 //@Mod.EventBusSubscriber(modid = CropCultivationMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public abstract class CraftingHandler
 {
 //    @SubscribeEvent
-//    public static void onStoneCut(StoneCutEvent event) {
+//    public static void onCrafted(PlayerEvent.ItemCraftedEvent event) {
+//        //too unreliable due to ItemStack update issues
+//    }
+
+//    /**
+//     * We forgo the use of stonecutter events because we don't need the flexibility at the moment.
+//     * @see com.creativechasm.cropcultivation.mixin.MixinStonecutterContainer
+//     */
+//    @SubscribeEvent
+//    public static void onStoneCut(/*StoneCutEvent event*/) {
 //
 //    }
 //

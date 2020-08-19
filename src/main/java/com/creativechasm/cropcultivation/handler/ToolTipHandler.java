@@ -6,8 +6,6 @@ import com.creativechasm.cropcultivation.item.ModItems;
 import com.creativechasm.cropcultivation.util.BlockPropertyUtil;
 import com.creativechasm.cropcultivation.util.GuiUtil;
 import com.creativechasm.cropcultivation.util.ModTags;
-import net.minecraft.block.CropsBlock;
-import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -17,6 +15,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderTooltipEvent;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -30,15 +29,15 @@ public abstract class ToolTipHandler
     public static void onItemToolTip(final ItemTooltipEvent event) {
         Item item = event.getItemStack().getItem();
 
-        if (item instanceof BlockItem && ((BlockItem) item).getBlock() instanceof CropsBlock) {
+        if (Tags.Items.SEEDS.contains(item) || Tags.Items.CROPS.contains(item)) {
             CompoundNBT nbtTag = event.getItemStack().getTag();
-            if (nbtTag != null && nbtTag.contains("BlockStateTag")) {
+            if (nbtTag != null && nbtTag.contains("cropcultivation") && nbtTag.contains("BlockStateTag")) {
                 CompoundNBT propertiesTag = nbtTag.getCompound("BlockStateTag");
                 event.getToolTip().add(new StringTextComponent(""));
                 event.getToolTip().add(new TranslationTextComponent("desc.cropcultivation.crop_traits").applyTextStyle(TextFormatting.GRAY));
-                event.getToolTip().add(new StringTextComponent(String.format(" Yield Modifier: %s", propertiesTag.getInt(BlockPropertyUtil.YIELD_MODIFIER.getName()))).applyTextStyle(TextFormatting.GRAY));
-                event.getToolTip().add(new StringTextComponent(String.format(" Moisture Tolerance: %s", propertiesTag.getInt(BlockPropertyUtil.MOISTURE_TOLERANCE.getName()))).applyTextStyle(TextFormatting.GRAY));
-                event.getToolTip().add(new StringTextComponent(String.format(" Temperature Tolerance: %s", propertiesTag.getInt(BlockPropertyUtil.TEMPERATURE_TOLERANCE.getName()))).applyTextStyle(TextFormatting.GRAY));
+                event.getToolTip().add(new StringTextComponent(" ").appendSibling(new TranslationTextComponent("desc.cropcultivation.yield_modifier", propertiesTag.getInt(BlockPropertyUtil.YIELD_MODIFIER.getName())).applyTextStyle(TextFormatting.GRAY)));
+                event.getToolTip().add(new StringTextComponent(" ").appendSibling(new TranslationTextComponent("desc.cropcultivation.moisture_tolerance", propertiesTag.getInt(BlockPropertyUtil.MOISTURE_TOLERANCE.getName())).applyTextStyle(TextFormatting.GRAY)));
+                event.getToolTip().add(new StringTextComponent(" ").appendSibling(new TranslationTextComponent("desc.cropcultivation.temperature_tolerance", propertiesTag.getInt(BlockPropertyUtil.TEMPERATURE_TOLERANCE.getName())).applyTextStyle(TextFormatting.GRAY)));
             }
         }
 

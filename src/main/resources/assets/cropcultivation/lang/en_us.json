@@ -42,6 +42,9 @@
   "desc.cropcultivation.crop_reader": "Debug item to read Plant Info...",
 
   "desc.cropcultivation.crop_traits": "Crop Traits:",
+  "desc.cropcultivation.yield_modifier": "Yield Modifier: %s",
+  "desc.cropcultivation.moisture_tolerance": "Moisture Tolerance: %s",
+  "desc.cropcultivation.temperature_tolerance": "Temperature Tolerance: %s",
   "desc.cropcultivation.fertilizer": "Fertilizer:",
 
   "measurement.cropcultivation.desc": " -- Last Measurement -- ",
