@@ -42,15 +42,8 @@ public class SoilTestKitItem extends DeviceItem
             tooltip.add((new TranslationTextComponent("measurement.cropcultivation.desc")));
 
             float pH = nbtTag.getFloat("pH");
-            tooltip.add(SoilPH.getTextComponentForPH(pH, String.format("pH: %.1f (%s)", pH, SoilPH.fromPH(pH).name())));
-
-            tooltip.add(
-                    new StringTextComponent("N: " + nbtTag.getInt("N")).applyTextStyle(TextFormatting.GRAY)
-                            .appendSibling(new StringTextComponent(" - ").applyTextStyle(TextFormatting.DARK_GRAY))
-                            .appendSibling(new StringTextComponent("P: " + nbtTag.getInt("P")).applyTextStyle(TextFormatting.GRAY))
-                            .appendSibling(new StringTextComponent(" - ").applyTextStyle(TextFormatting.DARK_GRAY))
-                            .appendSibling(new StringTextComponent("K: " + nbtTag.getInt("K")).applyTextStyle(TextFormatting.GRAY))
-            );
+            TranslationTextComponent pcCategory = new TranslationTextComponent("soil_ph." + SoilPH.fromPH(pH).name().toLowerCase());
+            tooltip.add(SoilPH.getTextComponentForPH(pH, String.format("pH: %.1f (", pH)).appendSibling(pcCategory).appendText(")"));
         }
         else {
             super.addInformation(stack, worldIn, tooltip, flagIn);

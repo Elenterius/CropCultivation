@@ -485,9 +485,9 @@ public abstract class SoilBlock extends FarmlandBlock {
     @Override
     public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         tooltip.add(new StringTextComponent(""));
-        tooltip.add(new TranslationTextComponent("measurement.soil_texture", new TranslationTextComponent("soil_texture." + soilTexture.name().toLowerCase())).applyTextStyle(TextFormatting.GRAY));
-        tooltip.add(new TranslationTextComponent("measurement.soil_ph", new TranslationTextComponent("soil_ph." + soilTexture.pHType.name().toLowerCase())).applyTextStyle(TextFormatting.GRAY));
-        tooltip.add(new TranslationTextComponent("measurement.drainage_type", new TranslationTextComponent("soil_drainage." + soilTexture.getDrainageType().name().toLowerCase())).applyTextStyle(TextFormatting.GRAY));
+        tooltip.add(new TranslationTextComponent("measurement.cropcultivation.soil_texture", new TranslationTextComponent("soil_texture." + soilTexture.name().toLowerCase())).applyTextStyle(TextFormatting.GRAY));
+        tooltip.add(new TranslationTextComponent("measurement.cropcultivation.soil_ph", new TranslationTextComponent("soil_ph." + soilTexture.pHType.name().toLowerCase())).applyTextStyle(TextFormatting.GRAY));
+        tooltip.add(new TranslationTextComponent("measurement.cropcultivation.drainage_type", new TranslationTextComponent("soil_drainage." + soilTexture.getDrainageType().name().toLowerCase())).applyTextStyle(TextFormatting.GRAY));
     }
 
     public static boolean doesSoilHaveWater(IWorldReader worldIn, BlockPos pos, int distance) {

@@ -49,25 +49,8 @@ public class SoilMeterItem extends DeviceItem implements IMeasuringDevice
             tooltip.add(new TranslationTextComponent("measurement.cropcultivation.light_level", lightLevel).applyTextStyle(TextFormatting.GRAY));
 
             tooltip.add(new StringTextComponent(""));
-            tooltip.add(SoilPH.getTextComponentForPH(pH, String.format("pH: %.1f (%s)", pH, SoilPH.fromPH(pH).name())));
-
-            int nitrogen = nbtTag.getInt("N");
-            float nPct = PlantMacronutrient.NITROGEN.getAvailabilityPctInSoil(pH);
-            int phosphorus = nbtTag.getInt("P");
-            float pPct = PlantMacronutrient.PHOSPHORUS.getAvailabilityPctInSoil(pH);
-            int potassium = nbtTag.getInt("K");
-            float kPct = PlantMacronutrient.POTASSIUM.getAvailabilityPctInSoil(pH);
-
-            tooltip.add(new StringTextComponent(""));
-            tooltip.add(new TranslationTextComponent("nutrient.cropcultivation.nitrogen")
-                    .appendSibling(new StringTextComponent(String.format(": %d%% x %.1f = ", nitrogen * 10, nPct)).applyTextStyle(TextFormatting.DARK_GRAY)
-                    .appendSibling(new StringTextComponent(String.format("%.2f%%", nitrogen * nPct * 10f)).applyTextStyle(TextFormatting.GRAY))));
-            tooltip.add(new TranslationTextComponent("nutrient.cropcultivation.phosphorus")
-                    .appendSibling(new StringTextComponent(String.format(": %d%% x %.1f = ", phosphorus * 10, pPct)).applyTextStyle(TextFormatting.DARK_GRAY)
-                    .appendSibling(new StringTextComponent(String.format("%.2f%%", phosphorus * pPct * 10f)).applyTextStyle(TextFormatting.GRAY))));
-            tooltip.add(new TranslationTextComponent("nutrient.cropcultivation.potassium")
-                    .appendSibling(new StringTextComponent(String.format(": %d%% x %.1f = ", potassium * 10, kPct)).applyTextStyle(TextFormatting.DARK_GRAY)
-                    .appendSibling(new StringTextComponent(String.format("%.2f%%", potassium * kPct * 10f)).applyTextStyle(TextFormatting.GRAY))));
+            TranslationTextComponent pcCategory = new TranslationTextComponent("soil_ph." + SoilPH.fromPH(pH).name().toLowerCase());
+            tooltip.add(SoilPH.getTextComponentForPH(pH, String.format("pH: %.1f (", pH)).appendSibling(pcCategory).appendText(")"));
         }
         else {
             super.addInformation(stack, worldIn, tooltip, flagIn);
