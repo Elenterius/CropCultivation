@@ -119,6 +119,7 @@ public class SoilStateTileEntity extends TileEntity {
     }
 
     public void resetCropYield() {
+        if (cropYield == 0f) return;;
         CropCultivationMod.LOGGER.debug(MarkerManager.getMarker("ICrop"), "resetting crop yield...");
         markDirty();
         cropYield = 0f;
@@ -130,7 +131,7 @@ public class SoilStateTileEntity extends TileEntity {
 
     public float getCropYieldAveraged(int cropAge) {
         if (cropYield == 0) return 1f;
-        return cropAge > 0 ? cropYield / cropAge : 1f;
+        return cropAge > 0 ? cropYield / cropAge + 0.175f : 1f; // increase yield by a flat amount to reward players more
     }
 
     @Override

@@ -2,8 +2,8 @@ package com.creativechasm.cropcultivation.optionaldependency;
 
 import com.creativechasm.cropcultivation.CropCultivationMod;
 import com.creativechasm.cropcultivation.init.CommonRegistry;
+import net.minecraft.block.Block;
 import net.minecraft.item.Item;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ColorHandlerEvent;
@@ -18,6 +18,7 @@ import org.apache.logging.log4j.MarkerManager;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class OptionalRegistry
 {
@@ -29,8 +30,14 @@ public class OptionalRegistry
         return Mods.isSimpleFarmingPresent && SimpleFarmingHandler.isCrop(owner);
     }
 
-    public static class Mods {
-        public static boolean isSimpleFarmingPresent;
+    public static boolean isSimpleFarmingDoubleCrop(Block block) {
+        return Mods.isSimpleFarmingPresent && SimpleFarmingHandler.isDoubleCrop(block);
+    }
+
+    public static class Mods
+    {
+        public static boolean isSimpleFarmingPresent; //we do this because mixins are applied before the Mod list is loaded
+
         static {
             try {
                 Class.forName("enemeez.simplefarming.SimpleFarming", false, Mods.class.getClassLoader());
@@ -42,6 +49,7 @@ public class OptionalRegistry
         }
 
         static final Map<OptionalMod<Object>, Class<? extends IOptionalModHandler>> OPTIONAL_HANDLERS = new HashMap<>();
+        static final Map<OptionalMod<Object>, IOptionalModHandler> LOADED_MOD_HANDLERS = new HashMap<>();
 
         static final OptionalMod<Object> FARMING_FOR_BLOCKHEADS = register("farmingforblockheads", FarmingForBlockHeadsHandler.class);
         static final OptionalMod<Object> HARVEST_CRAFT_2_CROPS = register("pamhc2crops", HarvestCraftHandler.class);
@@ -52,6 +60,10 @@ public class OptionalRegistry
             OptionalMod<Object> optionalMod = OptionalMod.of(modId);
             OPTIONAL_HANDLERS.put(optionalMod, handler);
             return optionalMod;
+        }
+
+        public static Optional<IOptionalModHandler> getModHandler(OptionalMod<Object> optionalMod) {
+            return Optional.ofNullable(LOADED_MOD_HANDLERS.get(optionalMod));
         }
     }
 
@@ -66,23 +78,22 @@ public class OptionalRegistry
         }
 
         public static void onSetup() {
-            Mods.OPTIONAL_HANDLERS.forEach((optionalMod, clazz) -> {
-                optionalMod.ifPresent(o -> {
-                    try {
-                        clazz.newInstance().onSetup();
-                    }
-                    catch (InstantiationException | IllegalAccessException e) {
-                        CropCultivationMod.LOGGER.error(MarkerManager.getMarker("ModCompat"), "failed to setup mod compat for " + optionalMod.getModId(), e);
-                    }
-                });
-            });
+            Mods.OPTIONAL_HANDLERS.forEach((optionalMod, clazz) -> optionalMod.ifPresent(o -> {
+                        try {
+                            IOptionalModHandler modHandler = clazz.newInstance();
+                            modHandler.onSetup();
+                            Mods.LOADED_MOD_HANDLERS.put(optionalMod, modHandler);
+                        }
+                        catch (InstantiationException | IllegalAccessException e) {
+                            CropCultivationMod.LOGGER.error(MarkerManager.getMarker("ModCompat"), "failed to setup mod compat for " + optionalMod.getModId(), e);
+                        }
+                    })
+            );
         }
 
         @SubscribeEvent
         public static void registerModifierSerializers(final RegistryEvent.Register<GlobalLootModifierSerializer<?>> event) {
-            if (Mods.SIMPLE_FARMING.isPresent()) {
-                event.getRegistry().register(new SimpleFarmingHandler.DoubleCropYieldModifier.Serializer().setRegistryName(new ResourceLocation(CropCultivationMod.MOD_ID, "double_crop_yield")));
-            }
+
         }
     }
 

@@ -1,8 +1,9 @@
-package com.creativechasm.cropcultivation.environment;
+package com.creativechasm.cropcultivation.handler;
 
 import com.creativechasm.cropcultivation.CropCultivationMod;
-import com.creativechasm.cropcultivation.block.SoilBlock;
 import com.creativechasm.cropcultivation.block.SoilStateTileEntity;
+import com.creativechasm.cropcultivation.environment.CropUtil;
+import com.creativechasm.cropcultivation.optionaldependency.OptionalRegistry;
 import com.creativechasm.cropcultivation.util.BlockPropertyUtil;
 import com.creativechasm.cropcultivation.util.MiscUtil;
 import com.google.gson.JsonObject;
@@ -13,6 +14,8 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.state.properties.DoubleBlockHalf;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -55,11 +58,23 @@ public class CropYieldModifier extends LootModifier
                 lootCountMap.put(stack.getItem(), count + stack.getCount());
             });
 
-            TileEntity tileEntity = world.getTileEntity(pos.down());
-            if (lootCountMap.size() > 0 && tileEntity instanceof SoilStateTileEntity) {
-                SoilStateTileEntity soil = (SoilStateTileEntity) tileEntity;
-                float yieldMultiplier = soil.getCropYieldAveraged(BlockPropertyUtil.getAge(state)); //get crop yield averaged by crop age
-                float yieldModifier = BlockPropertyUtil.getYieldModifier(state);
+            if (lootCountMap.size() > 0) {
+                float yieldModifier = BlockPropertyUtil.getYieldModifier(state); //get yield modifier from the "plant traits"
+                float yieldMultiplier;
+
+                BlockPos soilPosition = pos.down();
+                if (OptionalRegistry.isSimpleFarmingDoubleCrop(state.getBlock())) {
+                    if (state.get(BlockStateProperties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.UPPER) soilPosition = pos.down(2);
+                }
+
+                TileEntity tileEntity = world.getTileEntity(soilPosition);
+                if (tileEntity instanceof SoilStateTileEntity) {
+                    SoilStateTileEntity soil = (SoilStateTileEntity) tileEntity;
+                    yieldMultiplier = soil.getCropYieldAveraged(BlockPropertyUtil.getAge(state)); //get crop yield averaged by crop age
+                }
+                else {
+                    yieldMultiplier = 0.9f; //slightly punish players for growing crops on foreign farmland
+                }
 
                 lootCountMap.forEach((item, count) -> {
                     int yieldAmount = Math.max(1, Math.round((count + yieldModifier) * yieldMultiplier));
@@ -90,7 +105,7 @@ public class CropYieldModifier extends LootModifier
             BlockState state = context.get(LootParameters.BLOCK_STATE);
             BlockPos pos = context.get(LootParameters.POSITION);
             if (state != null && pos != null) {
-                return state.getBlock() instanceof CropsBlock && context.getWorld().getBlockState(pos.down()).getBlock() instanceof SoilBlock;
+                return state.getBlock() instanceof CropsBlock || OptionalRegistry.isSimpleFarmingCrop(state.getBlock());
             }
             return false;
         }

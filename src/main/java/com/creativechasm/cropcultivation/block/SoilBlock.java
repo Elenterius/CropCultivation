@@ -207,71 +207,77 @@ public abstract class SoilBlock extends FarmlandBlock {
         }
         soilContext.moisture -= moistureLoss;
 
-        //"boost" crop growth if high N concentration available in soil
-        float boostChance = soilContext.nitrogen * PlantMacronutrient.NITROGEN.getAvailabilityPctInSoil(soilContext.pH) / soilContext.getMaxNutrientAmount();
-        if (rand.nextFloat() < boostChance) {
-            BlockPos cropPos = pos.up();
-            BlockState cropState = worldIn.getBlockState(cropPos);
-            Block cropBlock = cropState.getBlock();
-            Optional<ICropEntry> optionalICrop = CommonRegistry.getCropRegistry().get(cropBlock.getRegistryName());
-            if (optionalICrop.isPresent()) {
-                if (!worldIn.getPendingBlockTicks().isTickPending(cropPos, cropBlock)) {
+        BlockPos cropPos = pos.up();
+        BlockState cropState = worldIn.getBlockState(cropPos);
+
+        if (cropState.getBlock() == Blocks.AIR) {
+            soilContext.getTileState().resetCropYield();
+        }
+        else {
+            //"boost" crop growth if high N concentration available in soil
+            float boostChance = soilContext.nitrogen * PlantMacronutrient.NITROGEN.getAvailabilityPctInSoil(soilContext.pH) / soilContext.getMaxNutrientAmount();
+            if (rand.nextFloat() < boostChance) {
+                Block cropBlock = cropState.getBlock();
+                Optional<ICropEntry> optionalICrop = CommonRegistry.getCropRegistry().get(cropBlock.getRegistryName());
+                if (optionalICrop.isPresent()) {
+                    if (!worldIn.getPendingBlockTicks().isTickPending(cropPos, cropBlock)) {
 //                CropCultivationMod.LOGGER.debug(MarkerManager.getMarker("SoilBlock"), "force growing of crop: " + cropState.getBlock());
-                    worldIn.getPendingBlockTicks().scheduleTick(cropPos, cropBlock, 2); //we are lazy and tick the crop instead
-                }
-            }
-            else if (cropBlock instanceof IGrowable) { //fallback for not registered crops
-                if (worldIn.rand.nextFloat() < CropUtil.getBaseGrowthChance()) {
-                    IGrowable iGrowable = (IGrowable) cropBlock;
-                    if (iGrowable.canGrow(worldIn, cropPos, cropState, false)) {
-
-//                        CropCultivationMod.LOGGER.debug(MarkerManager.getMarker("SoilBlock"), "force growing of crop: " + cropState.getBlock());
-                        iGrowable.grow(worldIn, worldIn.rand, cropPos, cropState);
-                        worldIn.playEvent(Constants.WorldEvents.BONEMEAL_PARTICLES, cropPos, 5);
-                        BlockState newCropState = worldIn.getBlockState(cropPos); //get updated block state
-
-                        boolean useDefaultGrowth = ModTags.Blocks.USE_DEFAULT_GROWTH.contains(cropState.getBlock());
-
-                        Optional<IntegerProperty> ageProperty = BlockPropertyUtil.getAgeProperty(cropState);
-                        if (ageProperty.isPresent()) {
-                            IntegerProperty age = ageProperty.get();
-                            int cropAge = cropState.get(age);
-                            int maxCropAge = BlockPropertyUtil.getMaxAge(age);
-
-                            //consume nutrients
-                            if (useDefaultGrowth) {
-                                CropUtil.FallbackCrop.consumeSoilNutrients(worldIn.rand, cropAge, maxCropAge, soilContext);
-                            }
-                            else {
-                                CropUtil.RegisteredCrop.consumeSoilNutrients(worldIn.rand, cropAge, maxCropAge, CropUtil.GENERIC_CROP, soilContext);
-                            }
-
-                            //update crop yield
-                            int newCropAge = BlockPropertyUtil.getAge(newCropState);
-                            CropUtil.FallbackCrop.updateYield(cropAge, newCropAge, soilContext);
-                        }
-                        else {//fallback, what IGrowable has no age property? (tall flowers! lol)
-                            soilContext.getTileState().resetCropYield();
-
-                            // penalize the player for using "illegal" plant
-                            if (useDefaultGrowth) {
-                                if (worldIn.rand.nextFloat() < 0.35f) soilContext.nitrogen -= 2;
-                                if (worldIn.rand.nextFloat() < 0.35f) soilContext.phosphorus -= 2;
-                                if (worldIn.rand.nextFloat() < 0.35f) soilContext.potassium -= 1;
-                            }
-                            else {
-                                if (CropUtil.RegisteredCrop.canConsumeNutrient(worldIn.rand, CropUtil.GENERIC_CROP.getNitrogenNeed())) soilContext.nitrogen -= 2;
-                                if (CropUtil.RegisteredCrop.canConsumeNutrient(worldIn.rand, CropUtil.GENERIC_CROP.getPhosphorusNeed())) soilContext.phosphorus -= 2;
-                                if (CropUtil.RegisteredCrop.canConsumeNutrient(worldIn.rand, CropUtil.GENERIC_CROP.getPotassiumNeed())) soilContext.potassium -= 1;
-                            }
-                        }
-                        CropUtil.FallbackCrop.consumeSoilMoisture(cropPos, newCropState, soilContext);
+                        worldIn.getPendingBlockTicks().scheduleTick(cropPos, cropBlock, 2); //we are lazy and tick the crop instead
                     }
                 }
-            }
-            else if (cropBlock instanceof IPlantable) { //fallback, incompatible plants
-                if (cropBlock.ticksRandomly(cropState) && !worldIn.getPendingBlockTicks().isTickPending(cropPos, cropBlock)) {
-                    worldIn.getPendingBlockTicks().scheduleTick(cropPos, cropBlock, 2);
+                else if (cropBlock instanceof IGrowable) { //fallback for not registered crops
+                    if (worldIn.rand.nextFloat() < CropUtil.getBaseGrowthChance()) {
+                        IGrowable iGrowable = (IGrowable) cropBlock;
+                        if (iGrowable.canGrow(worldIn, cropPos, cropState, false)) {
+
+//                        CropCultivationMod.LOGGER.debug(MarkerManager.getMarker("SoilBlock"), "force growing of crop: " + cropState.getBlock());
+                            iGrowable.grow(worldIn, worldIn.rand, cropPos, cropState);
+                            worldIn.playEvent(Constants.WorldEvents.BONEMEAL_PARTICLES, cropPos, 5);
+                            BlockState newCropState = worldIn.getBlockState(cropPos); //get updated block state
+
+                            boolean useDefaultGrowth = ModTags.Blocks.USE_DEFAULT_GROWTH.contains(cropState.getBlock());
+
+                            Optional<IntegerProperty> ageProperty = BlockPropertyUtil.getAgeProperty(cropState);
+                            if (ageProperty.isPresent()) {
+                                IntegerProperty age = ageProperty.get();
+                                int cropAge = cropState.get(age);
+                                int maxCropAge = BlockPropertyUtil.getMaxAge(age);
+
+                                //consume nutrients
+                                if (useDefaultGrowth) {
+                                    CropUtil.FallbackCrop.consumeSoilNutrients(worldIn.rand, cropAge, maxCropAge, soilContext);
+                                }
+                                else {
+                                    CropUtil.RegisteredCrop.consumeSoilNutrients(worldIn.rand, cropAge, maxCropAge, CropUtil.GENERIC_CROP, soilContext);
+                                }
+
+                                //update crop yield
+                                int newCropAge = BlockPropertyUtil.getAge(newCropState);
+                                CropUtil.FallbackCrop.updateYield(cropAge, newCropAge, soilContext);
+                            }
+                            else {//fallback, what IGrowable has no age property? (tall flowers! lol)
+                                soilContext.getTileState().resetCropYield();
+
+                                // penalize the player for using "illegal" plant
+                                if (useDefaultGrowth) {
+                                    if (worldIn.rand.nextFloat() < 0.35f) soilContext.nitrogen -= 2;
+                                    if (worldIn.rand.nextFloat() < 0.35f) soilContext.phosphorus -= 2;
+                                    if (worldIn.rand.nextFloat() < 0.35f) soilContext.potassium -= 1;
+                                }
+                                else {
+                                    if (CropUtil.RegisteredCrop.canConsumeNutrient(worldIn.rand, CropUtil.GENERIC_CROP.getNitrogenNeed())) soilContext.nitrogen -= 2;
+                                    if (CropUtil.RegisteredCrop.canConsumeNutrient(worldIn.rand, CropUtil.GENERIC_CROP.getPhosphorusNeed())) soilContext.phosphorus -= 2;
+                                    if (CropUtil.RegisteredCrop.canConsumeNutrient(worldIn.rand, CropUtil.GENERIC_CROP.getPotassiumNeed())) soilContext.potassium -= 1;
+                                }
+                            }
+                            CropUtil.FallbackCrop.consumeSoilMoisture(cropPos, newCropState, soilContext);
+                        }
+                    }
+                }
+                else if (cropBlock instanceof IPlantable) { //fallback, incompatible plants
+                    if (cropBlock.ticksRandomly(cropState) && !worldIn.getPendingBlockTicks().isTickPending(cropPos, cropBlock)) {
+                        worldIn.getPendingBlockTicks().scheduleTick(cropPos, cropBlock, 2);
+                    }
                 }
             }
         }
@@ -290,12 +296,11 @@ public abstract class SoilBlock extends FarmlandBlock {
         }
 
         if (hasCrops && soilContext.moisture < SoilMoisture.AVERAGE_1.getMoistureLevel()) {
-            BlockPos cropPos = pos.up();
-            BlockState cropState = worldIn.getBlockState(cropPos);
+            cropState = worldIn.getBlockState(cropPos); //get new state in case it changed
             if (cropState.getBlock() instanceof CropsBlock) {
                 float fertilizerBurnProbability = 0;
                 if (soilContext.phosphorus > 8) fertilizerBurnProbability += CropCultivationConfig.FERTILIZER_BURN_CHANCE.get() * 0.5f;
-                if (soilContext.potassium > 8) fertilizerBurnProbability += CropCultivationConfig.FERTILIZER_BURN_CHANCE.get() * 0.5f;
+                if (soilContext.potassium > 8) fertilizerBurnProbability += CropCultivationConfig.FERTILIZER_BURN_CHANCE.get() * 0.45f;
                 if (worldIn.rand.nextFloat() < fertilizerBurnProbability) {
                     worldIn.setBlockState(cropPos, ModBlocks.DEAD_CROP_WITHERED.getDefaultState()); //fertilizer burn (kill crop)
                 }

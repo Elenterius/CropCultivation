@@ -54,7 +54,14 @@ public abstract class CropHandler
                         return;
                     }
                     else if (growthChance > CropUtil.getBaseGrowthChance() * 0.5f && world.rand.nextFloat() < CropCultivationConfig.WEED_SPAWN_CHANCE.get()) {
-                        if (soilContext.pH >= 6.5f && soilContext.pH <= 7f) {
+                        boolean flag = true;
+                        Optional<IntegerProperty> ageProperty = BlockPropertyUtil.getAgeProperty(event.getState());
+                        if (ageProperty.isPresent()) {
+                            float agePct = (float) event.getState().get(ageProperty.get()) / (float) BlockPropertyUtil.getMaxAge(ageProperty.get());
+                            if (agePct >= 0.5f) flag = false; //prevent older crops to be replaced by weed
+                        }
+
+                        if (flag && soilContext.pH >= 6.5f && soilContext.pH <= 7f) {
                             ((ServerWorld)world).spawnParticle(ParticleTypes.SMOKE, pos.getX() + 0.5, pos.getY() - 0.75, pos.getZ() + 0.5, 5, 0.25, 0, 0.25, 0);
                             world.setBlockState(pos, CropUtil.getWeedPlant(soilContext)); //crop is out-competed by weed
                         }

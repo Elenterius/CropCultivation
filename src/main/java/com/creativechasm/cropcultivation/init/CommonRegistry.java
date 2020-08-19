@@ -2,8 +2,8 @@ package com.creativechasm.cropcultivation.init;
 
 import com.creativechasm.cropcultivation.CropCultivationMod;
 import com.creativechasm.cropcultivation.block.*;
-import com.creativechasm.cropcultivation.environment.CropYieldModifier;
 import com.creativechasm.cropcultivation.environment.soil.SoilTexture;
+import com.creativechasm.cropcultivation.handler.CropYieldModifier;
 import com.creativechasm.cropcultivation.item.*;
 import com.creativechasm.cropcultivation.registry.CropRegistry;
 import com.creativechasm.cropcultivation.trigger.ModTriggers;

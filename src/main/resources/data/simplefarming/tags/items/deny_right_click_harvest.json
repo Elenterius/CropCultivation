@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "cropcultivation:soil_meter",
+    "cropcultivation:crop_reader"
+  ]
+}

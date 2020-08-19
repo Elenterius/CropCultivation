@@ -1,7 +1,6 @@
 {
   "replace": false,
   "entries": [
-    "cropcultivation:crop_yield",
-    "cropcultivation:double_crop_yield"
+    "cropcultivation:crop_yield"
   ]
 }
