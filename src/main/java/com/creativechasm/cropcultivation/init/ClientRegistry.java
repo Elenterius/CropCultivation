@@ -1,11 +1,9 @@
 package com.creativechasm.cropcultivation.init;
 
 import com.creativechasm.cropcultivation.CropCultivationMod;
-import com.creativechasm.cropcultivation.block.ModBlocks;
 import com.creativechasm.cropcultivation.block.SoilBlock;
 import com.creativechasm.cropcultivation.environment.soil.SoilMoisture;
 import com.creativechasm.cropcultivation.environment.soil.SoilTexture;
-import com.creativechasm.cropcultivation.item.ModItems;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
@@ -22,7 +20,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 @OnlyIn(Dist.CLIENT)
 @Mod.EventBusSubscriber(modid = CropCultivationMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
-public class ClientRegistry
+public abstract class ClientRegistry
 {
     @SubscribeEvent
     public static void clientSetup(FMLClientSetupEvent event) {

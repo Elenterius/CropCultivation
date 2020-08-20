@@ -1,7 +1,7 @@
 package com.creativechasm.cropcultivation.block;
 
 import com.creativechasm.cropcultivation.environment.plant.WeedType;
-import com.creativechasm.cropcultivation.trigger.ModTriggers;
+import com.creativechasm.cropcultivation.init.ModTriggers;
 import com.creativechasm.cropcultivation.util.BlockPropertyUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

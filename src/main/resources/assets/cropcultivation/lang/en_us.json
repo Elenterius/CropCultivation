@@ -34,6 +34,7 @@
   "item.cropcultivation.soil_sampler": "Soil Auger",
   "item.cropcultivation.soil_meter": "Soil Meter",
   "item.cropcultivation.crop_reader": "Magnifying Glass",
+  "item.cropcultivation.tablet": "Ubicomp-Tablet",
 
   "desc.cropcultivation.thermo_hygrometer": "Measures Temperature and Humidity",
   "desc.cropcultivation.soil_test_kit": "Measures Soil pH and Macronutrient Concentration",

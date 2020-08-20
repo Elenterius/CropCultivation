@@ -1,7 +1,6 @@
 package com.creativechasm.cropcultivation.environment;
 
 import com.creativechasm.cropcultivation.CropCultivationConfig;
-import com.creativechasm.cropcultivation.block.ModBlocks;
 import com.creativechasm.cropcultivation.block.WeedBlock;
 import com.creativechasm.cropcultivation.environment.plant.IPlantGrowthCA;
 import com.creativechasm.cropcultivation.environment.plant.PlantMacronutrient;
@@ -9,6 +8,7 @@ import com.creativechasm.cropcultivation.environment.plant.WeedType;
 import com.creativechasm.cropcultivation.environment.soil.SoilMoisture;
 import com.creativechasm.cropcultivation.environment.soil.SoilStateContext;
 import com.creativechasm.cropcultivation.init.CommonRegistry;
+import com.creativechasm.cropcultivation.init.ModBlocks;
 import com.creativechasm.cropcultivation.registry.DefaultCropEntry;
 import com.creativechasm.cropcultivation.registry.ICropEntry;
 import com.creativechasm.cropcultivation.util.BlockPropertyUtil;

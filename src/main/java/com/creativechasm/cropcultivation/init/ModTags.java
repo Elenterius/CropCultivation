@@ -1,4 +1,4 @@
-package com.creativechasm.cropcultivation.util;
+package com.creativechasm.cropcultivation.init;
 
 import com.creativechasm.cropcultivation.CropCultivationMod;
 import net.minecraft.block.Block;

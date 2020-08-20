@@ -6,7 +6,6 @@ import com.creativechasm.cropcultivation.environment.soil.SoilTexture;
 import com.creativechasm.cropcultivation.handler.CropYieldModifier;
 import com.creativechasm.cropcultivation.item.*;
 import com.creativechasm.cropcultivation.registry.CropRegistry;
-import com.creativechasm.cropcultivation.trigger.ModTriggers;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
@@ -178,6 +177,8 @@ public abstract class CommonRegistry
                 new SoilSamplerItem(new Item.Properties().maxStackSize(1).rarity(Rarity.RARE).group(ITEM_GROUP)).setRegistryName("soil_sampler"),
                 new SoilMeterItem(new Item.Properties().maxStackSize(1).rarity(Rarity.RARE).group(ITEM_GROUP)).setRegistryName("soil_meter"),
                 new CropReaderItem(new Item.Properties().maxStackSize(1).rarity(Rarity.EPIC).group(ITEM_GROUP)).setRegistryName("crop_reader"),
+
+                new TabletItem(new Item.Properties().maxStackSize(1).rarity(Rarity.EPIC).group(ITEM_GROUP)).setRegistryName("tablet"),
 
                 new FoobarItem(new Item.Properties().maxStackSize(1).rarity(Rarity.EPIC).group(ITEM_GROUP)).setRegistryName("foobar")
         );

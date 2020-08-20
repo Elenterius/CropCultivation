@@ -1,11 +1,11 @@
-package com.creativechasm.cropcultivation.item;
+package com.creativechasm.cropcultivation.init;
 
 import com.creativechasm.cropcultivation.CropCultivationMod;
 import net.minecraft.item.Item;
 import net.minecraftforge.registries.ObjectHolder;
 
 @ObjectHolder(CropCultivationMod.MOD_ID)
-public class ModItems
+public abstract class ModItems
 {
 //    @ObjectHolder("loam_soil")
 //    public static BlockItem LOAM_SOIL;
@@ -57,4 +57,7 @@ public class ModItems
 
     @ObjectHolder("crop_reader")
     public static Item CROP_READER;
+
+    @ObjectHolder("tablet")
+    public static Item TABLET;
 }

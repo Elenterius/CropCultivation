@@ -1,11 +1,15 @@
-package com.creativechasm.cropcultivation.block;
+package com.creativechasm.cropcultivation.init;
 
 import com.creativechasm.cropcultivation.CropCultivationMod;
+import com.creativechasm.cropcultivation.block.DeadCropBlock;
+import com.creativechasm.cropcultivation.block.RaisedBedBlock;
+import com.creativechasm.cropcultivation.block.SoilBlock;
+import com.creativechasm.cropcultivation.block.WeedBlock;
 import net.minecraft.block.Block;
 import net.minecraftforge.registries.ObjectHolder;
 
 @ObjectHolder(CropCultivationMod.MOD_ID)
-public class ModBlocks
+public abstract class ModBlocks
 {
     @ObjectHolder("silt")
     public static Block SILT;

@@ -1,7 +1,8 @@
 package com.creativechasm.cropcultivation.block;
 
-import com.creativechasm.cropcultivation.trigger.ModTriggers;
-import com.creativechasm.cropcultivation.util.ModTags;
+import com.creativechasm.cropcultivation.init.ModBlocks;
+import com.creativechasm.cropcultivation.init.ModTags;
+import com.creativechasm.cropcultivation.init.ModTriggers;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DeadBushBlock;

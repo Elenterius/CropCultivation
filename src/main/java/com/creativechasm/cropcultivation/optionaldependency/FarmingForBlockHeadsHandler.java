@@ -1,7 +1,7 @@
 package com.creativechasm.cropcultivation.optionaldependency;
 
 import com.creativechasm.cropcultivation.CropCultivationMod;
-import com.creativechasm.cropcultivation.item.ModItems;
+import com.creativechasm.cropcultivation.init.ModItems;
 import net.blay09.mods.farmingforblockheads.api.FarmingForBlockheadsAPI;
 import net.blay09.mods.farmingforblockheads.api.IMarketCategory;
 import net.minecraft.item.ItemStack;

@@ -1,5 +1,6 @@
 package com.creativechasm.cropcultivation.trigger;
 
+import com.creativechasm.cropcultivation.init.ModTriggers;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import mcp.MethodsReturnNonnullByDefault;

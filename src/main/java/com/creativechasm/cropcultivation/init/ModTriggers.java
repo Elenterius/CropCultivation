@@ -1,8 +1,9 @@
-package com.creativechasm.cropcultivation.trigger;
+package com.creativechasm.cropcultivation.init;
 
+import com.creativechasm.cropcultivation.trigger.*;
 import net.minecraft.advancements.CriteriaTriggers;
 
-public class ModTriggers
+public abstract class ModTriggers
 {
     public static final DeadCropDestroyedTrigger DEAD_CROP_DESTROYED = new DeadCropDestroyedTrigger();
     public static final DeadCropWitheredDestroyedTrigger DEAD_CROP_WITHERED_DESTROYED = new DeadCropWitheredDestroyedTrigger();

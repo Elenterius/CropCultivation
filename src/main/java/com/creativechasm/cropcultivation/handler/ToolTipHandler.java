@@ -2,10 +2,10 @@ package com.creativechasm.cropcultivation.handler;
 
 import com.creativechasm.cropcultivation.CropCultivationMod;
 import com.creativechasm.cropcultivation.environment.plant.PlantMacronutrient;
-import com.creativechasm.cropcultivation.item.ModItems;
+import com.creativechasm.cropcultivation.init.ModItems;
+import com.creativechasm.cropcultivation.init.ModTags;
 import com.creativechasm.cropcultivation.util.BlockPropertyUtil;
 import com.creativechasm.cropcultivation.util.GuiUtil;
-import com.creativechasm.cropcultivation.util.ModTags;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
