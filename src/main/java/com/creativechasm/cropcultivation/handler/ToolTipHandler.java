@@ -6,6 +6,7 @@ import com.creativechasm.cropcultivation.init.ModItems;
 import com.creativechasm.cropcultivation.init.ModTags;
 import com.creativechasm.cropcultivation.util.BlockPropertyUtil;
 import com.creativechasm.cropcultivation.util.GuiUtil;
+import com.creativechasm.cropcultivation.util.TextUtil;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -33,23 +34,29 @@ public abstract class ToolTipHandler
             CompoundNBT nbtTag = event.getItemStack().getTag();
             if (nbtTag != null && nbtTag.contains("cropcultivation") && nbtTag.contains("BlockStateTag")) {
                 CompoundNBT propertiesTag = nbtTag.getCompound("BlockStateTag");
-                event.getToolTip().add(new StringTextComponent(""));
+                event.getToolTip().add(TextUtil.EMPTY_STRING);
                 event.getToolTip().add(new TranslationTextComponent("desc.cropcultivation.crop_traits").applyTextStyle(TextFormatting.GRAY));
-                event.getToolTip().add(new StringTextComponent(" ").appendSibling(new TranslationTextComponent("desc.cropcultivation.yield_modifier", propertiesTag.getInt(BlockPropertyUtil.YIELD_MODIFIER.getName())).applyTextStyle(TextFormatting.GRAY)));
-                event.getToolTip().add(new StringTextComponent(" ").appendSibling(new TranslationTextComponent("desc.cropcultivation.moisture_tolerance", propertiesTag.getInt(BlockPropertyUtil.MOISTURE_TOLERANCE.getName())).applyTextStyle(TextFormatting.GRAY)));
-                event.getToolTip().add(new StringTextComponent(" ").appendSibling(new TranslationTextComponent("desc.cropcultivation.temperature_tolerance", propertiesTag.getInt(BlockPropertyUtil.TEMPERATURE_TOLERANCE.getName())).applyTextStyle(TextFormatting.GRAY)));
+
+                String grade = TextUtil.GRADES[propertiesTag.getInt(BlockPropertyUtil.YIELD_MODIFIER.getName())];
+                event.getToolTip().add(TextUtil.insetTextComponent(new TranslationTextComponent("desc.cropcultivation.yield_modifier", grade)).applyTextStyle(TextFormatting.GRAY));
+
+                int level = propertiesTag.getInt(BlockPropertyUtil.MOISTURE_TOLERANCE.getName()) + 1;
+                event.getToolTip().add(TextUtil.insetTextComponent(new TranslationTextComponent("desc.cropcultivation.moisture_tolerance", new TranslationTextComponent("enchantment.level." + level))).applyTextStyle(TextFormatting.GRAY));
+
+                float toleranceInCelsius = BlockPropertyUtil.getTemperatureToleranceInCelsius(propertiesTag.getInt(BlockPropertyUtil.TEMPERATURE_TOLERANCE.getName()));
+                event.getToolTip().add(TextUtil.insetTextComponent(new TranslationTextComponent("desc.cropcultivation.temperature_tolerance", toleranceInCelsius)).applyTextStyle(TextFormatting.GRAY));
             }
         }
 
         if (ModTags.Items.FERTILIZER_GROUP.contains(item)) {  // add fertilizer info
-            event.getToolTip().add(new StringTextComponent(""));
+            event.getToolTip().add(TextUtil.EMPTY_STRING);
             event.getToolTip().add(new TranslationTextComponent("desc.cropcultivation.fertilizer").applyTextStyle(TextFormatting.GRAY));
             if (ModTags.Items.N_FERTILIZER.contains(item))
-                event.getToolTip().add(new StringTextComponent(" ").appendSibling(new TranslationTextComponent("nutrient.cropcultivation.nitrogen").applyTextStyle(TextFormatting.GRAY)));
+                event.getToolTip().add(TextUtil.insetTextComponent(new TranslationTextComponent("nutrient.cropcultivation.nitrogen")).applyTextStyle(TextFormatting.GRAY));
             if (ModTags.Items.P_FERTILIZER.contains(item))
-                event.getToolTip().add(new StringTextComponent(" ").appendSibling(new TranslationTextComponent("nutrient.cropcultivation.phosphorus").applyTextStyle(TextFormatting.GRAY)));
+                event.getToolTip().add(TextUtil.insetTextComponent(new TranslationTextComponent("nutrient.cropcultivation.phosphorus")).applyTextStyle(TextFormatting.GRAY));
             if (ModTags.Items.K_FERTILIZER.contains(item))
-                event.getToolTip().add(new StringTextComponent(" ").appendSibling(new TranslationTextComponent("nutrient.cropcultivation.potassium").applyTextStyle(TextFormatting.GRAY)));
+                event.getToolTip().add(TextUtil.insetTextComponent(new TranslationTextComponent("nutrient.cropcultivation.potassium")).applyTextStyle(TextFormatting.GRAY));
         }
 
         if ((item == ModItems.SOIL_TEST_KIT || item == ModItems.SOIL_METER) && event.getItemStack().hasTag() && event.getItemStack().getTag() != null) {
@@ -66,18 +73,18 @@ public abstract class ToolTipHandler
             event.getToolTip().add(new TranslationTextComponent("nutrient.cropcultivation.nitrogen")
                     .appendSibling(new StringTextComponent(String.format(": %d%% x %.1f = ", nitrogen * 10, nPct)).applyTextStyle(TextFormatting.DARK_GRAY)
                             .appendSibling(new StringTextComponent(String.format("%.2f%%", nitrogen * nPct * 10f)).applyTextStyle(TextFormatting.GRAY))));
-            event.getToolTip().add(new StringTextComponent(""));
-            event.getToolTip().add(new StringTextComponent(""));
+            event.getToolTip().add(TextUtil.EMPTY_STRING);
+            event.getToolTip().add(TextUtil.EMPTY_STRING);
             event.getToolTip().add(new TranslationTextComponent("nutrient.cropcultivation.phosphorus")
                     .appendSibling(new StringTextComponent(String.format(": %d%% x %.1f = ", phosphorus * 10, pPct)).applyTextStyle(TextFormatting.DARK_GRAY)
                             .appendSibling(new StringTextComponent(String.format("%.2f%%", phosphorus * pPct * 10f)).applyTextStyle(TextFormatting.GRAY))));
-            event.getToolTip().add(new StringTextComponent(""));
-            event.getToolTip().add(new StringTextComponent(""));
+            event.getToolTip().add(TextUtil.EMPTY_STRING);
+            event.getToolTip().add(TextUtil.EMPTY_STRING);
             event.getToolTip().add(new TranslationTextComponent("nutrient.cropcultivation.potassium")
                     .appendSibling(new StringTextComponent(String.format(": %d%% x %.1f = ", potassium * 10, kPct)).applyTextStyle(TextFormatting.DARK_GRAY)
                             .appendSibling(new StringTextComponent(String.format("%.2f%%", potassium * kPct * 10f)).applyTextStyle(TextFormatting.GRAY))));
-            event.getToolTip().add(new StringTextComponent(""));
-            event.getToolTip().add(new StringTextComponent(""));
+            event.getToolTip().add(TextUtil.EMPTY_STRING);
+            event.getToolTip().add(TextUtil.EMPTY_STRING);
         }
     }
 

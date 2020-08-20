@@ -111,15 +111,14 @@ public abstract class CropUtil
                 return false; //don't grow outside the pH tolerance range
             }
 
+            //check soil moisture
             int moistureTolerance = BlockPropertyUtil.getMoistureTolerance(cropState);
-            float temperatureTolerance = BlockPropertyUtil.getTemperatureTolerance(cropState);
-
-             //check soil moisture
             if (soilContext.moisture + moistureTolerance < iCrop.getMinSoilMoisture() * SoilMoisture.MAX_VALUE || soilContext.moisture - moistureTolerance > iCrop.getMaxSoilMoisture() * SoilMoisture.MAX_VALUE) {
                 return false; //don't grow outside the moisture tolerance range
             }
 
             //check temperature
+            float temperatureTolerance = BlockPropertyUtil.getTemperatureTolerance(cropState);
             float localTemperature = ClimateUtil.getLocalTemperature(world.getBiome(cropPos), cropPos, cropState);
             float soilTemperature = ClimateUtil.getLocalTemperature(world.getBiome(soilContext.getBlockPos()), soilContext.getBlockPos(), soilContext.getBlockState());
             float temperature = MathHelperX.lerp(0.7f, localTemperature, soilTemperature);

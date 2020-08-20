@@ -36,10 +36,14 @@ public abstract class BlockPropertyUtil {
 
     public static float getTemperatureTolerance(BlockState state) {
         if (state.getBlock() instanceof CropsBlock) {
-            float pct = state.get(TEMPERATURE_TOLERANCE) / 4f;
-            return pct == 0f ? 0f : ClimateUtil.convertTemperatureCelsiusToMC(pct * 10f);
+            float tolerance = getTemperatureToleranceInCelsius(state.get(TEMPERATURE_TOLERANCE));
+            return tolerance == 0f ? 0f : ClimateUtil.convertTemperatureCelsiusToMC(tolerance);
         }
         return 0f;
+    }
+
+    public static float getTemperatureToleranceInCelsius(int rawValue) {
+        return (rawValue / 4f) * 10f;
     }
 
     public static final ImmutableMap<IntegerProperty, Integer> maxAgeMappings;
