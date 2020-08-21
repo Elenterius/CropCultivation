@@ -60,7 +60,7 @@ peanut,,pamhc2crops:pampeanutcrop,simplefarming:peanut_crop,,peanutmod:peanut_cr
 peas,,pamhc2crops:pampeascrop,simplefarming:pea_crop,,
 pepper,,,simplefarming:pepper_crop,xlfoodmod:pepper_plant,
 pineapple,,pamhc2crops:pampineapplecrop,,,
-quinoa,,pamhc2crops:pamquinoacrop,,,
+quinoa,,pamhc2crops:pamquinoacrop,simplefarming:quinoa,,
 radish,,pamhc2crops:pamradishcrop,simplefarming:radish_crop,,
 rhubarb,,pamhc2crops:pamrhubarbcrop,,,
 rice,,pamhc2crops:pamricecrop,simplefarming:rice_crop,xlfoodmod:rice_plant,
