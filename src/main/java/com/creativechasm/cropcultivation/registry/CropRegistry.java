@@ -116,7 +116,7 @@ public final class CropRegistry {
                 String[] columns = line.split(",");
                 String commonId = columns[0];
                 if (commonId.isEmpty()) throw new IllegalArgumentException("invalid common id value");
-                List<ResourceLocation> list = Arrays.stream(columns).skip(1).filter(s -> !s.isEmpty()).map(ResourceLocation::new).filter(rl -> OptionalRegistry.Mods.isModLoaded(rl.getNamespace())).collect(Collectors.toList());
+                List<ResourceLocation> list = Arrays.stream(columns).skip(1).filter(s -> !s.isEmpty()).map(ResourceLocation::new).filter(rl -> rl.getNamespace().equals("minecraft") || OptionalRegistry.Mods.isModLoaded(rl.getNamespace())).collect(Collectors.toList());
                 commonIdToModIdMapping.putAll(commonId, list);
             }
         }
@@ -141,8 +141,11 @@ public final class CropRegistry {
                         Float.parseFloat(columns[8]), Float.parseFloat(columns[9])
                 );
 
-                commonIdMapping.put(commonId, cropEntry);
-                commonIdToModIdMapping.get(commonId).forEach(resourceLocation -> register(resourceLocation, cropEntry));
+                List<ResourceLocation> availableCrops = commonIdToModIdMapping.get(commonId);
+                if (availableCrops.size() > 0) { //only populate data for crops that exist, //FIXME: potential issue with player knowledge base containing unavailable crops
+                    commonIdMapping.put(commonId, cropEntry);
+                    availableCrops.forEach(resourceLocation -> register(resourceLocation, cropEntry));
+                }
             }
         }
         CropCultivationMod.LOGGER.info(LOG_MARKER, commonIdMapping.toString());
