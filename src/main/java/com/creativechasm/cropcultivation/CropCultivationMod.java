@@ -1,8 +1,12 @@
 package com.creativechasm.cropcultivation;
 
+import com.creativechasm.cropcultivation.init.ClientProxy;
+import com.creativechasm.cropcultivation.init.CommonProxy;
 import com.creativechasm.cropcultivation.init.CommonRegistry;
+import com.creativechasm.cropcultivation.init.IProxy;
 import com.creativechasm.cropcultivation.optionaldependency.OptionalRegistry;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
@@ -17,6 +21,8 @@ public class CropCultivationMod
     public static final String MOD_ID = "cropcultivation";
     public static final Logger LOGGER = LogManager.getLogger();
 
+    public static IProxy PROXY = DistExecutor.safeRunForDist(() -> ClientProxy::new, () -> CommonProxy::new);
+
     public CropCultivationMod() {
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, CropCultivationConfig.COMMON_SPEC, "cropcultivation-common.toml");
         CommonRegistry.init();
@@ -27,6 +33,7 @@ public class CropCultivationMod
 //        ClimateUtil.dumpBiomeTemperatureAndHumidity();
 //        ClimateUtil.resetTemperatureScaler();
 
+        OptionalRegistry.Mods.onSetup();
         CommonRegistry.setupFirst();
         OptionalRegistry.Common.onSetup();
         CommonRegistry.setupLast();

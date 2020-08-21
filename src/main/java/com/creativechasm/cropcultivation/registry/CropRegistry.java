@@ -1,6 +1,7 @@
 package com.creativechasm.cropcultivation.registry;
 
 import com.creativechasm.cropcultivation.CropCultivationMod;
+import com.creativechasm.cropcultivation.optionaldependency.OptionalRegistry;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.MultimapBuilder;
 import net.minecraft.util.ResourceLocation;
@@ -32,19 +33,17 @@ public final class CropRegistry {
     public CropRegistry(String mappingsCSV, String entriesCSV) {
         this.mappings_resource = mappingsCSV;
         this.entries_resource = entriesCSV;
+    }
 
+    public void buildRegistry() throws Exception {
+        boolean internal = true;
         try {
-            boolean internal = true;
             loadMappings(internal);
         }
         catch (Exception e) {
             CropCultivationMod.LOGGER.error(LOG_MARKER, "failed to initialize registry", e);
             throw new RuntimeException();
         }
-    }
-
-    public void buildRegistry() throws Exception {
-        boolean internal = true;
         loadCrops(internal);
     }
 
@@ -83,6 +82,10 @@ public final class CropRegistry {
         return Optional.empty();
     }
 
+    public Optional<ICropEntry> findAnyBy(final String name) {
+        return commonIdMapping.entrySet().parallelStream().filter(setEntry -> setEntry.getKey().contains(name)).map(Map.Entry::getValue).findAny();
+    }
+
     private void register(ResourceLocation rl, ICropEntry iCrop) {
         entries.computeIfAbsent(rl.getNamespace(), key -> new HashMap<>()).put(rl.getPath(), iCrop);
     }
@@ -113,8 +116,7 @@ public final class CropRegistry {
                 String[] columns = line.split(",");
                 String commonId = columns[0];
                 if (commonId.isEmpty()) throw new IllegalArgumentException("invalid common id value");
-
-                List<ResourceLocation> list = Arrays.stream(columns).skip(1).filter(s -> !s.isEmpty()).map(ResourceLocation::new).collect(Collectors.toList());
+                List<ResourceLocation> list = Arrays.stream(columns).skip(1).filter(s -> !s.isEmpty()).map(ResourceLocation::new).filter(rl -> OptionalRegistry.Mods.isModLoaded(rl.getNamespace())).collect(Collectors.toList());
                 commonIdToModIdMapping.putAll(commonId, list);
             }
         }

@@ -16,9 +16,7 @@ import net.minecraftforge.registries.ObjectHolder;
 import org.apache.logging.log4j.MarkerManager;
 
 import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class OptionalRegistry
 {
@@ -50,6 +48,7 @@ public class OptionalRegistry
 
         static final Map<OptionalMod<Object>, Class<? extends IOptionalModHandler>> OPTIONAL_HANDLERS = new HashMap<>();
         static final Map<OptionalMod<Object>, IOptionalModHandler> LOADED_MOD_HANDLERS = new HashMap<>();
+        static final Set<String> LOADED_MOD_IDS = new HashSet<>();
 
         static final OptionalMod<Object> FARMING_FOR_BLOCKHEADS = register("farmingforblockheads", FarmingForBlockHeadsHandler.class);
         static final OptionalMod<Object> HARVEST_CRAFT_2_CROPS = register("pamhc2crops", HarvestCraftHandler.class);
@@ -62,8 +61,27 @@ public class OptionalRegistry
             return optionalMod;
         }
 
+        public static boolean isModLoaded(String modId) {
+            return LOADED_MOD_IDS.contains(modId);
+        }
+
         public static Optional<IOptionalModHandler> getModHandler(OptionalMod<Object> optionalMod) {
             return Optional.ofNullable(LOADED_MOD_HANDLERS.get(optionalMod));
+        }
+
+        public static void onSetup() {
+            Mods.OPTIONAL_HANDLERS.forEach((optionalMod, clazz) -> optionalMod.ifPresent(o -> {
+                        try {
+                            IOptionalModHandler modHandler = clazz.newInstance();
+                            modHandler.onSetup();
+                            LOADED_MOD_HANDLERS.put(optionalMod, modHandler);
+                            LOADED_MOD_IDS.add(optionalMod.getModId());
+                        }
+                        catch (InstantiationException | IllegalAccessException e) {
+                            CropCultivationMod.LOGGER.error(MarkerManager.getMarker("ModCompat"), "failed to setup mod compat for " + optionalMod.getModId(), e);
+                        }
+                    })
+            );
         }
     }
 
@@ -78,22 +96,10 @@ public class OptionalRegistry
         }
 
         public static void onSetup() {
-            Mods.OPTIONAL_HANDLERS.forEach((optionalMod, clazz) -> optionalMod.ifPresent(o -> {
-                        try {
-                            IOptionalModHandler modHandler = clazz.newInstance();
-                            modHandler.onSetup();
-                            Mods.LOADED_MOD_HANDLERS.put(optionalMod, modHandler);
-                        }
-                        catch (InstantiationException | IllegalAccessException e) {
-                            CropCultivationMod.LOGGER.error(MarkerManager.getMarker("ModCompat"), "failed to setup mod compat for " + optionalMod.getModId(), e);
-                        }
-                    })
-            );
         }
 
         @SubscribeEvent
         public static void registerModifierSerializers(final RegistryEvent.Register<GlobalLootModifierSerializer<?>> event) {
-
         }
     }
 
