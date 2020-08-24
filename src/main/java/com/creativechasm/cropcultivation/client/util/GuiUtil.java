@@ -1,4 +1,4 @@
-package com.creativechasm.cropcultivation.util;
+package com.creativechasm.cropcultivation.client.util;
 
 import com.creativechasm.cropcultivation.CropCultivationMod;
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -79,7 +79,7 @@ public abstract class GuiUtil
         AbstractGui.fill(x, y + 1, x + 1, y2, colorAlpha);
     }
 
-    public static void renderBlockStateIntoGUI(BlockState state, int x, int y) {
+    public static void renderBlockStateIntoGUI(BlockState state, int x, int y, float size) {
         if (state.getRenderType() != BlockRenderType.INVISIBLE) {
             RenderSystem.pushMatrix();
 
@@ -89,8 +89,6 @@ public abstract class GuiUtil
             RenderSystem.enableBlend();
             RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
             RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-
-            float size = 32f;
 
             RenderSystem.translatef(x, y, 100.0F);
             RenderSystem.translatef(0f, size, 0.0F);

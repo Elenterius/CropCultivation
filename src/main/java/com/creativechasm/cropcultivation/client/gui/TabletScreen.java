@@ -1,13 +1,14 @@
 package com.creativechasm.cropcultivation.client.gui;
 
 import com.creativechasm.cropcultivation.CropCultivationMod;
+import com.creativechasm.cropcultivation.client.util.ColorScheme;
+import com.creativechasm.cropcultivation.client.util.GuiUtil;
 import com.creativechasm.cropcultivation.environment.ClimateUtil;
 import com.creativechasm.cropcultivation.environment.CropUtil;
 import com.creativechasm.cropcultivation.environment.plant.IPlantGrowthCA;
 import com.creativechasm.cropcultivation.init.CommonRegistry;
 import com.creativechasm.cropcultivation.registry.ICropEntry;
 import com.creativechasm.cropcultivation.util.BlockPropertyUtil;
-import com.creativechasm.cropcultivation.util.GuiUtil;
 import com.creativechasm.cropcultivation.util.TextUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.block.Block;
@@ -44,7 +45,7 @@ public class TabletScreen extends Screen
 
     private ICropEntry cachedCropEntry = null;
     @Nullable
-    private static BlockState cachedBlockstate = null;
+    private static BlockState[] cachedBlockstates = null;
     private ICropEntry currCropEntry = null;
     private List<ITextComponent> cachedTextLines = new ArrayList<>();
     private ITextComponent cachedTitle = TextUtil.EMPTY_STRING;
@@ -156,31 +157,46 @@ public class TabletScreen extends Screen
 
     protected void drawForegroundLayer(int x, int y, int mouseX, int mouseY, float partialTicks) {
         if (cachedCropEntry != currCropEntry) {
-            cachedBlockstate = null;
+            cachedBlockstates = null;
             cachedTitle = CropInfo.getEntryTitle(currCropEntry);
             cachedTextLines.clear();
             CropInfo.getTextLines(currCropEntry, cachedTextLines);
         }
         cachedCropEntry = currCropEntry;
 
-        if (cachedBlockstate != null) {
+        if (cachedBlockstates != null) {
 //            setBlitOffset(100);
-            GuiUtil.renderBlockStateIntoGUI(cachedBlockstate, x + 7, y + 17);
+            GuiUtil.renderBlockStateIntoGUI(cachedBlockstates[cachedBlockstates.length-1], x + 7, y + 17, 32f);
 //            itemRenderer.renderItemIntoGUI(cachedBlockstate, x + 7, y + 19);
 //            setBlitOffset(0);
+
+//            MatrixStack matrixstack = new MatrixStack();
+//            matrixstack.translate(0.0D, 0.0D, 300D);
+//            matrixstack.scale(0.75f, 0.75f, 0f);
+            for (int i = 0; i < cachedBlockstates.length; i++) {
+                GuiUtil.renderBlockStateIntoGUI(cachedBlockstates[i], x + 7 + i * 20, y + 57 + 18 + 3, 16f);
+//                font.drawString(i + "", x + 6 + i * 20, y + 57 + 18 + 3, ColorScheme.PRIMARY_COLOR);
+
+//                String str = i + "";
+//                IRenderTypeBuffer.Impl renderTypeBuffer = IRenderTypeBuffer.getImpl(Tessellator.getInstance().getBuffer());
+//                font.renderString(str, x + 6 + i * 20 + 16 - font.getStringWidth(str) + 3, y + 57 + 18 + 3, ColorScheme.PRIMARY_COLOR, true, matrixstack.getLast().getMatrix(), renderTypeBuffer, false, 0, 0xf000f0);
+//                renderTypeBuffer.finish();
+
+                fill(x + 6 + i * 20, y + 57 + 18 + 20, x + 7 + i * 20 + 16 + 1, y + 57 + 18 + 20 + 1, 0xFF5E4B39);
+            }
         }
 
-        font.drawString(cachedTitle.getFormattedText(), x + 42f, y + 19f, 0xFFFFFFFF);
+        font.drawString(cachedTitle.getFormattedText(), x + 42f, y + 19f, ColorScheme.ACCENT_COLOR);
 //        hLine(x + 42, x + 175 - 4, y + 19 + 9,0xFFFFFFFF);
 
-        float pct = 0.8f;
-        font.drawString(String.format("Data Completeness: %.1f%%", pct * 100f), x + 42f, y + 19f + 13f, 0xFFFFFFFF);
-        GuiUtil.drawProgressBar(x + 42, y + 19 + 23, (x + xSize - 4) - (x + 42), pct, 0xFFFFFFFF, 0xFFB1B1B1);
+        float pct = 1f;
+        font.drawString(String.format("Data Completeness: %.1f%%", pct * 100f), x + 42f, y + 19f + 13f, ColorScheme.ACCENT_COLOR);
+        GuiUtil.drawProgressBar(x + 42, y + 19 + 23, (x + xSize - 4) - (x + 42), pct, ColorScheme.SECONDARY_COLOR, ColorScheme.BACKGROUND_COLOR_LIGHT_GREY);
 
         int lines = Math.min((ySize - 40) / 9, cachedTextLines.size());
         for (int idx = 0; idx < lines; ++idx) {
             ITextComponent textComponent = cachedTextLines.get(idx);
-            font.drawString(textComponent.getFormattedText(), x + 7f, y + 48f + idx * 9, 0xFFFFFFFF);
+            font.drawString(textComponent.getFormattedText(), x + 7f, y + 57f + idx * 9, ColorScheme.SECONDARY_COLOR);
         }
     }
 
@@ -210,21 +226,28 @@ public class TabletScreen extends Screen
                 ResourceLocation blockEntry = registeredModBlocks.get(0);
                 translationKey = "block." + blockEntry.toString().replace(":", ".");
 
-                lines.add(TextUtil.EMPTY_STRING);
                 lines.add(new StringTextComponent("Name: ").appendSibling(new TranslationTextComponent(translationKey).applyTextStyle(TextFormatting.GRAY)));
 
                 if (ForgeRegistries.BLOCKS.containsKey(blockEntry)) {
                     Block block = ForgeRegistries.BLOCKS.getValue(blockEntry);
                     if (block != null) {
-                        cachedBlockstate = block.getDefaultState();
-                        Optional<IntegerProperty> ageProperty = BlockPropertyUtil.getAgeProperty(cachedBlockstate);
+                        BlockState defaultState = block.getDefaultState();
+                        Optional<IntegerProperty> ageProperty = BlockPropertyUtil.getAgeProperty(defaultState);
                         if (ageProperty.isPresent()) {
                             int maxAge = BlockPropertyUtil.getMaxAge(ageProperty.get());
-                            cachedBlockstate = cachedBlockstate.with(ageProperty.get(), maxAge);
-                            lines.add(new StringTextComponent("Age: ").appendSibling(new StringTextComponent("0 - " + maxAge).applyTextStyle(TextFormatting.GRAY)));
+                            cachedBlockstates = new BlockState[maxAge + 1];
+                            for (int age = 0; age < maxAge + 1; age++) {
+                                cachedBlockstates[age] = block.getDefaultState().with(ageProperty.get(), age);
+                            }
+                            lines.add(new StringTextComponent("Age: ").appendSibling(new StringTextComponent("0-" + maxAge).applyTextStyle(TextFormatting.GRAY)));
+                            lines.add(TextUtil.EMPTY_STRING);
+                            lines.add(TextUtil.EMPTY_STRING);
+                        }
+                        else {
+                            cachedBlockstates = new BlockState[] {defaultState};
                         }
                     }
-                    else cachedBlockstate = null;
+                    else cachedBlockstates = null;
                 }
             }
             else {
@@ -233,18 +256,17 @@ public class TabletScreen extends Screen
             }
 
             lines.add(TextUtil.EMPTY_STRING);
-            lines.add(new StringTextComponent("Registered: ").appendSibling(new StringTextComponent(registeredModBlocks.toString()).applyTextStyle(TextFormatting.GRAY)));
-
-            lines.add(TextUtil.EMPTY_STRING);
-            lines.add(new StringTextComponent("Needs"));
+            lines.add(new StringTextComponent("Nutrients"));
             lines.add(new StringTextComponent(String.format("Nitrogen: %s%%", (int) (cropEntry.getNitrogenNeed() * 100))).applyTextStyle(TextFormatting.GRAY));
             lines.add(new StringTextComponent(String.format("Phosphorus: %s%%", (int) (cropEntry.getPhosphorusNeed() * 100))).applyTextStyle(TextFormatting.GRAY));
             lines.add(new StringTextComponent(String.format("Potassium: %s%%", (int) (cropEntry.getPotassiumNeed() * 100))).applyTextStyle(TextFormatting.GRAY));
+
             lines.add(TextUtil.EMPTY_STRING);
-            lines.add(new StringTextComponent("Tolerance"));
-            lines.add(new StringTextComponent(String.format("Moisture: %s - %s", cropEntry.getMinSoilMoisture(), cropEntry.getMaxSoilMoisture())).applyTextStyle(TextFormatting.GRAY));
-            lines.add(new StringTextComponent(String.format("pH: %s - %s", cropEntry.getMinSoilPH(), cropEntry.getMaxSoilPH())).applyTextStyle(TextFormatting.GRAY));
-            lines.add(new StringTextComponent(String.format("Temperature: %.2f°C - %.2f°C (%.2f - %.2f)", ClimateUtil.convertTemperatureMCToCelsius(cropEntry.getMinTemperature()), ClimateUtil.convertTemperatureMCToCelsius(cropEntry.getMaxTemperature()), cropEntry.getMinTemperature(), cropEntry.getMaxTemperature())).applyTextStyle(TextFormatting.GRAY));
+            lines.add(new StringTextComponent("Soil Moisture: ").appendSibling(new StringTextComponent(String.format("%.0f%% - %.0f%%", cropEntry.getMinSoilMoisture() * 100f, cropEntry.getMaxSoilMoisture() * 100f)).applyTextStyle(TextFormatting.GRAY)));
+            lines.add(TextUtil.EMPTY_STRING);
+            lines.add(new StringTextComponent("Soil pH: ").appendSibling(new StringTextComponent(String.format("%s - %s", cropEntry.getMinSoilPH(), cropEntry.getMaxSoilPH())).applyTextStyle(TextFormatting.GRAY)));
+            lines.add(TextUtil.EMPTY_STRING);
+            lines.add(new StringTextComponent("Temperature: ").appendSibling(new StringTextComponent(String.format("%.2f°C - %.2f°C", ClimateUtil.convertTemperatureMCToCelsius(cropEntry.getMinTemperature()), ClimateUtil.convertTemperatureMCToCelsius(cropEntry.getMaxTemperature()))).applyTextStyle(TextFormatting.GRAY)));
 
             if (cropEntry instanceof IPlantGrowthCA) {
                 lines.add(TextUtil.EMPTY_STRING);
@@ -252,6 +274,9 @@ public class TabletScreen extends Screen
                 lines.add(new StringTextComponent(String.format("Metric: %s", ((IPlantGrowthCA) cropEntry).getNeighborhood())));
                 lines.add(new StringTextComponent(String.format("Population: %s - %s", ((IPlantGrowthCA) cropEntry).getMinPlantNeighbors(), ((IPlantGrowthCA) cropEntry).getMaxPlantNeighbors())));
             }
+
+            lines.add(TextUtil.EMPTY_STRING);
+            lines.add(new StringTextComponent("blocks: ").appendSibling(new StringTextComponent(registeredModBlocks.toString()).applyTextStyle(TextFormatting.GRAY)));
         }
     }
 }
