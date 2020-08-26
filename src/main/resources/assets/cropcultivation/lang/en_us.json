@@ -34,7 +34,7 @@
   "item.cropcultivation.soil_sampler": "Soil Auger",
   "item.cropcultivation.soil_meter": "Soil Meter",
   "item.cropcultivation.crop_reader": "Magnifying Glass",
-  "item.cropcultivation.tablet": "Ubicomp-Tablet",
+  "item.cropcultivation.tablet": "Tablet",
 
   "desc.cropcultivation.thermo_hygrometer": "Measures Temperature and Humidity",
   "desc.cropcultivation.soil_test_kit": "Measures Soil pH and Macronutrient Concentration",
@@ -48,6 +48,11 @@
   "desc.cropcultivation.temperature_tolerance": "Temperature Tolerance: ±%.f°C",
   "desc.cropcultivation.fertilizer": "Fertilizer:",
 
+  "gui.cropcultivation.macronutrients": "Macronutrients",
+  "gui.cropcultivation.name": "Name",
+  "gui.cropcultivation.age": "Age",
+  "gui.cropcultivation.data_completeness": "Data Completeness: %.1f%%",
+
   "measurement.cropcultivation.desc": " -- Last Measurement -- ",
   "measurement.cropcultivation.temperature": "Temperature: %s",
   "measurement.cropcultivation.default_temperature": "Default Temperature: %s",
@@ -59,7 +64,7 @@
   "measurement.cropcultivation.drainage_type": "Drainage: %s",
   "measurement.cropcultivation.soil_moisture": "Moisture: %s",
   "measurement.cropcultivation.organic_matter": "Organic Matter: %s",
-  "measurement.cropcultivation.soil_ph" : "pH: %s",
+  "measurement.cropcultivation.soil_ph": "pH: %s",
 
   "nutrient.cropcultivation.nitrogen": "Nitrogen",
   "nutrient.cropcultivation.phosphorus": "Phosphorus",
