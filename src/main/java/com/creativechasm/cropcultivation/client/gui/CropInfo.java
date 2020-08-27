@@ -1,9 +1,8 @@
 package com.creativechasm.cropcultivation.client.gui;
 
+import com.creativechasm.cropcultivation.CropCultivationMod;
 import com.creativechasm.cropcultivation.environment.ClimateUtil;
-import com.creativechasm.cropcultivation.environment.CropUtil;
 import com.creativechasm.cropcultivation.environment.plant.IPlantGrowthCA;
-import com.creativechasm.cropcultivation.init.CommonRegistry;
 import com.creativechasm.cropcultivation.registry.ICropEntry;
 import com.creativechasm.cropcultivation.util.BlockPropertyUtil;
 import com.creativechasm.cropcultivation.util.MiscUtil;
@@ -67,15 +66,15 @@ public class CropInfo
             return;
         }
 
-        Optional<ICropEntry> anyMatch = CommonRegistry.getCropRegistry().findAnyBy(searchStr);
-        ICropEntry foundEntry = anyMatch.orElse(CropUtil.GENERIC_CROP);
+        Optional<ICropEntry> anyMatch = CropCultivationMod.PROXY.getCropRegistry().findAnyBy(searchStr);
+        ICropEntry foundEntry = anyMatch.orElse(null); //CropUtil.GENERIC_CROP
 
         if (cachedCropEntry == foundEntry) return;
 
         invalidate();
         cachedCropEntry = foundEntry;
 
-        Optional<String> stringOptional = CommonRegistry.getCropRegistry().getCommonId(cachedCropEntry);
+        Optional<String> stringOptional = CropCultivationMod.PROXY.getCropRegistry().getCommonId(cachedCropEntry);
         if (stringOptional.isPresent()) {
             commonId = stringOptional.get();
             update();
@@ -120,7 +119,7 @@ public class CropInfo
         cachedTextCompDataCompleteness = new TranslationTextComponent("gui.cropcultivation.data_completeness", getDataCompletenessPct() * 100f);
 
         cachedTextCompLines.clear();
-        List<ResourceLocation> registeredModBlocks = CommonRegistry.getCropRegistry().getModsFor(commonId);
+        List<ResourceLocation> registeredModBlocks = CropCultivationMod.PROXY.getCropRegistry().getModsFor(commonId);
         if (registeredModBlocks.size() > 0) {
             ResourceLocation blockEntry = registeredModBlocks.get(0);
             String translationKey = "block." + blockEntry.toString().replace(":", ".");

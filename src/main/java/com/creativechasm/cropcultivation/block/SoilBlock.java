@@ -9,10 +9,10 @@ import com.creativechasm.cropcultivation.environment.soil.SoilMoisture;
 import com.creativechasm.cropcultivation.environment.soil.SoilPH;
 import com.creativechasm.cropcultivation.environment.soil.SoilStateContext;
 import com.creativechasm.cropcultivation.environment.soil.SoilTexture;
-import com.creativechasm.cropcultivation.init.CommonRegistry;
 import com.creativechasm.cropcultivation.init.ModBlocks;
 import com.creativechasm.cropcultivation.init.ModTags;
 import com.creativechasm.cropcultivation.init.ModTriggers;
+import com.creativechasm.cropcultivation.registry.CropRegistry;
 import com.creativechasm.cropcultivation.registry.ICropEntry;
 import com.creativechasm.cropcultivation.util.BlockPropertyUtil;
 import net.minecraft.block.*;
@@ -220,7 +220,7 @@ public abstract class SoilBlock extends FarmlandBlock {
             float boostChance = soilContext.nitrogen * PlantMacronutrient.NITROGEN.getAvailabilityPctInSoil(soilContext.pH) / soilContext.getMaxNutrientAmount();
             if (rand.nextFloat() < boostChance) {
                 Block cropBlock = cropState.getBlock();
-                Optional<ICropEntry> optionalICrop = CommonRegistry.getCropRegistry().get(cropBlock.getRegistryName());
+                Optional<ICropEntry> optionalICrop = CropCultivationMod.PROXY.getCropRegistry().get(cropBlock.getRegistryName());
                 if (optionalICrop.isPresent()) {
                     if (!worldIn.getPendingBlockTicks().isTickPending(cropPos, cropBlock)) {
 //                CropCultivationMod.LOGGER.debug(MarkerManager.getMarker("SoilBlock"), "force growing of crop: " + cropState.getBlock());
@@ -250,7 +250,7 @@ public abstract class SoilBlock extends FarmlandBlock {
                                     CropUtil.FallbackCrop.consumeSoilNutrients(worldIn.rand, cropAge, maxCropAge, soilContext);
                                 }
                                 else {
-                                    CropUtil.RegisteredCrop.consumeSoilNutrients(worldIn.rand, cropAge, maxCropAge, CropUtil.GENERIC_CROP, soilContext);
+                                    CropUtil.RegisteredCrop.consumeSoilNutrients(worldIn.rand, cropAge, maxCropAge, CropRegistry.GENERIC_CROP, soilContext);
                                 }
 
                                 //update crop yield
@@ -267,9 +267,9 @@ public abstract class SoilBlock extends FarmlandBlock {
                                     if (worldIn.rand.nextFloat() < 0.35f) soilContext.potassium -= 1;
                                 }
                                 else {
-                                    if (CropUtil.RegisteredCrop.canConsumeNutrient(worldIn.rand, CropUtil.GENERIC_CROP.getNitrogenNeed())) soilContext.nitrogen -= 2;
-                                    if (CropUtil.RegisteredCrop.canConsumeNutrient(worldIn.rand, CropUtil.GENERIC_CROP.getPhosphorusNeed())) soilContext.phosphorus -= 2;
-                                    if (CropUtil.RegisteredCrop.canConsumeNutrient(worldIn.rand, CropUtil.GENERIC_CROP.getPotassiumNeed())) soilContext.potassium -= 1;
+                                    if (CropUtil.RegisteredCrop.canConsumeNutrient(worldIn.rand, CropRegistry.GENERIC_CROP.getNitrogenNeed())) soilContext.nitrogen -= 2;
+                                    if (CropUtil.RegisteredCrop.canConsumeNutrient(worldIn.rand, CropRegistry.GENERIC_CROP.getPhosphorusNeed())) soilContext.phosphorus -= 2;
+                                    if (CropUtil.RegisteredCrop.canConsumeNutrient(worldIn.rand, CropRegistry.GENERIC_CROP.getPotassiumNeed())) soilContext.potassium -= 1;
                                 }
                             }
                             CropUtil.FallbackCrop.consumeSoilMoisture(cropPos, newCropState, soilContext);

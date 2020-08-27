@@ -9,7 +9,6 @@ import com.creativechasm.cropcultivation.environment.soil.SoilMoisture;
 import com.creativechasm.cropcultivation.environment.soil.SoilStateContext;
 import com.creativechasm.cropcultivation.init.CommonRegistry;
 import com.creativechasm.cropcultivation.init.ModBlocks;
-import com.creativechasm.cropcultivation.registry.DefaultCropEntry;
 import com.creativechasm.cropcultivation.registry.ICropEntry;
 import com.creativechasm.cropcultivation.util.BlockPropertyUtil;
 import com.creativechasm.cropcultivation.util.MathHelperX;
@@ -27,8 +26,6 @@ import java.util.Random;
 
 public abstract class CropUtil
 {
-    public static final ICropEntry GENERIC_CROP = new DefaultCropEntry("generic", 0.2f, 0.1f, 0.1f, 5.5f, 7.5f, 0.5f, 0.7f, 10f, 22f);
-
     public static float getBaseGrowthChance() {
         return CropCultivationConfig.BASE_GROWTH_CHANCE.get().floatValue(); //0.4f; //vanilla ~0.33f
     }

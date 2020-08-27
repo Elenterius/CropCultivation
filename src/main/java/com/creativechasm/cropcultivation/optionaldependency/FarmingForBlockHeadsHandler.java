@@ -33,8 +33,8 @@ public final class FarmingForBlockHeadsHandler implements IOptionalModHandler
         FarmingForBlockheadsAPI.registerMarketEntry(new ItemStack(ModItems.FISH_MEAL, 3), new ItemStack(net.minecraft.item.Items.EMERALD, 2), marketCategory);
         FarmingForBlockheadsAPI.registerMarketEntry(new ItemStack(ModItems.NPK_FERTILIZER, 3), new ItemStack(net.minecraft.item.Items.EMERALD, 9), marketCategory);
 
-        if (OptionalRegistry.Items.SOYBEAN_MEAL != null) {
-            FarmingForBlockheadsAPI.registerMarketEntry(new ItemStack(OptionalRegistry.Items.SOYBEAN_MEAL, 3), new ItemStack(net.minecraft.item.Items.EMERALD, 2), marketCategory);
+        if (OptionalCommonRegistry.Items.SOYBEAN_MEAL != null) {
+            FarmingForBlockheadsAPI.registerMarketEntry(new ItemStack(OptionalCommonRegistry.Items.SOYBEAN_MEAL, 3), new ItemStack(net.minecraft.item.Items.EMERALD, 2), marketCategory);
         }
     }
 }

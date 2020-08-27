@@ -1,50 +1,48 @@
 package com.creativechasm.cropcultivation.registry;
 
 import com.creativechasm.cropcultivation.CropCultivationMod;
-import com.creativechasm.cropcultivation.optionaldependency.OptionalRegistry;
+import com.creativechasm.cropcultivation.optionaldependency.OptionalCommonRegistry;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.MultimapBuilder;
 import net.minecraft.util.ResourceLocation;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@ParametersAreNonnullByDefault
-public final class CropRegistry {
+public final class CropRegistry
+{
 
     public static final Marker LOG_MARKER = MarkerManager.getMarker("CropRegistry");
+    public static final ICropEntry GENERIC_CROP = new DefaultCropEntry("generic", 0.2f, 0.1f, 0.1f, 5.5f, 7.5f, 0.5f, 0.7f, 10f, 22f);
 
     @SuppressWarnings("UnstableApiUsage")
     private final ListMultimap<String, ResourceLocation> commonIdToModIdMapping = MultimapBuilder.ListMultimapBuilder.hashKeys(100).arrayListValues(2).build();
     private final HashMap<String, ICropEntry> commonIdMapping = new HashMap<>(100);
     private final HashMap<String, HashMap<String, ICropEntry>> entries = new HashMap<>(3);
 
-    private final String mappings_resource;
-    private final String entries_resource;
-
-    public CropRegistry(String mappingsCSV, String entriesCSV) {
-        this.mappings_resource = mappingsCSV;
-        this.entries_resource = entriesCSV;
+    public void clear() {
+        commonIdMapping.clear();
+        //noinspection RedundantOperationOnEmptyContainer
+        commonIdMapping.clear();
+        entries.clear();
     }
 
-    public void buildRegistry() throws Exception {
-        boolean internal = true;
+    public void buildRegistry(File mappings, File entries) throws Exception {
         try {
-            loadMappings(internal);
+            loadMappings(mappings);
         }
         catch (Exception e) {
             CropCultivationMod.LOGGER.error(LOG_MARKER, "failed to initialize registry", e);
             throw new RuntimeException();
         }
-        loadCrops(internal);
+        loadCrops(entries);
     }
 
     public Optional<ICropEntry> get(@Nullable String commonId) {
@@ -66,7 +64,6 @@ public final class CropRegistry {
         return Optional.empty();
     }
 
-    @Nonnull
     public List<ResourceLocation> getModsFor(@Nullable String commonId) {
         if (commonId != null && !commonId.isEmpty()) {
             return commonIdToModIdMapping.get(commonId);
@@ -90,22 +87,12 @@ public final class CropRegistry {
         entries.computeIfAbsent(rl.getNamespace(), key -> new HashMap<>()).put(rl.getPath(), iCrop);
     }
 
-    private void loadMappings(boolean internalResource) throws Exception {
-        if (internalResource) {
-            readMappingsCSV(new InputStreamReader(getClass().getResourceAsStream(mappings_resource)));
-        }
-        else {
-            readMappingsCSV(new FileReader(mappings_resource.replace("/data", ".")));
-        }
+    private void loadMappings(File mappingsFile) throws Exception {
+        readMappingsCSV(new FileReader(mappingsFile));
     }
 
-    private void loadCrops(boolean internalResource) throws Exception {
-        if (internalResource) {
-            readCropsCSV(new InputStreamReader(getClass().getResourceAsStream(entries_resource)));
-        }
-        else {
-            readCropsCSV(new FileReader(entries_resource.replace("/data", ".")));
-        }
+    private void loadCrops(File entriesFile) throws Exception {
+        readCropsCSV(new FileReader(entriesFile));
     }
 
     private void readMappingsCSV(InputStreamReader isr) throws Exception {
@@ -116,7 +103,7 @@ public final class CropRegistry {
                 String[] columns = line.split(",");
                 String commonId = columns[0];
                 if (commonId.isEmpty()) throw new IllegalArgumentException("invalid common id value");
-                List<ResourceLocation> list = Arrays.stream(columns).skip(1).filter(s -> !s.isEmpty()).map(ResourceLocation::new).filter(rl -> rl.getNamespace().equals("minecraft") || OptionalRegistry.Mods.isModLoaded(rl.getNamespace())).collect(Collectors.toList());
+                List<ResourceLocation> list = Arrays.stream(columns).skip(1).filter(s -> !s.isEmpty()).map(ResourceLocation::new).filter(rl -> rl.getNamespace().equals("minecraft") || OptionalCommonRegistry.Mods.isModLoaded(rl.getNamespace())).collect(Collectors.toList());
                 commonIdToModIdMapping.putAll(commonId, list);
             }
         }

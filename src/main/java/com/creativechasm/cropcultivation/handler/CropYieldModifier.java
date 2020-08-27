@@ -3,7 +3,7 @@ package com.creativechasm.cropcultivation.handler;
 import com.creativechasm.cropcultivation.CropCultivationMod;
 import com.creativechasm.cropcultivation.block.SoilStateTileEntity;
 import com.creativechasm.cropcultivation.environment.CropUtil;
-import com.creativechasm.cropcultivation.optionaldependency.OptionalRegistry;
+import com.creativechasm.cropcultivation.optionaldependency.OptionalCommonRegistry;
 import com.creativechasm.cropcultivation.util.BlockPropertyUtil;
 import com.creativechasm.cropcultivation.util.MiscUtil;
 import com.google.gson.JsonObject;
@@ -63,7 +63,7 @@ public class CropYieldModifier extends LootModifier
                 float yieldMultiplier;
 
                 BlockPos soilPosition = pos.down();
-                if (OptionalRegistry.isSimpleFarmingDoubleCrop(state.getBlock())) {
+                if (OptionalCommonRegistry.isSimpleFarmingDoubleCrop(state.getBlock())) {
                     if (state.get(BlockStateProperties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.UPPER) soilPosition = pos.down(2);
                 }
 
@@ -107,7 +107,7 @@ public class CropYieldModifier extends LootModifier
             BlockState state = context.get(LootParameters.BLOCK_STATE);
             BlockPos pos = context.get(LootParameters.POSITION);
             if (state != null && pos != null) {
-                return state.getBlock() instanceof CropsBlock || OptionalRegistry.isSimpleFarmingCrop(state.getBlock());
+                return state.getBlock() instanceof CropsBlock || OptionalCommonRegistry.isSimpleFarmingCrop(state.getBlock());
             }
             return false;
         }

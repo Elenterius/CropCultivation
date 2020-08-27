@@ -5,7 +5,6 @@ import com.creativechasm.cropcultivation.block.*;
 import com.creativechasm.cropcultivation.environment.soil.SoilTexture;
 import com.creativechasm.cropcultivation.handler.CropYieldModifier;
 import com.creativechasm.cropcultivation.item.*;
-import com.creativechasm.cropcultivation.registry.CropRegistry;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
@@ -44,7 +43,6 @@ public abstract class CommonRegistry
     @ObjectHolder(CropCultivationMod.MOD_ID + ":farm_soil")
     public static TileEntityType<?> FARM_SOIL;
 
-    private static CropRegistry CROP_REGISTRY = null;
     public static Map<Block, BlockState> HOE_LOOKUP;
     public static Map<Block, RaisedBedBlock> RAISED_BED_LOOKUP;
 
@@ -58,17 +56,12 @@ public abstract class CommonRegistry
         }
     };
 
-    public static CropRegistry getCropRegistry() {
-        return CROP_REGISTRY;
-    }
-
     public static void init() {
-        CROP_REGISTRY = new CropRegistry("/data/cropcultivation/crop_registry/mappings.csv", "/data/cropcultivation/crop_registry/entries.csv");
         ModTriggers.register();
     }
 
     public static void setupFirst() {
-        registerCrops();
+//        registerCrops();
     }
 
     public static void setupLast() {
@@ -243,16 +236,6 @@ public abstract class CommonRegistry
         }
         else {
             throw new RuntimeException("failed to modify hoe lookup table");
-        }
-    }
-
-    private static void registerCrops() {
-        try {
-            CROP_REGISTRY.buildRegistry();
-        }
-        catch (Exception e) {
-            CropCultivationMod.LOGGER.error(CropRegistry.LOG_MARKER, "failed to populate registry", e);
-            throw new RuntimeException();
         }
     }
 

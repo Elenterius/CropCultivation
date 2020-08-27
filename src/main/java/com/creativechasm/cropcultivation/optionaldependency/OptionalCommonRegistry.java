@@ -4,9 +4,6 @@ import com.creativechasm.cropcultivation.CropCultivationMod;
 import com.creativechasm.cropcultivation.init.CommonRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -18,7 +15,7 @@ import org.apache.logging.log4j.MarkerManager;
 import javax.annotation.Nullable;
 import java.util.*;
 
-public class OptionalRegistry
+public class OptionalCommonRegistry
 {
     public static boolean isSoybeanAvailable() {
         return Mods.SIMPLE_FARMING.isPresent() || Mods.HARVEST_CRAFT_2_CROPS.isPresent();
@@ -86,7 +83,7 @@ public class OptionalRegistry
     }
 
     @Mod.EventBusSubscriber(modid = CropCultivationMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
-    public static class Common
+    public static class Main
     {
         @SubscribeEvent
         public static void onItemsRegistry(final RegistryEvent.Register<Item> registryEvent) {
@@ -95,24 +92,10 @@ public class OptionalRegistry
             }
         }
 
-        public static void onSetup() {
-        }
+        public static void onSetup() {}
 
         @SubscribeEvent
-        public static void registerModifierSerializers(final RegistryEvent.Register<GlobalLootModifierSerializer<?>> event) {
-        }
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    @Mod.EventBusSubscriber(modid = CropCultivationMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
-    public static class Client
-    {
-        @SubscribeEvent
-        public static void onItemColorRegistry(final ColorHandlerEvent.Item event) {
-            if (isSoybeanAvailable()) {
-                event.getItemColors().register((stack, index) -> 0x7E9739, Items.SOYBEAN_MEAL);
-            }
-        }
+        public static void registerModifierSerializers(final RegistryEvent.Register<GlobalLootModifierSerializer<?>> event) {}
     }
 
     @ObjectHolder(CropCultivationMod.MOD_ID)

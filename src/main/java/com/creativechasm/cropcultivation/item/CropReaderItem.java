@@ -1,11 +1,12 @@
 package com.creativechasm.cropcultivation.item;
 
+import com.creativechasm.cropcultivation.CropCultivationMod;
 import com.creativechasm.cropcultivation.environment.ClimateUtil;
 import com.creativechasm.cropcultivation.environment.CropUtil;
 import com.creativechasm.cropcultivation.environment.plant.IPlantGrowthCA;
 import com.creativechasm.cropcultivation.environment.soil.SoilStateContext;
-import com.creativechasm.cropcultivation.init.CommonRegistry;
 import com.creativechasm.cropcultivation.init.ModTags;
+import com.creativechasm.cropcultivation.registry.CropRegistry;
 import com.creativechasm.cropcultivation.registry.ICropEntry;
 import com.creativechasm.cropcultivation.util.BlockPropertyUtil;
 import net.minecraft.block.BlockState;
@@ -44,7 +45,7 @@ public class CropReaderItem extends DeviceItem implements IMeasuringDevice
             CompoundNBT nbtTag = stack.getTag();
 
             String commonId = nbtTag.getString("commonId");
-            Optional<ICropEntry> optionalCrop = CommonRegistry.getCropRegistry().get(commonId);
+            Optional<ICropEntry> optionalCrop = CropCultivationMod.PROXY.getCropRegistry().get(commonId);
 
             tooltip.add(new StringTextComponent(""));
             tooltip.add(new StringTextComponent("Crop: ").appendSibling(new StringTextComponent(nbtTag.getString("blockRN")).applyTextStyle(TextFormatting.GRAY)));
@@ -111,13 +112,13 @@ public class CropReaderItem extends DeviceItem implements IMeasuringDevice
 
             boolean useDefaultGrowth = ModTags.Blocks.USE_DEFAULT_GROWTH.contains(state.getBlock());
             if (!useDefaultGrowth) {
-                Optional<ICropEntry> optionalCrop = CommonRegistry.getCropRegistry().get(state.getBlock().getRegistryName());
-                ICropEntry cropEntry = optionalCrop.orElse(CropUtil.GENERIC_CROP);
+                Optional<ICropEntry> optionalCrop = CropCultivationMod.PROXY.getCropRegistry().get(state.getBlock().getRegistryName());
+                ICropEntry cropEntry = optionalCrop.orElse(CropRegistry.GENERIC_CROP);
 
-                Optional<String> optionalId = CommonRegistry.getCropRegistry().getCommonId(cropEntry);
+                Optional<String> optionalId = CropCultivationMod.PROXY.getCropRegistry().getCommonId(cropEntry);
                 optionalId.ifPresent(id -> {
                     nbtTag.putString("commonId", id);
-                    nbtTag.putString("registered", "" + CommonRegistry.getCropRegistry().getModsFor(id));
+                    nbtTag.putString("registered", "" + CropCultivationMod.PROXY.getCropRegistry().getModsFor(id));
                 });
 
                 SoilStateContext soilContext = new SoilStateContext(world, pos.down());

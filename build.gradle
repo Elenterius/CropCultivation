@@ -90,6 +90,7 @@ dependencies {
     implementation fg.deobf('net.blay09.mods:FarmingForBlockheads_1.15.2:6.1.5')
     implementation fg.deobf('appleskin:AppleSkin-mc1.15.2-forge:1.0.14')
     implementation 'org.spongepowered:mixin:0.8'
+    implementation group: 'org.mapdb', name: 'mapdb', version: '3.0.8'
 }
 
 import groovy.json.JsonSlurper

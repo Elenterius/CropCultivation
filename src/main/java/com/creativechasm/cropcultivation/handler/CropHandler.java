@@ -4,8 +4,8 @@ import com.creativechasm.cropcultivation.CropCultivationConfig;
 import com.creativechasm.cropcultivation.CropCultivationMod;
 import com.creativechasm.cropcultivation.environment.CropUtil;
 import com.creativechasm.cropcultivation.environment.soil.SoilStateContext;
-import com.creativechasm.cropcultivation.init.CommonRegistry;
 import com.creativechasm.cropcultivation.init.ModTags;
+import com.creativechasm.cropcultivation.registry.CropRegistry;
 import com.creativechasm.cropcultivation.registry.ICropEntry;
 import com.creativechasm.cropcultivation.util.BlockPropertyUtil;
 import net.minecraft.block.BlockState;
@@ -42,8 +42,8 @@ public abstract class CropHandler
         BlockPos pos = event.getPos();
         SoilStateContext soilContext = new SoilStateContext(world, pos.down());
         if (!soilContext.isClient) {
-            Optional<ICropEntry> optionalICrop = CommonRegistry.getCropRegistry().get(event.getState().getBlock().getRegistryName());
-            ICropEntry iCrop = optionalICrop.orElse(CropUtil.GENERIC_CROP); // if the crop is unknown use a generic fallback
+            Optional<ICropEntry> optionalICrop = CropCultivationMod.PROXY.getCropRegistry().get(event.getState().getBlock().getRegistryName());
+            ICropEntry iCrop = optionalICrop.orElse(CropRegistry.GENERIC_CROP); // if the crop is unknown use a generic fallback
 
             if (soilContext.isValid) {
                 boolean canGrow = CropUtil.RegisteredCrop.canCropGrow(world, pos, event.getState(), iCrop, soilContext); //pre-conditions
@@ -93,8 +93,8 @@ public abstract class CropHandler
 
             // update changes to world
             if (!useDefaultGrowth) {
-                Optional<ICropEntry> optionalICrop = CommonRegistry.getCropRegistry().get(newCropState.getBlock().getRegistryName());
-                ICropEntry iCrop = optionalICrop.orElse(CropUtil.GENERIC_CROP); // if the crop is unknown use a generic fallback
+                Optional<ICropEntry> optionalICrop = CropCultivationMod.PROXY.getCropRegistry().get(newCropState.getBlock().getRegistryName());
+                ICropEntry iCrop = optionalICrop.orElse(CropRegistry.GENERIC_CROP); // if the crop is unknown use a generic fallback
 
                 Optional<IntegerProperty> ageProperty = BlockPropertyUtil.getAgeProperty(newCropState);
                 if (ageProperty.isPresent()) {
