@@ -86,7 +86,7 @@ public class CropInfo
         }
     }
 
-    float getDataCompletnessPct() {
+    float getDataCompletenessPct() {
         return 1f;
     }
 
@@ -117,7 +117,7 @@ public class CropInfo
     private void update() {
         cachedTextCompId = new StringTextComponent("ID/").appendSibling(new StringTextComponent(commonId).appendText("/").applyTextStyle(TextFormatting.GRAY));
 
-        cachedTextCompDataCompleteness = new TranslationTextComponent("gui.cropcultivation.data_completeness", getDataCompletnessPct() * 100f);
+        cachedTextCompDataCompleteness = new TranslationTextComponent("gui.cropcultivation.data_completeness", getDataCompletenessPct() * 100f);
 
         cachedTextCompLines.clear();
         List<ResourceLocation> registeredModBlocks = CommonRegistry.getCropRegistry().getModsFor(commonId);

@@ -41,6 +41,7 @@
   "desc.cropcultivation.soil_sampler": "Samples the soil for moisture and soil texture",
   "desc.cropcultivation.soil_meter": "Its long probe allows it to measure the soil beneath the plants. This multi tool measures skylight levels, soil moisture, temperature, pH & nutrients all at once.",
   "desc.cropcultivation.crop_reader": "Debug item to read Plant Info...",
+  "desc.cropcultivation.tablet": "Browse your knowledge about Crops",
 
   "desc.cropcultivation.crop_traits": "Crop Traits:",
   "desc.cropcultivation.yield_modifier": "Yield Grade: %s",

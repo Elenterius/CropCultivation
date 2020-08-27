@@ -190,7 +190,7 @@ public class TabletScreen extends Screen
         font.drawString(cropInfo.getCommonId().getFormattedText(), x + 42f, y + 19f, ColorScheme.ACCENT_COLOR);
 //        hLine(x + 42, x + 175 - 4, y + 19 + 9,0xFFFFFFFF);
 
-        float pct = cropInfo.getDataCompletnessPct();
+        float pct = cropInfo.getDataCompletenessPct();
         font.drawString(cropInfo.getDataCompleteness().getFormattedText(), x + 42f, y + 19f + 13f, ColorScheme.ACCENT_COLOR);
         GuiUtil.drawProgressBar(x + 42, y + 19 + 23, (x + xSize - 4) - (x + 42), pct, ColorScheme.SECONDARY_COLOR, ColorScheme.BACKGROUND_COLOR_LIGHT_GREY);
 
