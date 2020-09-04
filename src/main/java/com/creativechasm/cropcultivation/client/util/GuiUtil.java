@@ -8,18 +8,43 @@ import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
 @OnlyIn(Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = CropCultivationMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public abstract class GuiUtil
 {
     public static final String MAGIC_STRING = "\u0020\u00a7" + 'r' + "\u0020\u0020";
     public static final ResourceLocation TEXTURE_MEASURE_BAR = new ResourceLocation(CropCultivationMod.MOD_ID, "textures/gui/measure_bar.png");
+
+    public static final ResourceLocation PRESS_START_2P_FONT = new ResourceLocation(CropCultivationMod.MOD_ID, "press_start_2p"); //important: without "font/" dir as prefix
+    public static final FontRenderer PRESS_START_2P_FONT_RENDERER;
+
+    static {
+        FontRenderer fontRenderer = Minecraft.getInstance().getFontResourceManager().getFontRenderer(GuiUtil.PRESS_START_2P_FONT);
+        if (fontRenderer == null) {
+            CropCultivationMod.LOGGER.warn("Failed to load true type font PressStart2P! Using vanilla font renderer instead");
+            PRESS_START_2P_FONT_RENDERER = Minecraft.getInstance().fontRenderer;
+        }
+        else {
+            CropCultivationMod.LOGGER.debug("True Type Font PressStart2P loaded");
+            PRESS_START_2P_FONT_RENDERER = fontRenderer;
+            PRESS_START_2P_FONT_RENDERER.setBidiFlag(Minecraft.getInstance().getLanguageManager().isCurrentLanguageBidirectional());
+        }
+    }
+
+    @SubscribeEvent
+    public static void onResourcepackReload() {
+
+    }
 
     public static void drawMeasureBar(int x, int y, int width, float pct, int colorAlpha) {
         int maxWidth = 16 * (width / 16 - 2) + 1;

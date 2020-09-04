@@ -1,0 +1,12 @@
+{
+  "providers": [
+    {
+      "type": "ttf",
+      "file": "cropcultivation:press_start_2p.ttf",
+      "shift": [0, 1.5],
+      "size": 8.0,
+      "oversample": 2.0,
+      "skip": ""
+    }
+  ]
+}

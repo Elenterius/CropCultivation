@@ -5,6 +5,7 @@ import com.creativechasm.cropcultivation.client.util.ColorScheme;
 import com.creativechasm.cropcultivation.client.util.GuiUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.chat.NarratorChatListener;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -154,18 +155,23 @@ public class TabletScreen extends Screen
         searchField.render(mouseX, mouseY, partialTicks);
     }
 
+    FontRenderer trueTypeFontRenderer = null;
+
     protected void drawForegroundLayer(int x, int y, int mouseX, int mouseY, float partialTicks) {
         if (!cropInfo.isValid) {
             int width = (int) (xSize * 0.8f);
-            GuiUtil.drawProgressBar(x + (xSize - width), y + ySize/2 + 8, width - (xSize-width), progress, ColorScheme.SECONDARY_COLOR, ColorScheme.BACKGROUND_COLOR_LIGHT_GREY);
+            GuiUtil.drawProgressBar(x + (xSize - width), y + ySize / 2 + 8, width - (xSize - width), progress, ColorScheme.SECONDARY_COLOR, ColorScheme.BACKGROUND_COLOR_LIGHT_GREY);
 
             for (int idx = 0; idx < loadingTextLines.size(); ++idx) {
                 String line = loadingTextLines.get(idx);
-                font.drawString(line, x + xSize/2f - font.getStringWidth(line) / 2f, y + ySize/2f + 9 + 12 + idx * (9+2), ColorScheme.PRIMARY_COLOR);
+                font.drawString(line, x + xSize / 2f - font.getStringWidth(line) / 2f, y + ySize / 2f + 9 + 12 + idx * (9 + 2), ColorScheme.PRIMARY_COLOR);
             }
-
             return;
         }
+
+        String text = "Foobar And Funky Town!:";
+        font.drawString(text + font.getStringWidth(text), x + xSize - 4, y + 19 + 23, ColorScheme.PRIMARY_COLOR);
+        GuiUtil.PRESS_START_2P_FONT_RENDERER.drawString(text + GuiUtil.PRESS_START_2P_FONT_RENDERER.getStringWidth(text), x + xSize - 4, y + 19 + 23, ColorScheme.PRIMARY_COLOR);
 
 //            setBlitOffset(100);
         GuiUtil.renderBlockStateIntoGUI(cropInfo.getMatureBlockState(), x + 7, y + 17, 32f);
@@ -196,7 +202,7 @@ public class TabletScreen extends Screen
 
         List<ItemStack> itemDrops = cropInfo.itemDrops;
         for (int i = 0, itemDropsSize = itemDrops.size(); i < itemDropsSize; i++) {
-            itemRenderer.renderItemIntoGUI(itemDrops.get(i), x + xSize/2 + i * 20, y + 57);
+            itemRenderer.renderItemIntoGUI(itemDrops.get(i), x + xSize / 2 + i * 20, y + 57);
         }
 
         int lines = Math.min((ySize - 40) / 9, cropInfo.getTextLines().size());
