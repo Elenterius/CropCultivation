@@ -169,12 +169,13 @@ public class TabletScreen extends Screen
             return;
         }
 
-        String text = "Foobar And Funky Town!:";
-        font.drawString(text + font.getStringWidth(text), x + xSize - 4, y + 19 + 23, ColorScheme.PRIMARY_COLOR);
-        GuiUtil.PRESS_START_2P_FONT_RENDERER.drawString(text + GuiUtil.PRESS_START_2P_FONT_RENDERER.getStringWidth(text), x + xSize - 4, y + 19 + 23, ColorScheme.PRIMARY_COLOR);
-
 //            setBlitOffset(100);
+        GuiUtil.hLine(x+7, y+18, x+6+32, ColorScheme.BACKGROUND_COLOR_LIGHT_GREY);
+        GuiUtil.hLine(x+7, y+18+32, x+6+32, ColorScheme.BACKGROUND_COLOR_LIGHT_GREY);
+        GuiUtil.vLine(x+7, y+18, y+18+32, ColorScheme.BACKGROUND_COLOR_LIGHT_GREY);
+        GuiUtil.vLine(x+6+32, y+18, y+18+32, ColorScheme.BACKGROUND_COLOR_LIGHT_GREY);
         GuiUtil.renderBlockStateIntoGUI(cropInfo.getMatureBlockState(), x + 7, y + 17, 32f);
+
 //            itemRenderer.renderItemIntoGUI(cachedBlockstate, x + 7, y + 19);
 //            setBlitOffset(0);
 
@@ -194,7 +195,6 @@ public class TabletScreen extends Screen
         }
 
         font.drawString(cropInfo.getCommonId().getFormattedText(), x + 42f, y + 19f, ColorScheme.ACCENT_COLOR);
-//        hLine(x + 42, x + 175 - 4, y + 19 + 9,0xFFFFFFFF);
 
         float pct = cropInfo.getDataCompletenessPct();
         font.drawString(cropInfo.getDataCompleteness().getFormattedText(), x + 42f, y + 19f + 13f, ColorScheme.ACCENT_COLOR);
@@ -202,7 +202,7 @@ public class TabletScreen extends Screen
 
         List<ItemStack> itemDrops = cropInfo.itemDrops;
         for (int i = 0, itemDropsSize = itemDrops.size(); i < itemDropsSize; i++) {
-            itemRenderer.renderItemIntoGUI(itemDrops.get(i), x + xSize / 2 + i * 20, y + 57);
+            itemRenderer.renderItemIntoGUI(itemDrops.get(i), (x + xSize - 2) - (i+1) * 20, y + 57);
         }
 
         int lines = Math.min((ySize - 40) / 9, cropInfo.getTextLines().size());

@@ -15,7 +15,6 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @OnlyIn(Dist.CLIENT)
@@ -26,24 +25,17 @@ public abstract class GuiUtil
     public static final ResourceLocation TEXTURE_MEASURE_BAR = new ResourceLocation(CropCultivationMod.MOD_ID, "textures/gui/measure_bar.png");
 
     public static final ResourceLocation PRESS_START_2P_FONT = new ResourceLocation(CropCultivationMod.MOD_ID, "press_start_2p"); //important: without "font/" dir as prefix
-    public static final FontRenderer PRESS_START_2P_FONT_RENDERER;
 
-    static {
+    public static FontRenderer getPressStart2pFontRenderer() {
         FontRenderer fontRenderer = Minecraft.getInstance().getFontResourceManager().getFontRenderer(GuiUtil.PRESS_START_2P_FONT);
         if (fontRenderer == null) {
             CropCultivationMod.LOGGER.warn("Failed to load true type font PressStart2P! Using vanilla font renderer instead");
-            PRESS_START_2P_FONT_RENDERER = Minecraft.getInstance().fontRenderer;
+            return Minecraft.getInstance().fontRenderer;
         }
         else {
-            CropCultivationMod.LOGGER.debug("True Type Font PressStart2P loaded");
-            PRESS_START_2P_FONT_RENDERER = fontRenderer;
-            PRESS_START_2P_FONT_RENDERER.setBidiFlag(Minecraft.getInstance().getLanguageManager().isCurrentLanguageBidirectional());
+//            fontRenderer.setBidiFlag(Minecraft.getInstance().getLanguageManager().isCurrentLanguageBidirectional());
+            return fontRenderer;
         }
-    }
-
-    @SubscribeEvent
-    public static void onResourcepackReload() {
-
     }
 
     public static void drawMeasureBar(int x, int y, int width, float pct, int colorAlpha) {

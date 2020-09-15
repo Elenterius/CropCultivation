@@ -198,7 +198,9 @@ public class CropInfo
             cachedTextCompLines.add(new StringTextComponent(String.format("Population: %s - %s", ((IPlantGrowthCA) cachedCropEntry).getMinPlantNeighbors(), ((IPlantGrowthCA) cachedCropEntry).getMaxPlantNeighbors())));
         }
 
-        cachedTextCompLines.add(TextUtil.EMPTY_STRING);
-        cachedTextCompLines.add(new StringTextComponent("[DEBUG] blocks: ").appendSibling(new StringTextComponent(registeredModBlocks.toString()).applyTextStyle(TextFormatting.GRAY)));
+        if (Minecraft.getInstance().gameSettings.advancedItemTooltips) {
+            cachedTextCompLines.add(TextUtil.EMPTY_STRING);
+            cachedTextCompLines.add(new StringTextComponent("[DEBUG] blocks: ").appendSibling(new StringTextComponent(registeredModBlocks.toString()).applyTextStyle(TextFormatting.GRAY)));
+        }
     }
 }
